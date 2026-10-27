@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "ludosport-arena",
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+/* Custom LudoSport Arena Styles */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+body {
+  background-color: #080c14;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.45);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.glow-saber-cyan {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+}
+
+.glow-saber-amber {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
+}
+
+/* Tab Navigation Styling */
+.nav-tab.active {
+  color: #00e5ff;
+}
+
+.nav-tab.active i {
+  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Hide number input spinners for clean scoreboard display */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00e5ff;
+}
+
+/* Selected button styles in registration form */
+.result-btn.selected {
+  border-color: #00e5ff !important;
+  background-color: rgba(0, 229, 255, 0.12) !important;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+.result-btn.selected[data-result="VICTORY_A"] {
+  border-color: #00e5ff !important;
+  background-color: rgba(0, 229, 255, 0.15) !important;
+}
+
+.result-btn.selected[data-result="DRAW"] {
+  border-color: #f59e0b !important;
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+}
+
+.result-btn.selected[data-result="VICTORY_B"] {
+  border-color: #f43f5e !important;
+  background-color: rgba(244, 63, 94, 0.15) !important;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+}
+
+/* Podium Styling */
+.podium-card {
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.podium-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Saber Colors for Avatar Rings */
+.saber-ring-cyan {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+.saber-ring-emerald {
+  border-color: #10b981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+.saber-ring-amber {
+  border-color: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+.saber-ring-purple {
+  border-color: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+.saber-ring-rose {
+  border-color: #f43f5e;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+}
+.saber-ring-white {
+  border-color: #f8fafc;
+  box-shadow: 0 0 10px rgba(248, 250, 252, 0.4);
+}
+
+/* Test Mode Pulse Indicator */
+.pulse-test-glow {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+  animation: pulseGlowAmber 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlowAmber {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+  }
+}
+
