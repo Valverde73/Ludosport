@@ -153,7 +153,7 @@ function doPost(e) {
 
       if (fencers.length > 0) {
         var rowsToAdd = fencers.map(function(f) {
-          return [f.id, f.name, f.rank || 'Iniciado', f.color || 'cyan', f.joinedAt || new Date().toISOString()];
+          return [f.id, f.name, f.rank || 'Inizziato', f.color || 'cyan', f.joinedAt || new Date().toISOString()];
         });
         fencerSheet.getRange(2, 1, rowsToAdd.length, 5).setValues(rowsToAdd);
       }
@@ -194,14 +194,20 @@ function getOrCreateFencersSheet(ss) {
   // Si la hoja solo tiene cabecera, sembramos alumnos iniciales
   if (data.length <= 1) {
     var defaults = [
-      ['f-1', 'Marco Silva', 'Avanzado', 'cyan', '2026-01-10'],
-      ['f-2', 'Elena Rostova', 'Intermedio', 'emerald', '2026-02-15'],
-      ['f-3', 'David Kenobi', 'Avanzado', 'amber', '2026-01-20'],
-      ['f-4', 'Sara Vane', 'Iniciado', 'purple', '2026-03-01'],
-      ['f-5', 'Alex Vance', 'Intermedio', 'cyan', '2026-02-10'],
-      ['f-6', 'Lucas Corvo', 'Iniciado', 'rose', '2026-03-05'],
-      ['f-7', 'Nuria Soler', 'Avanzado', 'white', '2026-01-12'],
-      ['f-8', 'Pablo Ruiz', 'Iniciado', 'amber', '2026-03-12']
+      ['f-1', 'Mar Garcia', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-2', 'Auri Haro', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-3', 'Mario Ferrer', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-4', 'Isa Liria', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-5', 'Ulises Carmona', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-6', 'Paula Carmona', 'Novizio', 'cyan', '2026-01-01'],
+      ['f-7', 'Alberto Delgado', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-8', 'Rogelio Carceles', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-9', 'Patricia Urquiza', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-10', 'Saúl García-Abadillo', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-11', 'Virginia García', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-12', 'Andrés Saavedra', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-13', 'Emilio Valverde', 'Inizziato', 'cyan', '2026-01-01'],
+      ['f-14', 'Trino Góngora', 'Instructor', 'emerald', '2026-01-01']
     ];
     sheet.getRange(2, 1, defaults.length, 5).setValues(defaults);
     data = sheet.getDataRange().getValues();
@@ -213,7 +219,7 @@ function getOrCreateFencersSheet(ss) {
       fencers.push({
         id: String(row[0]),
         name: String(row[1]),
-        rank: String(row[2] || 'Iniciado'),
+        rank: String(row[2] || 'Inizziato'),
         color: String(row[3] || 'cyan'),
         joinedAt: String(row[4] || '')
       });

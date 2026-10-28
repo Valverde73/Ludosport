@@ -5,14 +5,20 @@
 
 // Initial Seed Fencers (LudoSport School Pupils)
 const DEFAULT_FENCERS = [
-  { id: 'f-1', name: 'Marco Silva', rank: 'Avanzado', color: 'cyan', joinedAt: '2026-01-10' },
-  { id: 'f-2', name: 'Elena Rostova', rank: 'Intermedio', color: 'emerald', joinedAt: '2026-02-15' },
-  { id: 'f-3', name: 'David Kenobi', rank: 'Avanzado', color: 'amber', joinedAt: '2026-01-20' },
-  { id: 'f-4', name: 'Sara Vane', rank: 'Iniciado', color: 'purple', joinedAt: '2026-03-01' },
-  { id: 'f-5', name: 'Alex Vance', rank: 'Intermedio', color: 'cyan', joinedAt: '2026-02-10' },
-  { id: 'f-6', name: 'Lucas Corvo', rank: 'Iniciado', color: 'rose', joinedAt: '2026-03-05' },
-  { id: 'f-7', name: 'Nuria Soler', rank: 'Avanzado', color: 'white', joinedAt: '2026-01-12' },
-  { id: 'f-8', name: 'Pablo Ruiz', rank: 'Iniciado', color: 'amber', joinedAt: '2026-03-12' }
+  { id: 'f-1', name: 'Mar Garcia', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-2', name: 'Auri Haro', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-3', name: 'Mario Ferrer', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-4', name: 'Isa Liria', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-5', name: 'Ulises Carmona', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-6', name: 'Paula Carmona', rank: 'Novizio', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-7', name: 'Alberto Delgado', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-8', name: 'Rogelio Carceles', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-9', name: 'Patricia Urquiza', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-10', name: 'Saúl García-Abadillo', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-11', name: 'Virginia García', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-12', name: 'Andrés Saavedra', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-13', name: 'Emilio Valverde', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
+  { id: 'f-14', name: 'Trino Góngora', rank: 'Instructor', color: 'emerald', joinedAt: '2026-01-01' }
 ];
 
 // Months Name Dictionary (Spanish)
@@ -194,14 +200,14 @@ class LudoSportApp {
         monthKey: this.currentMonthKey,
         date: today,
         fighterAId: 'f-1',
-        fighterAName: 'Marco Silva',
+        fighterAName: 'Mar Garcia',
         fighterBId: 'f-2',
-        fighterBName: 'Elena Rostova',
+        fighterBName: 'Auri Haro',
         scoreA: 2,
         scoreB: 0,
         scoreText: '2 - 0',
         result: 'VICTORY_A',
-        winner: 'Marco Silva',
+        winner: 'Mar Garcia',
         pointsA: 3,
         pointsB: 0,
         notes: 'Forma 1 - Shii-Cho',
@@ -212,9 +218,9 @@ class LudoSportApp {
         monthKey: this.currentMonthKey,
         date: today,
         fighterAId: 'f-3',
-        fighterAName: 'David Kenobi',
+        fighterAName: 'Mario Ferrer',
         fighterBId: 'f-5',
-        fighterBName: 'Alex Vance',
+        fighterBName: 'Ulises Carmona',
         scoreA: 1,
         scoreB: 1,
         scoreText: '1 - 1',
@@ -230,17 +236,17 @@ class LudoSportApp {
         monthKey: this.currentMonthKey,
         date: today,
         fighterAId: 'f-4',
-        fighterAName: 'Sara Vane',
+        fighterAName: 'Isa Liria',
         fighterBId: 'f-7',
-        fighterBName: 'Nuria Soler',
+        fighterBName: 'Alberto Delgado',
         scoreA: 0,
         scoreB: 2,
         scoreText: '0 - 2',
         result: 'VICTORY_B',
-        winner: 'Nuria Soler',
+        winner: 'Alberto Delgado',
         pointsA: 0,
         pointsB: 3,
-        notes: 'Forma 2 - Makashi',
+        notes: 'Forma 2',
         timestamp: new Date(Date.now() - 3600000 * 3).toISOString()
       },
       {
@@ -248,14 +254,14 @@ class LudoSportApp {
         monthKey: this.currentMonthKey,
         date: today,
         fighterAId: 'f-6',
-        fighterAName: 'Lucas Corvo',
+        fighterAName: 'Paula Carmona',
         fighterBId: 'f-8',
-        fighterBName: 'Pablo Ruiz',
+        fighterBName: 'Rogelio Carceles',
         scoreA: 3,
         scoreB: 1,
         scoreText: '3 - 1',
         result: 'VICTORY_A',
-        winner: 'Lucas Corvo',
+        winner: 'Paula Carmona',
         pointsA: 3,
         pointsB: 0,
         notes: 'Ataques veloces',
@@ -265,36 +271,36 @@ class LudoSportApp {
         id: 'm-demo-5',
         monthKey: this.currentMonthKey,
         date: today,
-        fighterAId: 'f-1',
-        fighterAName: 'Marco Silva',
-        fighterBId: 'f-3',
-        fighterBName: 'David Kenobi',
-        scoreA: 2,
-        scoreB: 1,
-        scoreText: '2 - 1',
-        result: 'VICTORY_A',
-        winner: 'Marco Silva',
-        pointsA: 3,
-        pointsB: 0,
-        notes: 'Duelo reñido',
+        fighterAId: 'f-13',
+        fighterAName: 'Emilio Valverde',
+        fighterBId: 'f-14',
+        fighterBName: 'Trino Góngora',
+        scoreA: 1,
+        scoreB: 2,
+        scoreText: '1 - 2',
+        result: 'VICTORY_B',
+        winner: 'Trino Góngora',
+        pointsA: 0,
+        pointsB: 3,
+        notes: 'Duelo técnico de exhibición',
         timestamp: new Date(Date.now() - 3600000 * 1).toISOString()
       },
       {
         id: 'm-demo-6',
         monthKey: this.currentMonthKey,
         date: today,
-        fighterAId: 'f-2',
-        fighterAName: 'Elena Rostova',
-        fighterBId: 'f-4',
-        fighterBName: 'Sara Vane',
+        fighterAId: 'f-9',
+        fighterAName: 'Patricia Urquiza',
+        fighterBId: 'f-10',
+        fighterBName: 'Saúl García-Abadillo',
         scoreA: 1,
         scoreB: 0,
         scoreText: '1 - 0',
         result: 'VICTORY_A',
-        winner: 'Elena Rostova',
+        winner: 'Patricia Urquiza',
         pointsA: 3,
         pointsB: 0,
-        notes: 'Contraataque decisivo',
+        notes: 'Defensa sólida y contra',
         timestamp: new Date().toISOString()
       }
     ];
@@ -341,15 +347,19 @@ class LudoSportApp {
   loadFromLocalStorage() {
     const fencersKey = this.getActiveStorageFencersKey();
     const storedFencers = localStorage.getItem(fencersKey);
-    if (storedFencers) {
+    const ROSTER_VERSION = 'v2_official_ludosport_roster';
+    const storedVersion = localStorage.getItem('ls_roster_version');
+
+    if (storedFencers && storedVersion === ROSTER_VERSION) {
       try {
         this.fencers = JSON.parse(storedFencers);
       } catch (e) {
-        this.fencers = DEFAULT_FENCERS;
+        this.fencers = [...DEFAULT_FENCERS];
       }
     } else {
       this.fencers = [...DEFAULT_FENCERS];
       localStorage.setItem(fencersKey, JSON.stringify(this.fencers));
+      localStorage.setItem('ls_roster_version', ROSTER_VERSION);
     }
 
     const matchesKey = this.getActiveStorageMonthKey();
@@ -720,7 +730,7 @@ class LudoSportApp {
                   <div class="font-bold text-slate-100 flex items-center gap-1.5">
                     ${item.fencer.name}
                   </div>
-                  <div class="text-[10px] text-slate-400">${item.fencer.rank || 'Tirador'}</div>
+                  <div class="mt-0.5">${this.getRankBadge(item.fencer.rank)}</div>
                 </div>
               </div>
             </td>
@@ -747,7 +757,7 @@ class LudoSportApp {
 
     const optionsHtml = `
       <option value="">-- Seleccionar Tirador --</option>
-      ${this.fencers.map(f => `<option value="${f.id}">${f.name} (${f.rank || 'Alumno'})</option>`).join('')}
+      ${this.fencers.map(f => `<option value="${f.id}">${f.name} (${f.rank || 'Inizziato'})</option>`).join('')}
     `;
 
     selectA.innerHTML = optionsHtml;
@@ -1223,30 +1233,39 @@ class LudoSportApp {
     const container = document.getElementById('fencersGridList');
     if (!container) return;
 
-    container.innerHTML = this.fencers.map(f => `
-      <div class="bg-lsCard border border-lsBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-full border-2 saber-ring-${f.color || 'cyan'} bg-slate-900 flex items-center justify-center text-xs font-bold text-slate-100">
-            ${this.getInitials(f.name)}
+    container.innerHTML = this.fencers.map(f => {
+      const saberColorLabel = f.color === 'emerald' ? 'Verde' : (f.color === 'cyan' ? 'Azul' : f.color);
+      return `
+        <div class="bg-lsCard border border-lsBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-slate-700 transition-all">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-full border-2 saber-ring-${f.color || 'cyan'} bg-slate-900 flex items-center justify-center text-xs font-bold text-slate-100 shrink-0">
+              ${this.getInitials(f.name)}
+            </div>
+            <div class="min-w-0">
+              <div class="font-bold text-xs text-slate-100 truncate">${f.name}</div>
+              <div class="mt-1 flex items-center gap-1.5 flex-wrap">
+                ${this.getRankBadge(f.rank)}
+                <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full ${f.color === 'emerald' ? 'bg-emerald-400' : 'bg-cyan-400'}"></span>
+                  ${saberColorLabel}
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            <div class="font-bold text-xs text-slate-100">${f.name}</div>
-            <div class="text-[10px] text-slate-400">${f.rank || 'Alumno'}</div>
-          </div>
-        </div>
 
-        ${this.isAdmin || this.isTestMode ? `
-          <div class="flex items-center gap-1">
-            <button data-edit-fencer="${f.id}" class="edit-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition-colors">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-            </button>
-            <button data-delete-fencer="${f.id}" class="delete-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors">
-              <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
-        ` : ''}
-      </div>
-    `).join('');
+          ${this.isAdmin || this.isTestMode ? `
+            <div class="flex items-center gap-1 shrink-0">
+              <button data-edit-fencer="${f.id}" title="Editar Tirador" class="edit-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition-colors">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              </button>
+              <button data-delete-fencer="${f.id}" title="Eliminar Tirador" class="delete-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors">
+                <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
   }
 
   saveFencerFromModal(e) {
@@ -1436,13 +1455,13 @@ class LudoSportApp {
       title.textContent = 'Modificar Tirador';
       editId.value = editFencer.id;
       nameInput.value = editFencer.name;
-      rankInput.value = editFencer.rank || 'Iniciado';
+      rankInput.value = editFencer.rank || 'Inizziato';
       colorInput.value = editFencer.color || 'cyan';
     } else {
       title.textContent = 'Añadir Nuevo Tirador';
       editId.value = '';
       nameInput.value = '';
-      rankInput.value = 'Iniciado';
+      rankInput.value = 'Inizziato';
       colorInput.value = 'cyan';
     }
 
@@ -1507,6 +1526,22 @@ class LudoSportApp {
     const parts = name.split(' ');
     if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  getRankBadge(rank) {
+    const r = (rank || 'Inizziato').trim();
+    switch (r) {
+      case 'Novizio':
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/15 border border-sky-500/30 text-sky-300">Novizio</span>`;
+      case 'Inizziato':
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/15 border border-cyan-500/30 text-cyan-300">Inizziato</span>`;
+      case 'Academico':
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-500/15 border border-purple-500/30 text-purple-300">Academico</span>`;
+      case 'Instructor':
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">Instructor</span>`;
+      default:
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">${r}</span>`;
+    }
   }
 
   setupEventListeners() {

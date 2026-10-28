@@ -1,4 +1,4 @@
-# ⚔️ LudoSport Arena - Liga Mensual
+﻿# ⚔️ LudoSport Arena - Liga Mensual
 
 Aplicación web mobile-first para la gestión integral y en tiempo real de la **Liga Mensual de LudoSport**. Diseñada específicamente para ser utilizada a pie de pista desde smartphones durante las clases y entrenamientos.
 

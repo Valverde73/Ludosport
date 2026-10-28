@@ -134,11 +134,15 @@ input[type=number] {
 }
 
 /* Saber Colors for Avatar Rings */
-.saber-ring-cyan {
+.saber-ring-cyan,
+.saber-ring-blue,
+.saber-ring-azul {
   border-color: #00e5ff;
   box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
 }
-.saber-ring-emerald {
+.saber-ring-emerald,
+.saber-ring-green,
+.saber-ring-verde {
   border-color: #10b981;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
