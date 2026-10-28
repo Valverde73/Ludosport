@@ -25,10 +25,23 @@ Aplicación web mobile-first para la gestión integral y en tiempo real de la **
 
 ---
 
-## 🔐 Roles y Seguridad
-- **Modo Público (Lectura):** Acceso libre mediante el enlace web para todos los alumnos y seguidores. Visualización en tiempo real del podio, tabla de posiciones completa e histórico de combates del mes.
-- **Modo Rector / Administración:** Protegido mediante **código PIN** (PIN por defecto: `1234`, modificable en la pestaña de Ajustes). Habilita el formulario de registro de duelos, borrado de combates y alta/edición de tiradores de la escuela.
-- **🧪 Modo Pruebas (Sandbox):** Permite a los instructores y rectores experimentar con la app, simular combates o probar la interfaz sin riesgo alguno de sobreescribir o ensuciar las estadísticas y hojas oficiales de la escuela. Incluye un botón para precargar combates de demostración con un solo clic.
+## 🔐 Roles y Seguridad de Acceso
+
+1. **Modo Tirador (Vista Pública / Por Defecto):**
+   - Interfaz simplificada y optimizada para los alumnos y tiradores de la escuela:
+     - **Consultar información:** Acceso directo a la *Clasificación en directo* (podio y ranking completo), *Duelos actuales del mes* e *Historial de duelos pasados*.
+     - **Registrar resultados:** Formulario limpio e intuitivo para introducir los tanteos de los combates diarios a pie de pista.
+   - Los apartados sensibles de **Ajustes** y **Gestión de Tiradores** quedan completamente ocultos de la navegación principal para evitar alteraciones accidentales.
+
+2. **Modo Rector (Vista de Administración Protegida):**
+   - Acceso restringido exclusivamente tras autenticación con el **código PIN** de Rector (por defecto `1234`, personalizable en Ajustes).
+   - Al iniciar sesión como Rector, aparecen dinámicamente en el menú de navegación los módulos de:
+     - **Gestión de Tiradores:** Alta de nuevos alumnos, edición de niveles/formas y bajas del censo.
+     - **Ajustes & Configuración:** Conexión con Google Sheets API, reseteo crítico de la liga mensual, copias de seguridad JSON y gestión del PIN.
+     - **Herramientas de control:** Botones de borrado individual de combates en el Historial y botón de reseteo en el panel de duelos.
+
+3. **🧪 Modo Pruebas (Sandbox):**
+   - Permite a instructores y rectores simular combates, probar tanteos y explorar la app en un entorno aislado sin alterar los datos oficiales de la escuela ni las hojas de Google Sheets. Incluye el botón *Cargar Demo* para pruebas instantáneas.
 
 ---
 

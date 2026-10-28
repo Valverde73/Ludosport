@@ -102,9 +102,9 @@
         </div>
 
         <!-- Admin Mode Button -->
-        <button id="adminAuthBtn" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500">
+        <button id="adminAuthBtn" title="Acceso para Rectores / Administración" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:text-white">
           <i data-lucide="shield" class="w-3.5 h-3.5" id="adminShieldIcon"></i>
-          <span id="adminStatusText">Rector</span>
+          <span id="adminStatusText">Acceso Rector</span>
         </button>
       </div>
 
@@ -209,23 +209,9 @@
       </div>
     </section>
 
-    <!-- TAB 2: REGISTRAR DUELO (ADMIN) -->
+    <!-- TAB 2: REGISTRAR DUELO (PÚBLICO / TIRADORES) -->
     <section id="tab-duel" class="tab-content hidden animate-fadeIn">
       
-      <!-- Admin Locked Notice if not logged in -->
-      <div id="duelAdminLockOverlay" class="hidden bg-lsCard border border-lsBorder rounded-2xl p-6 text-center shadow-xl">
-        <div class="w-14 h-14 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-3">
-          <i data-lucide="lock" class="w-7 h-7"></i>
-        </div>
-        <h3 class="font-display text-base font-bold text-slate-100">Modo Administración Requerido</h3>
-        <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-          Solo los rectores o instructores de LudoSport autenticados con PIN pueden registrar resultados oficiales de combates.
-        </p>
-        <button id="unlockAdminFromDuelBtn" class="mt-4 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 shadow-lg shadow-cyan-500/20">
-          Desbloquear con PIN
-        </button>
-      </div>
-
       <!-- Duel Registration Form -->
       <div id="duelFormContainer" class="space-y-4">
         
@@ -235,15 +221,17 @@
               <i data-lucide="swords" class="w-5 h-5 text-cyan-400"></i>
               Registrar Combate
             </h2>
-            <p class="text-xs text-slate-400">Mes activo: <span id="duelFormMonthBadge" class="font-bold text-cyan-400"></span></p>
+            <p class="text-xs text-slate-400">Introduce el resultado del asalto diario &bull; Mes: <span id="duelFormMonthBadge" class="font-bold text-cyan-400"></span></p>
           </div>
-          <div class="flex items-center gap-2">
+          
+          <!-- Rector-only controls -->
+          <div id="rectorOnlyDuelControls" class="hidden flex items-center gap-2">
             <button id="openResetMonthModalBtn" type="button" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-[11px] font-bold transition-all shadow-sm" title="Limpiar los combates de este mes">
               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
               <span>Resetear Liga</span>
             </button>
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-              Modo Rector Activo
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">
+              Modo Rector
             </span>
           </div>
         </div>
@@ -407,10 +395,33 @@
             <i data-lucide="history" class="w-5 h-5 text-cyan-400"></i>
             Historial de Combates
           </h2>
-          <p class="text-xs text-slate-400">Combates disputados en <span id="historyMonthLabel" class="text-cyan-400 font-bold">este mes</span></p>
+          <p class="text-xs text-slate-400">Duelos en <span id="historyMonthLabel" class="text-cyan-400 font-bold">este mes</span></p>
         </div>
         <div class="text-xs font-combat font-bold text-slate-400">
           Total: <span id="historyMatchCount" class="text-cyan-400">0</span>
+        </div>
+      </div>
+
+      <!-- Scope Switcher: Duelos Actuales vs Histórico de Meses Pasados -->
+      <div class="flex items-center gap-1.5 mb-3 bg-slate-900/90 p-1 rounded-xl border border-lsBorder text-xs">
+        <button id="historyCurrentMonthPill" type="button" class="flex-1 py-1.5 px-2 rounded-lg font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-1.5 transition-all">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>Mes Actual</span>
+        </button>
+        <button id="historyPastMonthsPill" type="button" class="flex-1 py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-slate-200 border border-transparent flex items-center justify-center gap-1.5 transition-all">
+          <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+          <span>Meses Pasados</span>
+        </button>
+      </div>
+
+      <!-- Past Months Quick Selector (Visible when 'Meses Pasados' is active) -->
+      <div id="historyPastMonthsContainer" class="hidden mb-3 p-2.5 rounded-xl bg-lsCard border border-lsBorder">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Seleccionar mes del histórico:</span>
+          <span id="historyPastMonthsCount" class="text-[10px] text-cyan-400"></span>
+        </div>
+        <div id="historyPastMonthsList" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
+          <!-- Month pills rendered via JS -->
         </div>
       </div>
 
@@ -629,14 +640,14 @@
         <span class="text-[10px] font-semibold">Historial</span>
       </button>
 
-      <!-- Tab 4: Tiradores -->
-      <button data-tab="tab-fencers" class="nav-tab flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
+      <!-- Tab 4: Tiradores (Solo Rector) -->
+      <button id="navTabFencers" data-tab="tab-fencers" class="nav-tab hidden flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
         <i data-lucide="users" class="w-5 h-5 mb-0.5"></i>
         <span class="text-[10px] font-semibold">Tiradores</span>
       </button>
 
-      <!-- Tab 5: Ajustes -->
-      <button data-tab="tab-settings" class="nav-tab flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
+      <!-- Tab 5: Ajustes (Solo Rector) -->
+      <button id="navTabSettings" data-tab="tab-settings" class="nav-tab hidden flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
         <i data-lucide="settings" class="w-5 h-5 mb-0.5"></i>
         <span class="text-[10px] font-semibold">Ajustes</span>
       </button>

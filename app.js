@@ -861,12 +861,6 @@ class LudoSportApp {
   }
 
   async saveCombat() {
-    if (!this.isAdmin && !this.isTestMode) {
-      this.showToast('Acceso restringido: Introduce tu PIN de Rector', 'rose');
-      this.openPinModal();
-      return;
-    }
-
     const selectA = document.getElementById('fighterASelect');
     const selectB = document.getElementById('fighterBSelect');
     const dateInput = document.getElementById('duelDateInput');
@@ -985,6 +979,7 @@ class LudoSportApp {
   }
 
   renderHistory() {
+    this.renderHistoryPastMonthsList();
     const list = document.getElementById('historyMatchesList');
     const countBadge = document.getElementById('historyMatchCount');
     const searchFilter = (document.getElementById('historySearchInput')?.value || '').toLowerCase().trim();
@@ -1073,6 +1068,31 @@ class LudoSportApp {
             ` : ''}
           </div>
         </div>
+      `;
+    }).join('');
+  }
+
+  // Render clickable pills of all registered months in History tab
+  renderHistoryPastMonthsList() {
+    const container = document.getElementById('historyPastMonthsList');
+    const countBadge = document.getElementById('historyPastMonthsCount');
+    if (!container) return;
+
+    if (countBadge) {
+      countBadge.textContent = `${this.availableMonths.length} meses registrados`;
+    }
+
+    container.innerHTML = this.availableMonths.map(mKey => {
+      const isSelected = mKey === this.currentMonthKey;
+      return `
+        <button type="button" data-month="${mKey}" class="history-month-pill-btn px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
+          isSelected 
+            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-sm shadow-cyan-500/20' 
+            : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-slate-500 hover:text-white'
+        }">
+          <span>${this.formatMonthLabel(mKey)}</span>
+          ${isSelected ? ' <span class="text-cyan-400 font-bold">&bull;</span>' : ''}
+        </button>
       `;
     }).join('');
   }
@@ -1299,28 +1319,76 @@ class LudoSportApp {
   updateAdminUI() {
     const text = document.getElementById('adminStatusText');
     const btn = document.getElementById('adminAuthBtn');
-    const duelLock = document.getElementById('duelAdminLockOverlay');
-    const duelForm = document.getElementById('duelFormContainer');
+    const navFencers = document.getElementById('navTabFencers');
+    const navSettings = document.getElementById('navTabSettings');
+    const rectorDuelControls = document.getElementById('rectorOnlyDuelControls');
 
     if (this.isAdmin) {
-      if (text) text.textContent = 'Rector (Activo)';
+      if (text) text.textContent = 'Rector Activo';
       if (btn) {
-        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-cyan-500/40 bg-cyan-500/10 text-cyan-300';
+        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-cyan-500/50 bg-cyan-500/15 text-cyan-300 hover:border-cyan-400 shadow-sm shadow-cyan-500/20';
+        btn.title = 'Modo Rector Activo (clic para cerrar sesión)';
+        btn.innerHTML = `
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span id="adminStatusText">Rector Activo</span>
+          <i data-lucide="log-out" class="w-3 h-3 text-cyan-400/80 ml-0.5"></i>
+        `;
       }
-      if (duelLock) duelLock.classList.add('hidden');
-      if (duelForm) duelForm.classList.remove('hidden');
+      // Reveal restricted navigation tabs for Rector
+      if (navFencers) navFencers.classList.remove('hidden');
+      if (navSettings) navSettings.classList.remove('hidden');
+      if (rectorDuelControls) rectorDuelControls.classList.remove('hidden');
     } else {
-      if (text) text.textContent = 'Rector';
+      if (text) text.textContent = 'Acceso Rector';
       if (btn) {
-        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500';
+        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:text-white';
+        btn.title = 'Acceso para Rectores / Administración';
+        btn.innerHTML = `
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span id="adminStatusText">Acceso Rector</span>
+        `;
       }
-      if (this.isTestMode) {
-        if (duelLock) duelLock.classList.add('hidden');
-        if (duelForm) duelForm.classList.remove('hidden');
-      } else {
-        if (duelLock) duelLock.classList.remove('hidden');
-        if (duelForm) duelForm.classList.add('hidden');
+      // Hide restricted navigation tabs from Tiradores
+      if (navFencers) navFencers.classList.add('hidden');
+      if (navSettings) navSettings.classList.add('hidden');
+      if (rectorDuelControls) rectorDuelControls.classList.add('hidden');
+
+      // If viewing a restricted section, switch back to Ranking
+      const activeSection = document.querySelector('.tab-content:not(.hidden)');
+      if (activeSection && (activeSection.id === 'tab-fencers' || activeSection.id === 'tab-settings')) {
+        this.switchTab('tab-ranking');
       }
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (err) {}
+    }
+  }
+
+  // Role-Aware Tab Switcher
+  switchTab(targetId) {
+    // Restrict Fencers management and Settings exclusively to authenticated Rector
+    if ((targetId === 'tab-fencers' || targetId === 'tab-settings') && !this.isAdmin) {
+      this.showToast('Acceso exclusivo para Rectores. Introduce tu PIN.', 'rose');
+      this.openPinModal();
+      return;
+    }
+
+    document.querySelectorAll('.nav-tab').forEach(b => {
+      const isMatch = b.getAttribute('data-tab') === targetId;
+      b.classList.toggle('active', isMatch);
+    });
+
+    document.querySelectorAll('.tab-content').forEach(section => {
+      section.classList.toggle('hidden', section.id !== targetId);
+    });
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
     }
   }
 
@@ -1349,7 +1417,7 @@ class LudoSportApp {
       sessionStorage.setItem('ls_admin_logged', 'true');
       this.updateAdminUI();
       this.closePinModal();
-      this.showToast('¡Modo Rector desbloqueado!', 'emerald');
+      this.showToast('¡Modo Rector desbloqueado! Acceso a Tiradores y Ajustes habilitado', 'emerald');
       this.renderAll();
     } else {
       if (err) err.classList.remove('hidden');
@@ -1442,24 +1510,59 @@ class LudoSportApp {
   }
 
   setupEventListeners() {
-    // Navigation Tabs
+    // Navigation Tabs (Protected with Role Access)
     document.querySelectorAll('.nav-tab').forEach(tabBtn => {
       tabBtn.addEventListener('click', (e) => {
         const targetId = tabBtn.getAttribute('data-tab');
-        document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-        tabBtn.classList.add('active');
-
-        document.querySelectorAll('.tab-content').forEach(section => {
-          section.classList.add('hidden');
-        });
-
-        const activeSection = document.getElementById(targetId);
-        if (activeSection) {
-          activeSection.classList.remove('hidden');
-        }
-
-        if (window.lucide) window.lucide.createIcons();
+        this.switchTab(targetId);
       });
+    });
+
+    // Historial Month Scope switcher (Duelos Actuales vs Histórico de Meses)
+    document.getElementById('historyCurrentMonthPill')?.addEventListener('click', () => {
+      const curBtn = document.getElementById('historyCurrentMonthPill');
+      const pastBtn = document.getElementById('historyPastMonthsPill');
+      const pastBox = document.getElementById('historyPastMonthsContainer');
+      
+      curBtn?.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+      curBtn?.classList.remove('text-slate-400', 'border-transparent');
+      
+      pastBtn?.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+      pastBtn?.classList.add('text-slate-400', 'border-transparent');
+      
+      pastBox?.classList.add('hidden');
+
+      const defaultKey = this.getDefaultMonthKey();
+      if (this.currentMonthKey !== defaultKey && this.availableMonths.includes(defaultKey)) {
+        this.switchMonth(defaultKey);
+      }
+    });
+
+    document.getElementById('historyPastMonthsPill')?.addEventListener('click', () => {
+      const curBtn = document.getElementById('historyCurrentMonthPill');
+      const pastBtn = document.getElementById('historyPastMonthsPill');
+      const pastBox = document.getElementById('historyPastMonthsContainer');
+      
+      pastBtn?.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+      pastBtn?.classList.remove('text-slate-400', 'border-transparent');
+      
+      curBtn?.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
+      curBtn?.classList.add('text-slate-400', 'border-transparent');
+      
+      pastBox?.classList.remove('hidden');
+      this.renderHistoryPastMonthsList();
+    });
+
+    // History Past month pills delegation
+    document.getElementById('historyPastMonthsList')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.history-month-pill-btn');
+      if (btn) {
+        const mKey = btn.getAttribute('data-month');
+        if (mKey) {
+          this.switchMonth(mKey);
+          this.renderHistoryPastMonthsList();
+        }
+      }
     });
 
     // Test Mode Toggles
@@ -1506,26 +1609,32 @@ class LudoSportApp {
       }
     });
 
-    // New Month Button
+    // New Month Button (Protected: only Rector can start a new league month)
     document.getElementById('newMonthBtn')?.addEventListener('click', () => {
+      if (!this.isAdmin) {
+        this.showToast('Acceso restringido: Se requiere rol de Rector para iniciar un nuevo mes', 'rose');
+        this.openPinModal();
+        return;
+      }
       this.createNewMonth();
     });
 
-    // Admin Auth Button
+    // Admin Auth Button (Toggle Rector session with confirmation)
     document.getElementById('adminAuthBtn')?.addEventListener('click', () => {
       if (this.isAdmin) {
-        if (confirm('¿Cerrar sesión de Rector?')) {
+        if (confirm('¿Deseas cerrar la sesión de Rector y volver al Modo Tirador?')) {
           this.isAdmin = false;
           sessionStorage.removeItem('ls_admin_logged');
           this.updateAdminUI();
-          this.showToast('Sesión de Rector cerrada');
+          this.renderAll();
+          this.showToast('Sesión de Rector cerrada. Modo Tirador activo.', 'cyan');
         }
       } else {
         this.openPinModal();
       }
     });
 
-    // Unlock Admin from Duel lock overlay
+    // Unlock Admin from Duel lock overlay if any
     document.getElementById('unlockAdminFromDuelBtn')?.addEventListener('click', () => {
       this.openPinModal();
     });
