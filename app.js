@@ -5,20 +5,20 @@
 
 // Initial Seed Fencers (LudoSport School Pupils)
 const DEFAULT_FENCERS = [
-  { id: 'f-1', name: 'Mar Garcia', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-2', name: 'Auri Haro', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-3', name: 'Mario Ferrer', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-4', name: 'Isa Liria', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-5', name: 'Ulises Carmona', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-6', name: 'Paula Carmona', rank: 'Novizio', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-7', name: 'Alberto Delgado', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-8', name: 'Rogelio Carceles', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-9', name: 'Patricia Urquiza', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-10', name: 'Saúl García-Abadillo', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-11', name: 'Virginia García', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-12', name: 'Andrés Saavedra', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-13', name: 'Emilio Valverde', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01' },
-  { id: 'f-14', name: 'Trino Góngora', rank: 'Instructor', color: 'emerald', joinedAt: '2026-01-01' }
+  { id: 'f-1', name: 'Mar Garcia', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-2', name: 'Auri Haro', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-3', name: 'Mario Ferrer', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-4', name: 'Isa Liria', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-5', name: 'Ulises Carmona', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-6', name: 'Paula Carmona', rank: 'Novizio', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-7', name: 'Alberto Delgado', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-8', name: 'Rogelio Carceles', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-9', name: 'Patricia Urquiza', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-10', name: 'Saúl García-Abadillo', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-11', name: 'Virginia García', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-12', name: 'Andrés Saavedra', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-13', name: 'Emilio Valverde', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
+  { id: 'f-14', name: 'Trino Góngora', rank: 'Instructor', color: 'emerald', joinedAt: '2026-01-01', photoUrl: '' }
 ];
 
 // Months Name Dictionary (Spanish)
@@ -42,6 +42,18 @@ class LudoSportApp {
     this.selectedResult = 'DRAW'; // automatically calculated
     this.matchPendingDeleteId = null;
     this.isSyncing = false;
+
+    // Live Scoreboard & Timer State
+    this.liveFighterAId = '';
+    this.liveFighterBId = '';
+    this.liveScoreA = 0;
+    this.liveScoreB = 0;
+    this.timerSeconds = 120; // 2 minutes official bout
+    this.timerInterval = null;
+    this.timerRunning = false;
+    this.isSoundEnabled = true;
+    this.isPisteMode = false;
+    this.currentProfileFencerId = null;
 
     this.init();
   }
@@ -83,6 +95,7 @@ class LudoSportApp {
     this.updateAdminUI();
     this.loadData();
     this.updateDuelScoreAndOutcome();
+    this.initLiveScoreboard();
     
     // Set default date input in duel form to today
     const dateInput = document.getElementById('duelDateInput');
@@ -353,6 +366,9 @@ class LudoSportApp {
     if (storedFencers && storedVersion === ROSTER_VERSION) {
       try {
         this.fencers = JSON.parse(storedFencers);
+        this.fencers.forEach(f => {
+          if (f.photoUrl === undefined) f.photoUrl = '';
+        });
       } catch (e) {
         this.fencers = [...DEFAULT_FENCERS];
       }
@@ -588,6 +604,7 @@ class LudoSportApp {
     this.renderMonthSelector();
     this.renderRanking();
     this.renderDuelFormOptions();
+    this.renderLiveScoreboardOptions();
     this.renderHistory();
     this.renderFencersList();
     this.updateQuickStats();
@@ -652,20 +669,20 @@ class LudoSportApp {
 
         podiumContainer.innerHTML = `
           <!-- 2nd Place -->
-          <div class="podium-card p-2.5 rounded-2xl bg-lsCard/90 border border-slate-700/60 flex flex-col items-center justify-end text-center pt-4">
+          <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-slate-700/60 flex flex-col items-center justify-end text-center pt-4 hover:border-slate-500 transition-all">
             <span class="w-6 h-6 rounded-full bg-slate-400/20 text-slate-300 font-bold text-xs flex items-center justify-center mb-1">2</span>
-            <div class="w-10 h-10 rounded-full border-2 border-slate-400 bg-slate-800 flex items-center justify-center font-bold text-slate-200 text-xs mb-1.5 shadow-md">
-              ${this.getInitials(second.fencer.name)}
+            <div class="mb-1.5 shadow-md">
+              ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', true)}
             </div>
             <div class="font-bold text-xs text-slate-200 truncate w-full">${second.fencer.name}</div>
             <div class="text-[10px] text-slate-400">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
           </div>
 
           <!-- 1st Place (Gold / Crown) -->
-          <div class="podium-card p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-lsCard to-lsCard border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10">
+          <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card cursor-pointer p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-lsCard to-lsCard border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10 hover:border-amber-400 transition-all">
             <i data-lucide="crown" class="w-5 h-5 text-amber-400 mb-0.5 animate-bounce"></i>
-            <div class="w-12 h-12 rounded-full border-2 border-amber-400 bg-amber-500/10 flex items-center justify-center font-bold text-amber-300 text-sm mb-1.5 shadow-lg shadow-amber-500/30">
-              ${this.getInitials(first.fencer.name)}
+            <div class="mb-1.5 shadow-lg shadow-amber-500/30">
+              ${this.getFencerAvatarHtml(first.fencer, 'w-12 h-12', true)}
             </div>
             <div class="font-bold text-xs text-amber-300 truncate w-full">${first.fencer.name}</div>
             <div class="text-[11px] font-bold text-slate-200">${first.points} pts</div>
@@ -673,10 +690,10 @@ class LudoSportApp {
           </div>
 
           <!-- 3rd Place -->
-          <div class="podium-card p-2.5 rounded-2xl bg-lsCard/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4">
+          <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4 hover:border-amber-600 transition-all">
             <span class="w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs flex items-center justify-center mb-1">3</span>
-            <div class="w-10 h-10 rounded-full border-2 border-amber-700 bg-slate-800 flex items-center justify-center font-bold text-slate-200 text-xs mb-1.5 shadow-md">
-              ${this.getInitials(third.fencer.name)}
+            <div class="mb-1.5 shadow-md">
+              ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', true)}
             </div>
             <div class="font-bold text-xs text-slate-200 truncate w-full">${third.fencer.name}</div>
             <div class="text-[10px] text-slate-400">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
@@ -709,8 +726,6 @@ class LudoSportApp {
         if (pos === 2) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-slate-400/20 text-slate-300 font-bold items-center justify-center text-[10px] border border-slate-400/40">2</span>`;
         if (pos === 3) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-amber-700/20 text-amber-500 font-bold items-center justify-center text-[10px] border border-amber-700/40">3</span>`;
 
-        const saberClass = `saber-ring-${item.fencer.color || 'cyan'}`;
-
         let diffBadge = `<span class="text-slate-500 font-combat font-semibold text-xs">0</span>`;
         if (item.diff > 0) {
           diffBadge = `<span class="text-emerald-400 font-combat font-bold text-xs">+${item.diff}</span>`;
@@ -719,15 +734,13 @@ class LudoSportApp {
         }
 
         return `
-          <tr class="hover:bg-slate-800/40 transition-colors">
+          <tr data-fencer-profile="${item.fencer.id}" title="Clic para ver perfil y estadísticas de ${item.fencer.name}" class="hover:bg-slate-800/40 transition-colors cursor-pointer">
             <td class="py-2.5 pl-3 pr-2 text-center">${posBadge}</td>
             <td class="py-2.5 px-2">
               <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full border ${saberClass} bg-slate-900 flex items-center justify-center text-[10px] font-bold text-slate-200">
-                  ${this.getInitials(item.fencer.name)}
-                </div>
+                ${this.getFencerAvatarHtml(item.fencer, 'w-7 h-7', true)}
                 <div>
-                  <div class="font-bold text-slate-100 flex items-center gap-1.5">
+                  <div class="font-bold text-slate-100 flex items-center gap-1.5 hover:text-cyan-300 transition-colors">
                     ${item.fencer.name}
                   </div>
                   <div class="mt-0.5">${this.getRankBadge(item.fencer.rank)}</div>
@@ -1234,15 +1247,16 @@ class LudoSportApp {
     if (!container) return;
 
     container.innerHTML = this.fencers.map(f => {
-      const saberColorLabel = f.color === 'emerald' ? 'Verde' : (f.color === 'cyan' ? 'Azul' : f.color);
+      const saberColorLabel = this.getSaberColorName(f.color);
       return `
         <div class="bg-lsCard border border-lsBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-slate-700 transition-all">
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-full border-2 saber-ring-${f.color || 'cyan'} bg-slate-900 flex items-center justify-center text-xs font-bold text-slate-100 shrink-0">
-              ${this.getInitials(f.name)}
-            </div>
+          <div data-fencer-profile="${f.id}" title="Ver perfil de ${f.name}" class="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group">
+            ${this.getFencerAvatarHtml(f, 'w-10 h-10', true)}
             <div class="min-w-0">
-              <div class="font-bold text-xs text-slate-100 truncate">${f.name}</div>
+              <div class="font-bold text-xs text-slate-100 truncate group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                <span>${f.name}</span>
+                <i data-lucide="chevron-right" class="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </div>
               <div class="mt-1 flex items-center gap-1.5 flex-wrap">
                 ${this.getRankBadge(f.rank)}
                 <span class="text-[10px] text-slate-400 flex items-center gap-1">
@@ -1254,7 +1268,7 @@ class LudoSportApp {
           </div>
 
           ${this.isAdmin || this.isTestMode ? `
-            <div class="flex items-center gap-1 shrink-0">
+            <div class="flex items-center gap-1 shrink-0 border-l border-slate-800 pl-2">
               <button data-edit-fencer="${f.id}" title="Editar Tirador" class="edit-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition-colors">
                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
               </button>
@@ -1262,7 +1276,11 @@ class LudoSportApp {
                 <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
               </button>
             </div>
-          ` : ''}
+          ` : `
+            <button data-fencer-profile="${f.id}" title="Ver estadísticas" class="p-1.5 rounded-lg text-slate-500 hover:text-cyan-400 hover:bg-slate-800 transition-colors shrink-0">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </button>
+          `}
         </div>
       `;
     }).join('');
@@ -1279,9 +1297,11 @@ class LudoSportApp {
     const nameInput = document.getElementById('fencerNameInput');
     const rankInput = document.getElementById('fencerRankInput');
     const colorInput = document.getElementById('fencerColorInput');
+    const photoInput = document.getElementById('fencerPhotoUrlInput');
 
     const name = nameInput.value.trim();
     if (!name) return;
+    const photoUrl = photoInput ? photoInput.value.trim() : '';
 
     if (editId) {
       // Edit
@@ -1290,6 +1310,7 @@ class LudoSportApp {
         f.name = name;
         f.rank = rankInput.value;
         f.color = colorInput.value;
+        f.photoUrl = photoUrl;
       }
       this.showToast(`Tirador actualizado: ${name}`, 'emerald');
     } else {
@@ -1299,6 +1320,7 @@ class LudoSportApp {
         name: name,
         rank: rankInput.value,
         color: colorInput.value,
+        photoUrl: photoUrl,
         joinedAt: new Date().toISOString().split('T')[0]
       };
       this.fencers.push(newFencer);
@@ -1450,6 +1472,7 @@ class LudoSportApp {
     const nameInput = document.getElementById('fencerNameInput');
     const rankInput = document.getElementById('fencerRankInput');
     const colorInput = document.getElementById('fencerColorInput');
+    const photoInput = document.getElementById('fencerPhotoUrlInput');
 
     if (editFencer) {
       title.textContent = 'Modificar Tirador';
@@ -1457,12 +1480,14 @@ class LudoSportApp {
       nameInput.value = editFencer.name;
       rankInput.value = editFencer.rank || 'Inizziato';
       colorInput.value = editFencer.color || 'cyan';
+      if (photoInput) photoInput.value = editFencer.photoUrl || '';
     } else {
       title.textContent = 'Añadir Nuevo Tirador';
       editId.value = '';
       nameInput.value = '';
       rankInput.value = 'Inizziato';
       colorInput.value = 'cyan';
+      if (photoInput) photoInput.value = '';
     }
 
     if (modal) modal.classList.remove('hidden');
@@ -1542,6 +1567,561 @@ class LudoSportApp {
       default:
         return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">${r}</span>`;
     }
+  }
+
+  getSaberColorName(color) {
+    switch (color) {
+      case 'cyan': return 'Azul';
+      case 'emerald': return 'Verde';
+      case 'amber': return 'Amarillo / Ámbar';
+      case 'purple': return 'Púrpura';
+      case 'rose': return 'Rojo';
+      case 'white': return 'Blanco / Plata';
+      default: return color || 'Azul';
+    }
+  }
+
+  // Dynamic Avatar Generator (Photo URL or Initials + Saber Halo)
+  getFencerAvatarHtml(fencer, size = 'w-9 h-9', borderGlow = true) {
+    if (!fencer) {
+      return `<div class="${size} rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400">?</div>`;
+    }
+    const ringColor = fencer.color || 'cyan';
+    const ringClass = borderGlow ? `border-2 saber-ring-${ringColor}` : 'border border-slate-700';
+    const initials = this.getInitials(fencer.name);
+
+    if (fencer.photoUrl && fencer.photoUrl.trim().startsWith('http')) {
+      return `
+        <div class="${size} rounded-full ${ringClass} bg-slate-900 overflow-hidden relative shrink-0 flex items-center justify-center">
+          <img src="${fencer.photoUrl}" alt="${fencer.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="w-full h-full hidden items-center justify-center font-bold text-slate-100 text-xs bg-slate-900">${initials}</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="${size} rounded-full ${ringClass} bg-slate-900 flex items-center justify-center font-bold text-slate-100 text-xs shrink-0 select-none">
+        ${initials}
+      </div>
+    `;
+  }
+
+  // Calculate detailed stats for a single fencer
+  getFencerStats(fencerId) {
+    let matchesPlayed = 0;
+    let won = 0;
+    let drawn = 0;
+    let lost = 0;
+    let pointsFor = 0;
+    let pointsAgainst = 0;
+    const personalMatches = [];
+
+    this.matches.forEach(m => {
+      const isA = m.fighterAId === fencerId;
+      const isB = m.fighterBId === fencerId;
+      if (!isA && !isB) return;
+
+      matchesPlayed++;
+      personalMatches.push(m);
+
+      const sA = (typeof m.scoreA === 'number') ? m.scoreA : (m.result === 'VICTORY_A' ? 1 : 0);
+      const sB = (typeof m.scoreB === 'number') ? m.scoreB : (m.result === 'VICTORY_B' ? 1 : 0);
+
+      const myScore = isA ? sA : sB;
+      const oppScore = isA ? sB : sA;
+
+      pointsFor += myScore;
+      pointsAgainst += oppScore;
+
+      if (m.result === 'DRAW') {
+        drawn++;
+      } else if ((m.result === 'VICTORY_A' && isA) || (m.result === 'VICTORY_B' && isB)) {
+        won++;
+      } else {
+        lost++;
+      }
+    });
+
+    const diff = pointsFor - pointsAgainst;
+    const winrate = matchesPlayed > 0 ? ((won / matchesPlayed) * 100).toFixed(1) + '%' : '0%';
+
+    return {
+      matchesPlayed,
+      won,
+      drawn,
+      lost,
+      pointsFor,
+      pointsAgainst,
+      diff,
+      winrate,
+      matches: personalMatches
+    };
+  }
+
+  openFencerProfileModal(fencerId) {
+    const fencer = this.fencers.find(f => f.id === fencerId);
+    if (!fencer) return;
+
+    this.currentProfileFencerId = fencerId;
+    const stats = this.getFencerStats(fencerId);
+
+    const modal = document.getElementById('fencerProfileModal');
+    const avatarContainer = document.getElementById('profileAvatarContainer');
+    const nameEl = document.getElementById('profileFencerName');
+    const rankBadgeEl = document.getElementById('profileRankBadge');
+    const colorBadgeEl = document.getElementById('profileSaberColorBadge');
+
+    const statPJ = document.getElementById('statPJ');
+    const statV = document.getElementById('statV');
+    const statD = document.getElementById('statD');
+    const statWinrate = document.getElementById('statWinrate');
+    const statOHRealizados = document.getElementById('statOHRealizados');
+    const statOHRecibidos = document.getElementById('statOHRecibidos');
+    const statOHDiff = document.getElementById('statOHDiff');
+
+    const matchCountEl = document.getElementById('profileMatchCount');
+    const matchesListEl = document.getElementById('profileMatchesList');
+    const editBtn = document.getElementById('profileEditBtn');
+
+    if (avatarContainer) {
+      avatarContainer.innerHTML = this.getFencerAvatarHtml(fencer, 'w-14 h-14', true);
+    }
+    if (nameEl) nameEl.textContent = fencer.name;
+    if (rankBadgeEl) rankBadgeEl.innerHTML = this.getRankBadge(fencer.rank);
+    if (colorBadgeEl) {
+      const col = fencer.color || 'cyan';
+      const colLabel = this.getSaberColorName(col);
+      colorBadgeEl.innerHTML = `<span class="w-2 h-2 rounded-full ${col === 'emerald' ? 'bg-emerald-400' : 'bg-cyan-400'}"></span> Sable ${colLabel}`;
+    }
+
+    if (statPJ) statPJ.textContent = stats.matchesPlayed;
+    if (statV) statV.textContent = stats.won;
+    if (statD) statD.textContent = stats.lost;
+    if (statWinrate) statWinrate.textContent = stats.winrate;
+    if (statOHRealizados) statOHRealizados.textContent = stats.pointsFor;
+    if (statOHRecibidos) statOHRecibidos.textContent = stats.pointsAgainst;
+    if (statOHDiff) {
+      statOHDiff.textContent = (stats.diff > 0 ? '+' : '') + stats.diff;
+      statOHDiff.className = `font-combat font-bold text-base ${stats.diff > 0 ? 'text-emerald-400' : stats.diff < 0 ? 'text-rose-400' : 'text-slate-300'}`;
+    }
+
+    if (matchCountEl) {
+      matchCountEl.textContent = `${stats.matchesPlayed} combate${stats.matchesPlayed === 1 ? '' : 's'} este mes`;
+    }
+
+    if (matchesListEl) {
+      if (stats.matches.length === 0) {
+        matchesListEl.innerHTML = `
+          <div class="p-6 text-center text-slate-500 text-xs bg-slate-900/60 rounded-xl border border-slate-800">
+            Aún no ha disputado ningún asalto este mes.
+          </div>
+        `;
+      } else {
+        matchesListEl.innerHTML = stats.matches.map(m => {
+          const isA = m.fighterAId === fencerId;
+          const oppName = isA ? m.fighterBName : m.fighterAName;
+          const oppId = isA ? m.fighterBId : m.fighterAId;
+          const oppFencer = this.fencers.find(f => f.id === oppId);
+          const sA = (typeof m.scoreA === 'number') ? m.scoreA : (m.result === 'VICTORY_A' ? 1 : 0);
+          const sB = (typeof m.scoreB === 'number') ? m.scoreB : (m.result === 'VICTORY_B' ? 1 : 0);
+          const myScore = isA ? sA : sB;
+          const oppScore = isA ? sB : sA;
+
+          let resBadge = '';
+          if (m.result === 'DRAW') {
+            resBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 border border-amber-500/30 text-amber-300">Empate</span>`;
+          } else if ((m.result === 'VICTORY_A' && isA) || (m.result === 'VICTORY_B' && !isA)) {
+            resBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">Victoria</span>`;
+          } else {
+            resBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/15 border border-rose-500/30 text-rose-300">Derrota</span>`;
+          }
+
+          return `
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2 shadow-sm">
+              <div class="flex items-center gap-2 min-w-0">
+                ${this.getFencerAvatarHtml(oppFencer, 'w-7 h-7', false)}
+                <div class="min-w-0">
+                  <div class="text-[11px] font-bold text-slate-200 truncate">vs ${oppName}</div>
+                  <div class="text-[9px] text-slate-500">${m.date}${m.notes ? ` &bull; ${m.notes}` : ''}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="font-combat font-black text-xs text-slate-100 px-2 py-0.5 rounded bg-slate-950 border border-slate-800">
+                  ${myScore} - ${oppScore}
+                </span>
+                ${resBadge}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    if (editBtn) {
+      if (this.isAdmin || this.isTestMode) {
+        editBtn.classList.remove('hidden');
+      } else {
+        editBtn.classList.add('hidden');
+      }
+    }
+
+    if (modal) modal.classList.remove('hidden');
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  closeFencerProfileModal() {
+    const modal = document.getElementById('fencerProfileModal');
+    if (modal) modal.classList.add('hidden');
+    this.currentProfileFencerId = null;
+  }
+
+  // --- LIVE SCOREBOARD & ARBITRATION METHODS ---
+
+  playBeep(freq = 600, duration = 0.15) {
+    if (!this.isSoundEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  initLiveScoreboard() {
+    this.renderLiveScoreboardOptions();
+    this.updateLiveFightersUI();
+    this.updateLiveTimerDisplay();
+  }
+
+  renderLiveScoreboardOptions() {
+    const selA = document.getElementById('liveFighterASelect');
+    const selB = document.getElementById('liveFighterBSelect');
+    if (!selA || !selB) return;
+
+    const curA = selA.value;
+    const curB = selB.value;
+
+    const optionsHtmlA = `
+      <option value="">-- Tirador Alfa (Lado Azul) --</option>
+      ${this.fencers.map(f => `<option value="${f.id}">${f.name} (${f.rank || 'Inizziato'})</option>`).join('')}
+    `;
+
+    const optionsHtmlB = `
+      <option value="">-- Tirador Beta (Lado Ámbar/Rojo) --</option>
+      ${this.fencers.map(f => `<option value="${f.id}">${f.name} (${f.rank || 'Inizziato'})</option>`).join('')}
+    `;
+
+    selA.innerHTML = optionsHtmlA;
+    selB.innerHTML = optionsHtmlB;
+
+    if (curA) selA.value = curA;
+    if (curB) selB.value = curB;
+
+    this.liveFighterAId = selA.value;
+    this.liveFighterBId = selB.value;
+    this.updateLiveFightersUI();
+  }
+
+  updateLiveFightersUI() {
+    const selA = document.getElementById('liveFighterASelect');
+    const selB = document.getElementById('liveFighterBSelect');
+    const idA = selA ? selA.value : this.liveFighterAId;
+    const idB = selB ? selB.value : this.liveFighterBId;
+
+    this.liveFighterAId = idA;
+    this.liveFighterBId = idB;
+
+    const fA = this.fencers.find(f => f.id === idA);
+    const fB = this.fencers.find(f => f.id === idB);
+
+    const nameA = document.getElementById('liveFighterAName');
+    const rankA = document.getElementById('liveFighterARank');
+    const avatarA = document.getElementById('liveAvatarContainerA');
+
+    const nameB = document.getElementById('liveFighterBName');
+    const rankB = document.getElementById('liveFighterBRank');
+    const avatarB = document.getElementById('liveAvatarContainerB');
+
+    if (nameA) nameA.textContent = fA ? fA.name : 'Tirador Alfa';
+    if (rankA) rankA.textContent = fA ? `${fA.rank || 'Inizziato'} • Sable ${this.getSaberColorName(fA.color)}` : 'Seleccionar alumno';
+    if (avatarA) avatarA.innerHTML = this.getFencerAvatarHtml(fA, 'w-10 h-10', true);
+
+    if (nameB) nameB.textContent = fB ? fB.name : 'Tirador Beta';
+    if (rankB) rankB.textContent = fB ? `${fB.rank || 'Inizziato'} • Sable ${this.getSaberColorName(fB.color)}` : 'Seleccionar alumno';
+    if (avatarB) avatarB.innerHTML = this.getFencerAvatarHtml(fB, 'w-10 h-10', true);
+
+    this.updateLiveOutcomeBanner();
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  adjustLiveScoreA(delta) {
+    this.liveScoreA = Math.max(0, this.liveScoreA + delta);
+    const display = document.getElementById('liveScoreADisplay');
+    if (display) display.textContent = this.liveScoreA;
+    this.playBeep(delta > 0 ? 520 : 380, 0.08);
+    this.updateLiveOutcomeBanner();
+  }
+
+  adjustLiveScoreB(delta) {
+    this.liveScoreB = Math.max(0, this.liveScoreB + delta);
+    const display = document.getElementById('liveScoreBDisplay');
+    if (display) display.textContent = this.liveScoreB;
+    this.playBeep(delta > 0 ? 520 : 380, 0.08);
+    this.updateLiveOutcomeBanner();
+  }
+
+  updateLiveOutcomeBanner() {
+    const banner = document.getElementById('liveOutcomeBanner');
+    if (!banner) return;
+
+    const fA = this.fencers.find(f => f.id === this.liveFighterAId);
+    const fB = this.fencers.find(f => f.id === this.liveFighterBId);
+    const nameA = fA ? fA.name : 'Tirador Alfa';
+    const nameB = fB ? fB.name : 'Tirador Beta';
+
+    const sA = this.liveScoreA;
+    const sB = this.liveScoreB;
+
+    if (sA > sB) {
+      banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-cyan-500/10 border-cyan-500/40 text-cyan-300 flex items-center justify-center gap-2';
+      banner.innerHTML = `<i data-lucide="award" class="w-4 h-4 text-cyan-400"></i><span>Victoria para ${nameA} (+${sA - sB}) &bull; [${sA} - ${sB}]</span>`;
+    } else if (sB > sA) {
+      banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-amber-500/10 border-amber-500/40 text-amber-300 flex items-center justify-center gap-2';
+      banner.innerHTML = `<i data-lucide="award" class="w-4 h-4 text-amber-400"></i><span>Victoria para ${nameB} (+${sB - sA}) &bull; [${sA} - ${sB}]</span>`;
+    } else {
+      banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-slate-900 border-slate-700 text-slate-300 flex items-center justify-center gap-2';
+      banner.innerHTML = `<i data-lucide="scale" class="w-4 h-4 text-slate-400"></i><span>Empate Técnico &bull; [${sA} - ${sB}]</span>`;
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  updateLiveTimerDisplay() {
+    const display = document.getElementById('liveTimerDisplay');
+    const statusText = document.getElementById('liveTimerStatusText');
+    const toggleBtn = document.getElementById('liveTimerToggleBtn');
+    const icon = document.getElementById('liveTimerIcon');
+    const label = document.getElementById('liveTimerActionLabel');
+
+    if (display) {
+      const mins = Math.floor(this.timerSeconds / 60);
+      const secs = this.timerSeconds % 60;
+      display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      if (this.timerSeconds <= 10 && this.timerSeconds > 0) {
+        display.classList.add('timer-critical');
+      } else {
+        display.classList.remove('timer-critical');
+      }
+    }
+
+    if (toggleBtn && label) {
+      if (this.timerRunning) {
+        label.textContent = 'Pausar';
+        toggleBtn.className = 'flex-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
+        if (icon) icon.setAttribute('data-lucide', 'pause');
+        if (statusText) {
+          statusText.textContent = 'Combate en curso';
+          statusText.className = 'text-[11px] font-semibold text-emerald-400 mt-1';
+        }
+      } else {
+        label.textContent = this.timerSeconds === 0 ? 'Reiniciar' : 'Iniciar';
+        toggleBtn.className = 'flex-1 py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
+        if (icon) icon.setAttribute('data-lucide', 'play');
+        if (statusText) {
+          if (this.timerSeconds === 0) {
+            statusText.textContent = '¡Tiempo agotado!';
+            statusText.className = 'text-[11px] font-bold text-rose-400 mt-1';
+          } else if (this.timerSeconds < 120) {
+            statusText.textContent = 'Combate en pausa';
+            statusText.className = 'text-[11px] font-semibold text-amber-400 mt-1';
+          } else {
+            statusText.textContent = 'Listo para iniciar';
+            statusText.className = 'text-[11px] font-semibold text-slate-400 mt-1';
+          }
+        }
+      }
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  startLiveTimer() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    if (this.timerSeconds === 0) this.timerSeconds = 120;
+
+    this.timerRunning = true;
+    this.playBeep(750, 0.15);
+    this.updateLiveTimerDisplay();
+
+    this.timerInterval = setInterval(() => {
+      if (this.timerSeconds > 0) {
+        this.timerSeconds--;
+        if (this.timerSeconds <= 5 && this.timerSeconds > 0) {
+          this.playBeep(600, 0.08);
+        }
+        this.updateLiveTimerDisplay();
+      } else {
+        // Bout time over!
+        this.pauseLiveTimer();
+        this.playBeep(880, 0.25);
+        setTimeout(() => this.playBeep(880, 0.25), 300);
+        setTimeout(() => this.playBeep(1100, 0.5), 600);
+        this.showToast('🔔 ¡Tiempo de asalto finalizado!', 'rose');
+      }
+    }, 1000);
+  }
+
+  pauseLiveTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+    this.timerRunning = false;
+    this.updateLiveTimerDisplay();
+  }
+
+  toggleLiveTimer() {
+    if (this.timerRunning) {
+      this.pauseLiveTimer();
+      this.playBeep(450, 0.1);
+    } else {
+      this.startLiveTimer();
+    }
+  }
+
+  resetLiveTimer() {
+    this.pauseLiveTimer();
+    this.timerSeconds = 120;
+    this.updateLiveTimerDisplay();
+    this.playBeep(500, 0.1);
+  }
+
+  addLiveTimerSeconds(extra = 30) {
+    this.timerSeconds += extra;
+    this.updateLiveTimerDisplay();
+  }
+
+  async finishAndSaveLiveCombat() {
+    const fA = this.fencers.find(f => f.id === this.liveFighterAId);
+    const fB = this.fencers.find(f => f.id === this.liveFighterBId);
+
+    if (!fA || !fB) {
+      this.showToast('Selecciona a ambos tiradores (Alfa y Beta) antes de finalizar', 'amber');
+      return;
+    }
+
+    if (fA.id === fB.id) {
+      this.showToast('No puedes seleccionar al mismo alumno en ambos lados', 'rose');
+      return;
+    }
+
+    // Check conflict
+    const existing = this.findExistingMatch(fA.id, fB.id);
+    if (existing) {
+      if (!confirm(`Este cruce ya se disputó este mes (${existing.scoreText || existing.result}). ¿Deseas registrar este nuevo resultado de todos modos?`)) {
+        return;
+      }
+    }
+
+    this.pauseLiveTimer();
+
+    const sA = this.liveScoreA;
+    const sB = this.liveScoreB;
+    let pointsA = 0;
+    let pointsB = 0;
+    let winner = 'DRAW';
+    let result = 'DRAW';
+
+    if (sA > sB) {
+      result = 'VICTORY_A';
+      pointsA = 3;
+      pointsB = 0;
+      winner = fA.name;
+    } else if (sB > sA) {
+      result = 'VICTORY_B';
+      pointsA = 0;
+      pointsB = 3;
+      winner = fB.name;
+    } else {
+      result = 'DRAW';
+      pointsA = 1;
+      pointsB = 1;
+      winner = 'Empate';
+    }
+
+    const matchDate = new Date().toISOString().split('T')[0];
+    const newMatch = {
+      id: 'm-' + Date.now(),
+      monthKey: this.currentMonthKey,
+      date: matchDate,
+      fighterAId: fA.id,
+      fighterAName: fA.name,
+      fighterBId: fB.id,
+      fighterBName: fB.name,
+      scoreA: sA,
+      scoreB: sB,
+      scoreText: `${sA} - ${sB}`,
+      result: result,
+      winner: winner,
+      pointsA: pointsA,
+      pointsB: pointsB,
+      notes: 'Marcador en Directo (Pista)',
+      timestamp: new Date().toISOString()
+    };
+
+    // Save locally
+    this.matches.unshift(newMatch);
+    this.saveLocalCache();
+
+    // Sync to Sheets
+    if (this.sheetsUrl && this.sheetsUrl.startsWith('http')) {
+      this.syncMatchToSheets(newMatch, 'saveMatch');
+    }
+
+    this.showToast(`¡Combate guardado! ${fA.name} ${sA} - ${sB} ${fB.name}`, 'emerald');
+    this.playBeep(880, 0.2);
+
+    // Reset Live Board for next bout
+    this.liveScoreA = 0;
+    this.liveScoreB = 0;
+    const dispA = document.getElementById('liveScoreADisplay');
+    const dispB = document.getElementById('liveScoreBDisplay');
+    if (dispA) dispA.textContent = '0';
+    if (dispB) dispB.textContent = '0';
+    this.resetLiveTimer();
+
+    // Re-render other tabs
+    this.renderAll();
+  }
+
+  toggleLiveFullscreen() {
+    this.isPisteMode = !this.isPisteMode;
+    document.body.classList.toggle('piste-mode', this.isPisteMode);
+
+    const icon = document.getElementById('liveFullscreenIcon');
+    const label = document.getElementById('liveFullscreenLabel');
+
+    if (this.isPisteMode) {
+      if (icon) icon.setAttribute('data-lucide', 'minimize');
+      if (label) label.textContent = 'Salir Pista';
+      this.showToast('🏟️ Modo Pista Horizontal Activo', 'cyan');
+    } else {
+      if (icon) icon.setAttribute('data-lucide', 'maximize');
+      if (label) label.textContent = 'Modo Pista';
+    }
+
+    if (window.lucide) window.lucide.createIcons();
   }
 
   setupEventListeners() {
@@ -1907,6 +2487,57 @@ class LudoSportApp {
         }
       };
       reader.readAsText(file);
+    });
+
+    // --- FENCER PROFILE MODAL LISTENERS ---
+    document.addEventListener('click', (e) => {
+      const profileTrigger = e.target.closest('[data-fencer-profile]');
+      if (profileTrigger && !e.target.closest('.edit-fencer-btn') && !e.target.closest('.delete-fencer-btn')) {
+        const fId = profileTrigger.getAttribute('data-fencer-profile');
+        if (fId) {
+          this.openFencerProfileModal(fId);
+        }
+      }
+    });
+
+    document.getElementById('closeProfileModalBtn')?.addEventListener('click', () => this.closeFencerProfileModal());
+    document.getElementById('closeProfileModalBottomBtn')?.addEventListener('click', () => this.closeFencerProfileModal());
+
+    document.getElementById('profileEditBtn')?.addEventListener('click', () => {
+      if (this.currentProfileFencerId) {
+        const f = this.fencers.find(item => item.id === this.currentProfileFencerId);
+        this.closeFencerProfileModal();
+        if (f) this.openFencerModal(f);
+      }
+    });
+
+    // --- LIVE SCOREBOARD LISTENERS ---
+    document.getElementById('openLiveFromRankingBtn')?.addEventListener('click', () => this.switchTab('tab-live'));
+    document.getElementById('openLiveFromDuelBannerBtn')?.addEventListener('click', () => this.switchTab('tab-live'));
+
+    document.getElementById('liveFighterASelect')?.addEventListener('change', () => this.updateLiveFightersUI());
+    document.getElementById('liveFighterBSelect')?.addEventListener('change', () => this.updateLiveFightersUI());
+
+    document.getElementById('liveBtnScoreAInc')?.addEventListener('click', () => this.adjustLiveScoreA(1));
+    document.getElementById('liveBtnScoreADec')?.addEventListener('click', () => this.adjustLiveScoreA(-1));
+    document.getElementById('liveBtnScoreBInc')?.addEventListener('click', () => this.adjustLiveScoreB(1));
+    document.getElementById('liveBtnScoreBDec')?.addEventListener('click', () => this.adjustLiveScoreB(-1));
+
+    document.getElementById('liveTimerToggleBtn')?.addEventListener('click', () => this.toggleLiveTimer());
+    document.getElementById('liveTimerResetBtn')?.addEventListener('click', () => this.resetLiveTimer());
+    document.getElementById('liveTimerAdd30Btn')?.addEventListener('click', () => this.addLiveTimerSeconds(30));
+
+    document.getElementById('liveFinishAndSaveBtn')?.addEventListener('click', () => this.finishAndSaveLiveCombat());
+    document.getElementById('liveFullscreenBtn')?.addEventListener('click', () => this.toggleLiveFullscreen());
+
+    document.getElementById('liveSoundToggleBtn')?.addEventListener('click', () => {
+      this.isSoundEnabled = !this.isSoundEnabled;
+      const icon = document.getElementById('liveSoundIcon');
+      if (icon) {
+        icon.setAttribute('data-lucide', this.isSoundEnabled ? 'volume-2' : 'volume-x');
+      }
+      this.showToast(this.isSoundEnabled ? 'Sonido activado' : 'Sonido silenciado', 'cyan');
+      if (window.lucide) window.lucide.createIcons();
     });
   }
 }

@@ -143,19 +143,19 @@ function doPost(e) {
     // 4. Guardar lista completa de tiradores
     if (action === 'saveFencersList') {
       var fencers = data.fencers || [];
-      var fencerSheet = getSheetOrCreate(ss, 'Tiradores', ['ID', 'Nombre', 'Rango', 'Color Sable', 'Fecha Alta']);
+      var fencerSheet = getSheetOrCreate(ss, 'Tiradores', ['ID', 'Nombre', 'Rango', 'Color Sable', 'Fecha Alta', 'Foto URL']);
 
       // Limpiar datos existentes (preservando cabecera)
       var lastRow = fencerSheet.getLastRow();
       if (lastRow > 1) {
-        fencerSheet.getRange(2, 1, lastRow - 1, 5).clearContent();
+        fencerSheet.getRange(2, 1, lastRow - 1, 6).clearContent();
       }
 
       if (fencers.length > 0) {
         var rowsToAdd = fencers.map(function(f) {
-          return [f.id, f.name, f.rank || 'Inizziato', f.color || 'cyan', f.joinedAt || new Date().toISOString()];
+          return [f.id, f.name, f.rank || 'Inizziato', f.color || 'cyan', f.joinedAt || new Date().toISOString(), f.photoUrl || ''];
         });
-        fencerSheet.getRange(2, 1, rowsToAdd.length, 5).setValues(rowsToAdd);
+        fencerSheet.getRange(2, 1, rowsToAdd.length, 6).setValues(rowsToAdd);
       }
 
       return jsonResponse({ success: true, message: 'Lista de tiradores actualizada' });
@@ -187,29 +187,29 @@ function getSheetOrCreate(ss, sheetName, headers) {
 }
 
 function getOrCreateFencersSheet(ss) {
-  var sheet = getSheetOrCreate(ss, 'Tiradores', ['ID', 'Nombre', 'Rango', 'Color Sable', 'Fecha Alta']);
+  var sheet = getSheetOrCreate(ss, 'Tiradores', ['ID', 'Nombre', 'Rango', 'Color Sable', 'Fecha Alta', 'Foto URL']);
   var data = sheet.getDataRange().getValues();
   var fencers = [];
 
   // Si la hoja solo tiene cabecera, sembramos alumnos iniciales
   if (data.length <= 1) {
     var defaults = [
-      ['f-1', 'Mar Garcia', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-2', 'Auri Haro', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-3', 'Mario Ferrer', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-4', 'Isa Liria', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-5', 'Ulises Carmona', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-6', 'Paula Carmona', 'Novizio', 'cyan', '2026-01-01'],
-      ['f-7', 'Alberto Delgado', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-8', 'Rogelio Carceles', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-9', 'Patricia Urquiza', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-10', 'Saúl García-Abadillo', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-11', 'Virginia García', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-12', 'Andrés Saavedra', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-13', 'Emilio Valverde', 'Inizziato', 'cyan', '2026-01-01'],
-      ['f-14', 'Trino Góngora', 'Instructor', 'emerald', '2026-01-01']
+      ['f-1', 'Mar Garcia', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-2', 'Auri Haro', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-3', 'Mario Ferrer', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-4', 'Isa Liria', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-5', 'Ulises Carmona', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-6', 'Paula Carmona', 'Novizio', 'cyan', '2026-01-01', ''],
+      ['f-7', 'Alberto Delgado', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-8', 'Rogelio Carceles', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-9', 'Patricia Urquiza', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-10', 'Saúl García-Abadillo', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-11', 'Virginia García', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-12', 'Andrés Saavedra', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-13', 'Emilio Valverde', 'Inizziato', 'cyan', '2026-01-01', ''],
+      ['f-14', 'Trino Góngora', 'Instructor', 'emerald', '2026-01-01', '']
     ];
-    sheet.getRange(2, 1, defaults.length, 5).setValues(defaults);
+    sheet.getRange(2, 1, defaults.length, 6).setValues(defaults);
     data = sheet.getDataRange().getValues();
   }
 
@@ -221,7 +221,8 @@ function getOrCreateFencersSheet(ss) {
         name: String(row[1]),
         rank: String(row[2] || 'Inizziato'),
         color: String(row[3] || 'cyan'),
-        joinedAt: String(row[4] || '')
+        joinedAt: String(row[4] || ''),
+        photoUrl: String(row[5] || '')
       });
     }
   }

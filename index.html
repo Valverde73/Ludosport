@@ -164,9 +164,15 @@
           </h2>
           <p class="text-xs text-slate-400">Victoria: 3 pts | Empate: 1 pt | Derrota: 0 pts</p>
         </div>
-        <button id="refreshDataBtn" title="Recargar datos" class="p-2 rounded-lg bg-lsCard hover:bg-slate-800 border border-lsBorder text-slate-400 hover:text-cyan-400 transition-colors">
-          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
-        </button>
+        <div class="flex items-center gap-2">
+          <button id="openLiveFromRankingBtn" title="Abrir Marcador en Directo para arbitraje" class="px-2.5 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-bold text-xs flex items-center gap-1.5 transition-colors">
+            <i data-lucide="timer" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Arbitraje</span> En Directo
+          </button>
+          <button id="refreshDataBtn" title="Recargar datos" class="p-2 rounded-lg bg-lsCard hover:bg-slate-800 border border-lsBorder text-slate-400 hover:text-cyan-400 transition-colors">
+            <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Ranking Podium / Top 3 Preview -->
@@ -212,6 +218,25 @@
     <!-- TAB 2: REGISTRAR DUELO (PÚBLICO / TIRADORES) -->
     <section id="tab-duel" class="tab-content hidden animate-fadeIn">
       
+      <!-- Live Scoreboard Quick Banner Callout -->
+      <div class="mb-3 p-3 rounded-2xl bg-gradient-to-r from-cyan-950/60 via-slate-900 to-slate-900 border border-cyan-500/30 flex items-center justify-between gap-3 shadow-lg">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+            <i data-lucide="timer" class="w-5 h-5"></i>
+          </div>
+          <div class="min-w-0">
+            <h4 class="font-bold text-xs text-slate-100 flex items-center gap-1.5">
+              <span>Marcador en Directo para Pista</span>
+              <span class="px-1.5 py-0.2 rounded text-[9px] bg-cyan-500/20 text-cyan-300 font-extrabold uppercase">Nuevo</span>
+            </h4>
+            <p class="text-[11px] text-slate-400 truncate">Cronómetro de 2:00, botones táctiles gigantes y vista horizontal.</p>
+          </div>
+        </div>
+        <button id="openLiveFromDuelBannerBtn" type="button" class="shrink-0 px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm">
+          Arbitrar
+        </button>
+      </div>
+
       <!-- Duel Registration Form -->
       <div id="duelFormContainer" class="space-y-4">
         
@@ -382,6 +407,168 @@
           <div id="pendingDuelsList" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
             <!-- Rendered by JS -->
           </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB LIVE: MARCADOR EN DIRECTO (ARBITRAJE HORIZONTAL & CRONÓMETRO) -->
+    <section id="tab-live" class="tab-content hidden animate-fadeIn">
+      
+      <!-- Live Arbiter Header -->
+      <div class="flex items-center justify-between mb-3 mt-1 flex-wrap gap-2">
+        <div>
+          <h2 class="font-display text-lg font-bold tracking-wide text-slate-100 flex items-center gap-2">
+            <i data-lucide="timer" class="w-5 h-5 text-cyan-400"></i>
+            Marcador en Directo
+          </h2>
+          <p class="text-xs text-slate-400">Arbitraje táctil de asaltos a 2:00 &bull; Ideal en horizontal</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Audio Beep Toggle -->
+          <button id="liveSoundToggleBtn" type="button" class="p-2 rounded-xl bg-lsCard hover:bg-slate-800 border border-lsBorder text-cyan-400 hover:text-cyan-300 transition-colors" title="Sonido del cronómetro">
+            <i data-lucide="volume-2" class="w-4 h-4" id="liveSoundIcon"></i>
+          </button>
+          
+          <!-- Fullscreen / Landscape Piste Toggle -->
+          <button id="liveFullscreenBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-bold text-xs transition-colors" title="Modo Pantalla Completa para Pista">
+            <i data-lucide="maximize" class="w-3.5 h-3.5" id="liveFullscreenIcon"></i>
+            <span id="liveFullscreenLabel">Modo Pista</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Arena Scoreboard Container -->
+      <div id="liveArenaContainer" class="bg-lsCard border border-lsBorder rounded-3xl p-3 sm:p-5 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-12 -left-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Top live fighters bar & selectors -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 mb-4 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0"></span>
+            <select id="liveFighterASelect" class="flex-1 bg-lsDark border border-cyan-500/40 rounded-xl p-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-400">
+              <option value="">-- Tirador Alfa (Lado Azul) --</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+            <select id="liveFighterBSelect" class="flex-1 bg-lsDark border border-amber-500/40 rounded-xl p-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+              <option value="">-- Tirador Beta (Lado Ámbar/Rojo) --</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Main Scoreboard Arena (Grid 3 cols in landscape/tablet, 1 col in mobile portrait) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 items-center">
+          
+          <!-- CORNER ALFA (TIRADOR A) -->
+          <div class="live-corner-card p-4 rounded-2xl bg-slate-900/90 border-2 border-cyan-500/40 shadow-xl flex flex-col items-center justify-between text-center relative">
+            <div class="flex items-center gap-2 mb-2 w-full justify-center">
+              <div id="liveAvatarContainerA" class="w-10 h-10 rounded-full border-2 border-cyan-400 bg-slate-950 flex items-center justify-center font-bold text-xs text-cyan-300 shadow-md shadow-cyan-500/20 shrink-0">
+                A
+              </div>
+              <div class="min-w-0 text-left">
+                <h3 id="liveFighterAName" class="font-display font-bold text-sm text-cyan-300 truncate">Tirador Alfa</h3>
+                <div id="liveFighterARank" class="text-[10px] text-slate-400">Seleccionar alumno</div>
+              </div>
+            </div>
+
+            <!-- Giant Touch Score Number -->
+            <div class="my-2 select-none">
+              <div id="liveScoreADisplay" class="font-combat font-black text-7xl sm:text-8xl md:text-9xl text-cyan-400 tracking-tight drop-shadow-[0_0_25px_rgba(0,229,255,0.4)]">
+                0
+              </div>
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">OHs Anotados</span>
+            </div>
+
+            <!-- Giant Touch Controls (+ / -) -->
+            <div class="w-full grid grid-cols-2 gap-2 mt-2">
+              <button type="button" id="liveBtnScoreADec" class="py-3 sm:py-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-2xl border border-slate-700 flex items-center justify-center select-none transition-all shadow-md" title="Restar OH">
+                −
+              </button>
+              <button type="button" id="liveBtnScoreAInc" class="py-3 sm:py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-cyan-500 hover:brightness-110 active:scale-95 text-slate-950 font-black text-3xl flex items-center justify-center select-none transition-all shadow-lg shadow-cyan-500/30" title="Sumar OH">
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- CENTER CONSOLE: TIMER & ARBITER CONTROL -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col items-center justify-between text-center gap-3">
+            
+            <!-- Timer Box -->
+            <div class="w-full p-3 rounded-2xl bg-slate-900 border border-slate-700/80 shadow-inner">
+              <span class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center justify-center gap-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i>
+                Tiempo Oficial (2:00)
+              </span>
+              <div id="liveTimerDisplay" class="font-combat font-black text-5xl sm:text-6xl text-slate-100 tracking-wider tabular-nums select-none">
+                02:00
+              </div>
+              <div id="liveTimerStatusText" class="text-[11px] font-semibold text-emerald-400 mt-1">
+                Listo para iniciar
+              </div>
+
+              <!-- Timer Action Buttons -->
+              <div class="flex items-center justify-center gap-2 mt-3">
+                <button type="button" id="liveTimerToggleBtn" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
+                  <i data-lucide="play" class="w-4 h-4" id="liveTimerIcon"></i>
+                  <span id="liveTimerActionLabel">Iniciar</span>
+                </button>
+                <button type="button" id="liveTimerResetBtn" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 active:scale-95 transition-all" title="Reiniciar a 2:00">
+                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+                <button type="button" id="liveTimerAdd30Btn" class="px-2 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-combat font-bold border border-slate-700 active:scale-95 transition-all" title="Añadir 30 segundos">
+                  +30s
+                </button>
+              </div>
+            </div>
+
+            <!-- Live Score Status Preview Banner -->
+            <div id="liveOutcomeBanner" class="w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-amber-500/10 border-amber-500/30 text-amber-300 flex items-center justify-center gap-2">
+              <i data-lucide="scale" class="w-4 h-4"></i>
+              <span id="liveOutcomeText">Empate Técnico (0 - 0)</span>
+            </div>
+
+            <!-- Finalize & Save Combat Button -->
+            <button type="button" id="liveFinishAndSaveBtn" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 hover:brightness-110 text-white font-display font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+              Finalizar y Guardar Combate
+            </button>
+          </div>
+
+          <!-- CORNER BETA (TIRADOR B) -->
+          <div class="live-corner-card p-4 rounded-2xl bg-slate-900/90 border-2 border-amber-500/40 shadow-xl flex flex-col items-center justify-between text-center relative">
+            <div class="flex items-center gap-2 mb-2 w-full justify-center">
+              <div id="liveAvatarContainerB" class="w-10 h-10 rounded-full border-2 border-amber-400 bg-slate-950 flex items-center justify-center font-bold text-xs text-amber-300 shadow-md shadow-amber-500/20 shrink-0">
+                B
+              </div>
+              <div class="min-w-0 text-left">
+                <h3 id="liveFighterBName" class="font-display font-bold text-sm text-amber-300 truncate">Tirador Beta</h3>
+                <div id="liveFighterBRank" class="text-[10px] text-slate-400">Seleccionar alumno</div>
+              </div>
+            </div>
+
+            <!-- Giant Touch Score Number -->
+            <div class="my-2 select-none">
+              <div id="liveScoreBDisplay" class="font-combat font-black text-7xl sm:text-8xl md:text-9xl text-amber-400 tracking-tight drop-shadow-[0_0_25px_rgba(245,158,11,0.4)]">
+                0
+              </div>
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">OHs Anotados</span>
+            </div>
+
+            <!-- Giant Touch Controls (+ / -) -->
+            <div class="w-full grid grid-cols-2 gap-2 mt-2">
+              <button type="button" id="liveBtnScoreBDec" class="py-3 sm:py-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-black text-2xl border border-slate-700 flex items-center justify-center select-none transition-all shadow-md" title="Restar OH">
+                −
+              </button>
+              <button type="button" id="liveBtnScoreBInc" class="py-3 sm:py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:brightness-110 active:scale-95 text-slate-950 font-black text-3xl flex items-center justify-center select-none transition-all shadow-lg shadow-amber-500/30" title="Sumar OH">
+                +
+              </button>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -634,6 +821,12 @@
         <span class="text-[10px] font-semibold mt-0.5">Duelo</span>
       </button>
 
+      <!-- Tab Live: En Directo (Marcador) -->
+      <button data-tab="tab-live" class="nav-tab flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
+        <i data-lucide="timer" class="w-5 h-5 mb-0.5"></i>
+        <span class="text-[10px] font-semibold">En Directo</span>
+      </button>
+
       <!-- Tab 3: Historial -->
       <button data-tab="tab-history" class="nav-tab flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-400 hover:text-cyan-400 transition-all">
         <i data-lucide="history" class="w-5 h-5 mb-0.5"></i>
@@ -727,6 +920,12 @@
           </select>
         </div>
 
+        <div>
+          <label class="block text-[10px] text-slate-400 uppercase tracking-wider mb-1 font-semibold">URL de Foto (Opcional)</label>
+          <input type="url" id="fencerPhotoUrlInput" placeholder="https://ejemplo.com/foto.jpg" class="w-full bg-lsDark border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-400">
+          <p class="text-[9px] text-slate-500 mt-1">Si se deja vacío, se mostrará avatar dinámico con iniciales y halo del sable.</p>
+        </div>
+
         <div class="pt-2 flex gap-2">
           <button type="button" id="cancelFencerFormBtn" class="flex-1 py-2 rounded-lg bg-slate-800 text-slate-300 font-bold text-xs">
             Cancelar
@@ -788,6 +987,108 @@
           Eliminar
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FENCER PROFILE & STATS -->
+  <div id="fencerProfileModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-lsCard border border-lsBorder rounded-3xl max-w-md w-full max-h-[92vh] flex flex-col shadow-2xl animate-scaleUp overflow-hidden">
+      
+      <!-- Profile Top Banner with Saber Halo -->
+      <div id="profileHeaderBanner" class="p-4 sm:p-5 pb-3 border-b border-slate-800 relative bg-gradient-to-b from-slate-900 to-lsCard">
+        <button id="closeProfileModalBtn" class="absolute top-3 right-3 p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div class="flex items-center gap-3.5">
+          <div id="profileAvatarContainer" class="relative shrink-0">
+            <!-- Dynamic Avatar injected by JS -->
+          </div>
+          <div class="min-w-0 flex-1 pr-6">
+            <h3 id="profileFencerName" class="font-display font-bold text-base sm:text-lg text-slate-100 truncate">
+              Nombre Tirador
+            </h3>
+            <div class="mt-1 flex items-center gap-2 flex-wrap">
+              <span id="profileRankBadge"></span>
+              <span id="profileSaberColorBadge" class="text-[10px] text-slate-400 flex items-center gap-1 font-semibold"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Stats & Personal Matches -->
+      <div class="p-4 overflow-y-auto space-y-4 flex-1">
+        
+        <!-- Key Performance Statistics Cards -->
+        <div>
+          <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-cyan-400"></i>
+            Rendimiento en Liga
+          </h4>
+          
+          <div class="grid grid-cols-4 gap-2 text-center">
+            <div class="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+              <span class="block text-[10px] text-slate-400 font-semibold uppercase">PJ</span>
+              <span id="statPJ" class="font-combat font-bold text-base text-slate-200">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+              <span class="block text-[10px] text-emerald-400 font-semibold uppercase">Victorias</span>
+              <span id="statV" class="font-combat font-bold text-base text-emerald-300">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/25">
+              <span class="block text-[10px] text-rose-400 font-semibold uppercase">Derrotas</span>
+              <span id="statD" class="font-combat font-bold text-base text-rose-300">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/25">
+              <span class="block text-[10px] text-cyan-400 font-semibold uppercase">% Victoria</span>
+              <span id="statWinrate" class="font-combat font-bold text-base text-cyan-300">0%</span>
+            </div>
+          </div>
+
+          <!-- OHs Realizados, Recibidos y Diferencial -->
+          <div class="grid grid-cols-3 gap-2 text-center mt-2">
+            <div class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="block text-[10px] text-slate-400 font-semibold">OHs Realizados</span>
+              <span id="statOHRealizados" class="font-combat font-bold text-base text-emerald-400">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="block text-[10px] text-slate-400 font-semibold">OHs Recibidos</span>
+              <span id="statOHRecibidos" class="font-combat font-bold text-base text-rose-400">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="block text-[10px] text-slate-400 font-semibold">Diferencial OHs</span>
+              <span id="statOHDiff" class="font-combat font-bold text-base text-cyan-300">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Match History -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="swords" class="w-3.5 h-3.5 text-cyan-400"></i>
+              Historial de Duelos
+            </h4>
+            <span id="profileMatchCount" class="text-[10px] text-slate-400 font-combat">0 combates</span>
+          </div>
+          <div id="profileMatchesList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Profile Footer -->
+      <div class="p-3 border-t border-slate-800 bg-slate-900/70 flex justify-between items-center gap-2">
+        <button id="profileEditBtn" type="button" class="hidden px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+          <span>Editar Tirador</span>
+        </button>
+        <button id="closeProfileModalBottomBtn" type="button" class="ml-auto px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors">
+          Cerrar
+        </button>
+      </div>
+
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-﻿# ⚔️ LudoSport Arena - Liga Mensual
+# ⚔️ LudoSport Arena - Liga Mensual
 
 Aplicación web mobile-first para la gestión integral y en tiempo real de la **Liga Mensual de LudoSport**. Diseñada específicamente para ser utilizada a pie de pista desde smartphones durante las clases y entrenamientos.
 
@@ -22,6 +22,28 @@ Aplicación web mobile-first para la gestión integral y en tiempo real de la **
    - 4º Mayor número de Tocados a favor
    - 5º Menor número de combates disputados
    - 6º Orden alfabético
+
+---
+
+## 👤 Ficha / Perfil de Tirador con Estadísticas y Avatar Dinámico
+- **Acceso rápido con un toque:** Al hacer clic sobre cualquier tirador (en la tabla de clasificación, en las tarjetas del podio o en la lista de alumnos), se despliega su **Perfil Completo**.
+- **Avatar Dinámico:** Generación automática de avatar con las iniciales del alumno y un resplandor (*glow*) que replica el color oficial de su sable de luz (Azul, Verde, Amarillo, Púrpura, Rojo o Blanco). Permite además añadir una URL personalizada de foto real (`photoUrl`).
+- **Métricas Oficiales de Rendimiento:**
+  - Combates disputados (**PJ**), Victorias (**V**), Derrotas (**D**) y Ratio de Victoria (**% Winrate**).
+  - Puntos / Tocados realizados (**OHs a favor**), recibidos (**OHs en contra**) y **Diferencial de OHs (DIF)**.
+- **Historial Personal Scrollable:** Lista detallada y exclusiva de todos los combates disputados por el alumno, indicando la fecha, el rival, el marcador exacto y el resultado obtenido (Victoria, Empate o Derrota) con insignias de color.
+
+---
+
+## ⏱️ Modo "Marcador en Directo" (Live Scoreboard) para Arbitraje
+- **Diseñado para pista y orientación horizontal:** Pestaña dedicada y accesible desde la barra inferior o desde accesos directos en el ranking y formulario de duelos.
+- **Modo Pista Pantalla Completa:** Botón para ocultar barras de navegación y optimizar el uso en tablets o smartphones colocados horizontalmente junto a la pista de combate.
+- **Cronómetro Oficial de Asalto (2:00 minutos):**
+  - Temporizador digital de cuenta atrás con botones de **Iniciar**, **Pausar**, **Reiniciar** y ajuste rápido `+30s`.
+  - Alerta acústica mediante sintetizador Web Audio (sin dependencias de archivos externos) con aviso sonoro en los últimos 5 segundos y pitido triple al agotarse el tiempo.
+  - Indicador visual crítico cuando restan menos de 10 segundos.
+- **Botones Gigantes Táctiles (+ / −):** Teclas táctiles de gran tamaño para que el árbitro sume o reste los OHs anotados por el Tirador Alfa y el Tirador Beta en tiempo real sin apartar la mirada del asalto.
+- **Finalizar y Guardar con 1 Clic:** Botón que calcula automáticamente el desenlace (Victoria A, Victoria B o Empate) según los OHs anotados y registra el combate directamente en el historial, la clasificación de la liga y la hoja de Google Sheets.
 
 ---
 
