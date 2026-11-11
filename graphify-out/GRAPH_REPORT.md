@@ -1,17 +1,17 @@
 # Graph Report - LudoSport  (2026-11-11)
 
 ## Corpus Check
-- 6 files · ~22,454 words
+- 7 files · ~22,746 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 1, .gs 1, .toml 1)
 
 ## Summary
-- 854 nodes · 1446 edges · 87 communities (49 shown, 38 thin omitted)
+- 856 nodes · 1449 edges · 83 communities (47 shown, 36 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 24 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f3ce0531`
+- Built from commit: `c3d262ad`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,7 +19,7 @@
 - LudoSportApp
 - server.cjs
 - lifecycle.test.js
-- _load_plugin
+- test_plugin.py
 - test-bootstrap-caching.mjs
 - server.test.js
 - vercel.json
@@ -87,20 +87,15 @@
 - test-skill-registration.mjs
 - helper.test.js
 - render-graphs.js
-- .hermes-plugin/__init__.py
-- test_plugin.py
-- test_bootstrap.py
-- _bootstrap
-- TestLayoutResolution
-- TestSkillDescriptions
+- ref_assert
 
 ## God Nodes (most connected - your core abstractions)
-1. `LudoSportApp` - 81 edges
+1. `LudoSportApp` - 82 edges
 2. `main()` - 27 edges
-3. `main()` - 16 edges
-4. `runTests()` - 16 edges
+3. `TestMonthlyBadgesSystem` - 16 edges
+4. `main()` - 16 edges
 5. `runTests()` - 16 edges
-6. `TestMonthlyBadgesSystem` - 15 edges
+6. `runTests()` - 16 edges
 7. `handleRequest()` - 14 edges
 8. `runTests()` - 13 edges
 9. `_load_plugin()` - 13 edges
@@ -121,7 +116,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (87 total, 38 thin omitted)
+## Communities (83 total, 36 thin omitted)
 
 ### Community 0 - "LudoSportApp"
 Cohesion: 0.07
@@ -129,15 +124,15 @@ Nodes (4): DEFAULT_FENCERS, LudoSportApp, MONTH_NAMES, normalizeSupabaseUrl()
 
 ### Community 1 - "server.cjs"
 Cohesion: 0.05
-Nodes (58): bootstrapPage(), brandMarkup(), broadcast(), browserLauncherForPlatform(), chmodOwnerOnly(), RFC-6455, clients, companionUrl() (+50 more)
+Nodes (57): bootstrapPage(), brandMarkup(), broadcast(), browserLauncherForPlatform(), chmodOwnerOnly(), RFC-6455, clients, companionUrl() (+49 more)
 
 ### Community 2 - "lifecycle.test.js"
 Cohesion: 0.11
 Nodes (28): assert, firstServerStarted(), fs, httpStatus(), isWindowsLikeShell(), killAndWait(), makeShellTempDir(), newestSessionDir() (+20 more)
 
-### Community 3 - "_load_plugin"
-Cohesion: 0.28
-Nodes (4): _fire_pre_llm(), _load_plugin(), TestBootstrapInjection, TestPluginRegistration
+### Community 3 - "test_plugin.py"
+Cohesion: 0.07
+Nodes (12): _build_bootstrap(), _frontmatter_value(), register(), _skills_dir(), _strip_frontmatter(), mock_ctx(), _fire_pre_llm(), _load_plugin() (+4 more)
 
 ### Community 4 - "test-bootstrap-caching.mjs"
 Cohesion: 0.12
@@ -148,8 +143,8 @@ Cohesion: 0.14
 Nodes (23): assert, assertStartedOnExpectedPort(), cleanup(), CONTENT_DIR, ensureSymlinkWorks(), fetch(), fs, http (+15 more)
 
 ### Community 6 - "vercel.json"
-Cohesion: 0.40
-Nodes (4): cleanUrls, name, routes, version
+Cohesion: 0.50
+Nodes (3): cleanUrls, name, version
 
 ### Community 7 - ".calculate_badges"
 Cohesion: 0.13
@@ -160,8 +155,8 @@ Cohesion: 0.15
 Nodes (31): add_openai_agent_metadata_fixture(), assert_branch_absent(), assert_contains(), assert_current_branch(), assert_equals(), assert_file_equals(), assert_matches(), assert_not_contains() (+23 more)
 
 ### Community 9 - "analyze-token-usage.py"
-Cohesion: 0.24
-Nodes (4): analyze_main_session(), calculate_cost(), format_tokens(), main()
+Cohesion: 0.11
+Nodes (9): analyze_main_session(), calculate_cost(), format_tokens(), main(), _bootstrap(), _load(), TestBootstrapContent, TestSkillsDirResolution (+1 more)
 
 ### Community 12 - "branding.test.js"
 Cohesion: 0.17
@@ -311,18 +306,10 @@ Nodes (6): assert, fs, HELPER, moduleShim, path, src
 Cohesion: 0.60
 Nodes (5): combineGraphs(), extractDotBlocks(), extractGraphBody(), main(), renderToSvg()
 
-### Community 81 - ".hermes-plugin/__init__.py"
-Cohesion: 0.31
-Nodes (5): _build_bootstrap(), _frontmatter_value(), register(), _skills_dir(), _strip_frontmatter()
-
-### Community 83 - "test_bootstrap.py"
-Cohesion: 0.36
-Nodes (3): _load(), TestSkillsDirResolution, TestStripFrontmatter
-
 ## Knowledge Gaps
 - **5 isolated node(s):** `RFC-6455`, `HOME`, `OPENCODE_CONFIG_DIR`, `XDG_CONFIG_HOME`, `RFC-6455`
-  These have ≤1 connection - possible missing edges. (Counts symbols only; 281 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **38 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges. (Counts symbols only; 282 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **36 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -332,12 +319,12 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `RFC-6455`, `HOME`, `OPENCODE_CONFIG_DIR` to the rest of the system?**
   _5 weakly-connected nodes found - possible missing edges._
 - **Should `LudoSportApp` be split into smaller, more focused modules?**
-  _Cohesion score 0.07450980392156863 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07359781121751026 - nodes in this community are weakly interconnected._
 - **Should `server.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.05081585081585081 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05499735589635114 - nodes in this community are weakly interconnected._
 - **Should `lifecycle.test.js` be split into smaller, more focused modules?**
   _Cohesion score 0.1053763440860215 - nodes in this community are weakly interconnected._
+- **Should `test_plugin.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.06914893617021277 - nodes in this community are weakly interconnected._
 - **Should `test-bootstrap-caching.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
-- **Should `server.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13538461538461538 - nodes in this community are weakly interconnected._

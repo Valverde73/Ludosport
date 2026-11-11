@@ -331,14 +331,24 @@ class TestMonthlyBadgesSystem(unittest.TestCase):
         self.assertIn('initSupabaseClient', code)
         self.assertIn('seedInitialFencers', code)
         self.assertIn('syncMatchToSupabase', code)
+        self.assertIn('fetchRemoteConfig', code)
         self.assertIn('fencerToDb', code)
         self.assertIn('fencerFromDb', code)
         self.assertIn('matchToDb', code)
         self.assertIn('matchFromDb', code)
 
+    def test_api_config_endpoint_integrity(self):
+        config_js_path = os.path.join(os.path.dirname(__file__), 'api', 'config.js')
+        self.assertTrue(os.path.exists(config_js_path), "api/config.js must exist for serverless Vercel config")
+        with open(config_js_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        self.assertIn('process.env.SUPABASE_URL', content)
+        self.assertIn('process.env.SUPABASE_ANON_KEY', content)
+        self.assertIn('module.exports', content)
+
     def test_no_api_keys_or_tokens_in_frontend(self):
         # Guarantee no hardcoded secret, token, or api key exists in source files
-        frontend_files = ['app.js', 'index.html', 'badges.js']
+        frontend_files = ['app.js', 'index.html', 'badges.js', os.path.join('api', 'config.js')]
         forbidden_patterns = ['sb_publishable_', 'eyJh', 'service_role']
         for fname in frontend_files:
             fpath = os.path.join(os.path.dirname(__file__), fname)

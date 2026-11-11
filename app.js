@@ -113,6 +113,29 @@ class LudoSportApp {
     }
   }
 
+  // Consulta el endpoint serverless /api/config de Vercel (obtiene credenciales desde variables de entorno)
+  async fetchRemoteConfig() {
+    try {
+      const response = await fetch('/api/config');
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.configured && data.url && data.key) {
+          this.supabaseUrl = data.url;
+          this.supabaseKey = data.key;
+          this.initSupabaseClient();
+          const urlInput = document.getElementById('supabaseUrlInput');
+          if (urlInput) urlInput.value = this.supabaseUrl;
+          const keyInput = document.getElementById('supabaseKeyInput');
+          if (keyInput) keyInput.value = this.supabaseKey;
+          return true;
+        }
+      }
+    } catch (e) {
+      // Entorno local sin serverless o sin conexión
+    }
+    return false;
+  }
+
   // --- Mappers between Frontend (camelCase) and Supabase (snake_case) ---
   fencerToDb(f) {
     return {
@@ -439,6 +462,11 @@ class LudoSportApp {
   async loadData() {
     this.setSyncStatus('Cargando...', 'amber');
     
+    // Si no hay cliente activo, resolver configuración desde /api/config
+    if (!this.supabase) {
+      await this.fetchRemoteConfig();
+    }
+
     // 1. Intentar cargar desde Supabase si el cliente está listo
     if (this.supabase) {
       try {

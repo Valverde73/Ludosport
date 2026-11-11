@@ -2,7 +2,7 @@
   "0": "LudoSportApp",
   "1": "server.cjs",
   "2": "lifecycle.test.js",
-  "3": "_load_plugin",
+  "3": "test_plugin.py",
   "4": "test-bootstrap-caching.mjs",
   "5": "server.test.js",
   "6": "vercel.json",
@@ -80,10 +80,6 @@
   "78": "test-skill-registration.mjs",
   "79": "helper.test.js",
   "80": "render-graphs.js",
-  "81": ".hermes-plugin/__init__.py",
-  "82": "test_plugin.py",
-  "83": "test_bootstrap.py",
-  "84": "_bootstrap",
-  "85": "TestLayoutResolution",
-  "86": "TestSkillDescriptions"
+  "81": "ref_assert",
+  "82": "config.js"
 }
