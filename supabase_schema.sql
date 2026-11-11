@@ -16,35 +16,28 @@ CREATE TABLE IF NOT EXISTS public.fencers (
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Habilitar Row Level Security (RLS)
+-- Habilitar Row Level Security (RLS) en fencers
 ALTER TABLE public.fencers ENABLE ROW LEVEL SECURITY;
 
--- Políticas de acceso para fencers (Lectura y Escritura anónima/pública para la app)
-DROP POLICY IF EXISTS "Acceso público lectura fencers" ON public.fencers;
-CREATE POLICY "Acceso público lectura fencers" ON public.fencers
-    FOR SELECT USING (true);
-
-DROP POLICY IF EXISTS "Acceso público inserción fencers" ON public.fencers;
-CREATE POLICY "Acceso público inserción fencers" ON public.fencers
-    FOR INSERT WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Acceso público actualización fencers" ON public.fencers;
-CREATE POLICY "Acceso público actualización fencers" ON public.fencers
-    FOR UPDATE USING (true);
-
-DROP POLICY IF EXISTS "Acceso público borrado fencers" ON public.fencers;
-CREATE POLICY "Acceso público borrado fencers" ON public.fencers
-    FOR DELETE USING (true);
+-- Política de acceso público total en fencers (SELECT, INSERT, UPDATE, DELETE)
+DO $$
+BEGIN
+    DROP POLICY IF EXISTS "Acceso público fencers" ON public.fencers;
+    CREATE POLICY "Acceso público fencers" ON public.fencers
+        FOR ALL USING (true) WITH CHECK (true);
+EXCEPTION WHEN undefined_table THEN
+    NULL;
+END $$;
 
 -- 2. TABLA: COMBATES MENSUALES (matches)
 CREATE TABLE IF NOT EXISTS public.matches (
     id TEXT PRIMARY KEY,
     date TEXT NOT NULL,
-    fighter_a_id TEXT NOT NULL REFERENCES public.fencers(id) ON DELETE CASCADE,
+    fighter_a_id TEXT NOT NULL,
     fighter_a_name TEXT NOT NULL,
-    fighter_b_id TEXT NOT NULL REFERENCES public.fencers(id) ON DELETE CASCADE,
+    fighter_b_id TEXT NOT NULL,
     fighter_b_name TEXT NOT NULL,
-    result TEXT NOT NULL, -- 'VICTORY_A' | 'VICTORY_B' | 'DRAW'
+    result TEXT NOT NULL,
     points_a INTEGER NOT NULL DEFAULT 0,
     points_b INTEGER NOT NULL DEFAULT 0,
     winner TEXT NOT NULL,
@@ -52,8 +45,8 @@ CREATE TABLE IF NOT EXISTS public.matches (
     score_a INTEGER NOT NULL DEFAULT 0,
     score_b INTEGER NOT NULL DEFAULT 0,
     score_text TEXT DEFAULT '',
-    month_key TEXT NOT NULL, -- ej: '112026', 'TEST_112026'
-    timestamp TEXT NOT NULL,
+    month_key TEXT NOT NULL,
+    "timestamp" TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -62,25 +55,18 @@ CREATE INDEX IF NOT EXISTS idx_matches_month_key ON public.matches (month_key);
 CREATE INDEX IF NOT EXISTS idx_matches_fighter_a ON public.matches (fighter_a_id);
 CREATE INDEX IF NOT EXISTS idx_matches_fighter_b ON public.matches (fighter_b_id);
 
--- Habilitar Row Level Security (RLS)
+-- Habilitar Row Level Security (RLS) en matches
 ALTER TABLE public.matches ENABLE ROW LEVEL SECURITY;
 
--- Políticas de acceso para matches
-DROP POLICY IF EXISTS "Acceso público lectura matches" ON public.matches;
-CREATE POLICY "Acceso público lectura matches" ON public.matches
-    FOR SELECT USING (true);
-
-DROP POLICY IF EXISTS "Acceso público inserción matches" ON public.matches;
-CREATE POLICY "Acceso público inserción matches" ON public.matches
-    FOR INSERT WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Acceso público actualización matches" ON public.matches;
-CREATE POLICY "Acceso público actualización matches" ON public.matches
-    FOR UPDATE USING (true);
-
-DROP POLICY IF EXISTS "Acceso público borrado matches" ON public.matches;
-CREATE POLICY "Acceso público borrado matches" ON public.matches
-    FOR DELETE USING (true);
+-- Política de acceso público total en matches (SELECT, INSERT, UPDATE, DELETE)
+DO $$
+BEGIN
+    DROP POLICY IF EXISTS "Acceso público matches" ON public.matches;
+    CREATE POLICY "Acceso público matches" ON public.matches
+        FOR ALL USING (true) WITH CHECK (true);
+EXCEPTION WHEN undefined_table THEN
+    NULL;
+END $$;
 
 -- 3. SEMILLA INICIAL DE LOS 14 TIRADORES OFICIALES (LudoSport Almería)
 INSERT INTO public.fencers (id, name, rank, color, joined_at, photo_url)
