@@ -74,5 +74,11 @@
   "72": "test-sdd-helper-paths.sh",
   "73": "test-no-dev-files-in-skills.sh",
   "74": "test-skill-size.sh",
-  "75": "hermes/__init__.py"
+  "75": "hermes/__init__.py",
+  "76": "superpowers.js",
+  "77": "ref_path",
+  "78": "test-skill-registration.mjs",
+  "79": "helper.test.js",
+  "80": "render-graphs.js",
+  "81": "ref_assert"
 }

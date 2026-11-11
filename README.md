@@ -101,28 +101,21 @@ La aplicación calcula y asigna en tiempo real 5 títulos e insignias deportivas
 ## 🚀 Arquitectura Técnica
 - **Frontend:** HTML5 semántico, Tailwind CSS (Mobile-First responsive), Lucide Icons, tipografías Orbitron / Inter.
 - **Zero-Dependency & Instant Load:** No requiere herramientas complejas de compilación; carga instantáneamente en cualquier navegador móvil o de escritorio.
-- **Backend & Persistencia (Google Sheets):** Integración nativa con Google Sheets a través de **Google Apps Script** (`Code.gs`) como API REST ultraligera y gratuita.
-- **Persistencia Híbrida Offline / Online:** Si no hay conexión o no se ha configurado la URL de Sheets, la app funciona al 100% en modo LocalStorage en el dispositivo, con capacidad de exportar e importar copias de seguridad en formato JSON.
+- **Backend & Base de Datos (Supabase):** Integración directa con **Supabase** (PostgreSQL en la nube) mediante el SDK oficial `@supabase/supabase-js`, con sincronización en tiempo real y políticas de Row Level Security (RLS).
+- **Persistencia Híbrida Offline / Online:** Si no hay conexión o no se ha configurado Supabase, la app funciona al 100% en modo LocalStorage en el dispositivo, con capacidad de exportar e importar copias de seguridad en formato JSON.
 
 ---
 
-## 📋 Configuración de Google Sheets (Paso a Paso)
+## 🗄️ Configuración de Supabase (Paso a Paso)
 
-1. Entra en tu cuenta de [Google Drive](https://drive.google.com) y crea una nueva **Hoja de cálculo de Google** con el nombre que prefieras (por ejemplo: `LudoSport Liga Mensual`).
-2. En la barra superior de la hoja, haz clic en **Extensiones > Apps Script**.
-3. En el editor de código que se abre, borra el contenido existente y copia todo el código que se encuentra en el archivo [`Code.gs`](./Code.gs) de este repositorio.
-4. Haz clic en el icono de guardar (o pulsa `Ctrl + S`).
-5. En la esquina superior derecha, pulsa en el botón azul **Implementar (Deploy)** > **Nueva implementación**.
-6. En la ventana emergente, haz clic en el icono del engranaje ⚙️ a la izquierda de "Seleccionar tipo" y elige **Aplicación web**.
-7. Rellena los siguientes campos:
-   - **Descripción:** `LudoSport API v1`
-   - **Ejecutar como:** `Yo (tu correo de Google)`
-   - **Quién tiene acceso:** `Cualquier usuario` *(Anyone - ¡Esencial para que la app pueda comunicarse sin pedir login de Google!)*
-8. Pulsa en **Implementar**, autoriza los permisos requeridos por Google si te lo solicita y copia la **URL de la aplicación web** (la que termina en `/exec`).
-9. Abre tu Web App de LudoSport, ve a la pestaña **Ajustes**, pega la URL en el campo **Web App URL** y pulsa **Guardar y Sincronizar**.
-
-> [!TIP]
-> Google Sheets creará automáticamente la pestaña `Tiradores` con los alumnos iniciales de la escuela y una pestaña por cada mes activo (ej: `102026`) con todos los campos formateados.
+1. Entra en tu panel de control de [Supabase](https://supabase.com/dashboard/project/hvnwxeifiyysitoxorxy).
+2. En el menú lateral izquierdo, haz clic en **SQL Editor**.
+3. Abre el archivo [`supabase_schema.sql`](./supabase_schema.sql) de este repositorio, copia todo su contenido, pégalo en el editor SQL y pulsa **Run**.
+4. Este script creará automáticamente:
+   - Tabla `fencers`: con los 14 alumnos oficiales de LudoSport Almería y sus sables.
+   - Tabla `matches`: para los enfrentamientos, tanteos de OHs y fechas de cada mes.
+   - Políticas RLS: para acceso seguro y directo desde la aplicación web.
+5. La aplicación ya incluye preconfigurados por defecto tu Project URL y Anon Key pública en la pestaña **Ajustes**. Si deseas personalizarlos, puedes modificarlos en cualquier momento desde dicha pestaña.
 
 ---
 

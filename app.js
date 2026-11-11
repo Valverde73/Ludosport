@@ -27,13 +27,28 @@ const MONTH_NAMES = [
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 
+// Supabase Configuration Defaults (LudoSport Official Backend)
+const DEFAULT_SUPABASE_PROJECT_URL = 'https://hvnwxeifiyysitoxorxy.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_nZW3rlx3uJqF3Gl38eqymg_1mRvNzfR';
+
+function normalizeSupabaseUrl(raw) {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+  const match = trimmed.match(/project\/([a-z0-9_-]+)/i);
+  if (match) return `https://${match[1]}.supabase.co`;
+  if (!trimmed.startsWith('http')) return `https://${trimmed}.supabase.co`;
+  return trimmed.replace(/\/+$/, '');
+}
+
 class LudoSportApp {
   constructor() {
     this.currentMonthKey = this.getDefaultMonthKey();
     this.isAdmin = false;
     this.isTestMode = false;
     this.adminPin = '1234';
-    this.sheetsUrl = '';
+    this.supabaseUrl = localStorage.getItem('ls_supabase_url') || DEFAULT_SUPABASE_PROJECT_URL;
+    this.supabaseKey = localStorage.getItem('ls_supabase_key') || DEFAULT_SUPABASE_ANON_KEY;
+    this.supabase = null;
     this.fencers = [];
     this.matches = []; // matches for the active month
     this.availableMonths = [];
@@ -83,12 +98,107 @@ class LudoSportApp {
     return this.isTestMode ? `ls_test_fencers` : `ls_fencers`;
   }
 
-  getActiveSheetsMonthKey() {
+  getActiveDbMonthKey() {
     return this.isTestMode ? `TEST_${this.currentMonthKey}` : this.currentMonthKey;
+  }
+
+  initSupabaseClient() {
+    try {
+      const normalizedUrl = normalizeSupabaseUrl(this.supabaseUrl);
+      if (window.supabase && typeof window.supabase.createClient === 'function' && normalizedUrl && this.supabaseKey) {
+        this.supabase = window.supabase.createClient(normalizedUrl, this.supabaseKey);
+      } else {
+        this.supabase = null;
+      }
+    } catch (e) {
+      console.warn('Fallo al inicializar cliente de Supabase:', e);
+      this.supabase = null;
+    }
+  }
+
+  // --- Mappers between Frontend (camelCase) and Supabase (snake_case) ---
+  fencerToDb(f) {
+    return {
+      id: String(f.id),
+      name: String(f.name),
+      rank: String(f.rank || 'Inizziato'),
+      color: String(f.color || 'cyan'),
+      joined_at: String(f.joinedAt || new Date().toISOString().split('T')[0]),
+      photo_url: String(f.photoUrl || '')
+    };
+  }
+
+  fencerFromDb(row) {
+    return {
+      id: String(row.id),
+      name: String(row.name),
+      rank: String(row.rank || 'Inizziato'),
+      color: String(row.color || 'cyan'),
+      joinedAt: String(row.joined_at || ''),
+      photoUrl: String(row.photo_url || '')
+    };
+  }
+
+  matchToDb(m) {
+    return {
+      id: String(m.id),
+      date: String(m.date),
+      fighter_a_id: String(m.fighterAId),
+      fighter_a_name: String(m.fighterAName),
+      fighter_b_id: String(m.fighterBId),
+      fighter_b_name: String(m.fighterBName),
+      result: String(m.result),
+      points_a: Number(m.pointsA || 0),
+      points_b: Number(m.pointsB || 0),
+      winner: String(m.winner),
+      notes: String(m.notes || ''),
+      score_a: Number(m.scoreA !== undefined ? m.scoreA : 0),
+      score_b: Number(m.scoreB !== undefined ? m.scoreB : 0),
+      score_text: String(m.scoreText || `${m.scoreA || 0} - ${m.scoreB || 0}`),
+      month_key: String(m.monthKey || this.getActiveDbMonthKey()),
+      timestamp: String(m.timestamp || new Date().toISOString())
+    };
+  }
+
+  matchFromDb(row) {
+    return {
+      id: String(row.id),
+      date: String(row.date),
+      fighterAId: String(row.fighter_a_id),
+      fighterAName: String(row.fighter_a_name),
+      fighterBId: String(row.fighter_b_id),
+      fighterBName: String(row.fighter_b_name),
+      result: String(row.result),
+      pointsA: Number(row.points_a || 0),
+      pointsB: Number(row.points_b || 0),
+      winner: String(row.winner),
+      notes: String(row.notes || ''),
+      timestamp: String(row.timestamp || ''),
+      scoreA: Number(row.score_a !== undefined ? row.score_a : (row.result === 'VICTORY_A' ? 1 : 0)),
+      scoreB: Number(row.score_b !== undefined ? row.score_b : (row.result === 'VICTORY_B' ? 1 : 0)),
+      scoreText: String(row.score_text || `${row.score_a || 0} - ${row.score_b || 0}`),
+      monthKey: String(row.month_key || '')
+    };
+  }
+
+  async seedInitialFencers() {
+    if (!this.supabase) return;
+    try {
+      const rows = DEFAULT_FENCERS.map(f => this.fencerToDb(f));
+      const { error } = await this.supabase.from('fencers').upsert(rows);
+      if (error) {
+        console.warn('Aviso al sembrar tiradores en Supabase:', error.message);
+      } else {
+        console.log('Semilla inicial de 14 tiradores cargada con éxito en Supabase');
+      }
+    } catch (e) {
+      console.warn('Excepción al sembrar tiradores en Supabase:', e);
+    }
   }
 
   init() {
     this.loadLocalConfig();
+    this.initSupabaseClient();
     this.setupEventListeners();
     this.updateTestModeUI();
     this.renderMonthSelector();
@@ -112,10 +222,15 @@ class LudoSportApp {
     const storedPin = localStorage.getItem('ls_admin_pin');
     if (storedPin) this.adminPin = storedPin;
 
-    const storedSheets = localStorage.getItem('ls_sheets_url');
-    if (storedSheets) this.sheetsUrl = storedSheets;
-    const sheetsInput = document.getElementById('sheetsUrlInput');
-    if (sheetsInput) sheetsInput.value = this.sheetsUrl;
+    const storedSupabaseUrl = localStorage.getItem('ls_supabase_url');
+    if (storedSupabaseUrl) this.supabaseUrl = storedSupabaseUrl;
+    const storedSupabaseKey = localStorage.getItem('ls_supabase_key');
+    if (storedSupabaseKey) this.supabaseKey = storedSupabaseKey;
+
+    const urlInput = document.getElementById('supabaseUrlInput');
+    if (urlInput) urlInput.value = this.supabaseUrl;
+    const keyInput = document.getElementById('supabaseKeyInput');
+    if (keyInput) keyInput.value = this.supabaseKey;
 
     const storedAuth = sessionStorage.getItem('ls_admin_logged');
     if (storedAuth === 'true') this.isAdmin = true;
@@ -326,27 +441,57 @@ class LudoSportApp {
 
   async loadData() {
     this.setSyncStatus('Cargando...', 'amber');
-    const sheetsMonthKey = this.getActiveSheetsMonthKey();
     
-    // 1. Try to load from Google Sheets if configured
-    if (this.sheetsUrl && this.sheetsUrl.trim().startsWith('http')) {
+    // 1. Intentar cargar desde Supabase si el cliente está listo
+    if (this.supabase) {
       try {
-        const url = `${this.sheetsUrl}?action=getData&monthKey=${sheetsMonthKey}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (data && data.success) {
-          this.fencers = data.fencers && data.fencers.length > 0 ? data.fencers : DEFAULT_FENCERS;
-          this.matches = data.matches || [];
-          this.saveLocalCache();
-          const syncLabel = this.isTestMode ? 'Sheets (Modo Pruebas)' : 'Conectado a Sheets';
-          this.setSyncStatus(syncLabel, 'emerald');
-          this.renderAll();
-          return;
+        // A. Cargar fencers
+        let { data: fencersData, error: fError } = await this.supabase
+          .from('fencers')
+          .select('*')
+          .order('name');
+
+        if (fError) {
+          if (fError.code === 'PGRST205') {
+            console.warn('Tablas de Supabase no creadas aún. Por favor ejecuta el archivo supabase_schema.sql en el SQL Editor de Supabase.');
+          }
+          throw fError;
         }
+
+        // Sembrado automático si la tabla de fencers está vacía
+        if (!fencersData || fencersData.length === 0) {
+          await this.seedInitialFencers();
+          const refetch = await this.supabase.from('fencers').select('*').order('name');
+          fencersData = refetch.data || [];
+        }
+
+        if (fencersData && fencersData.length > 0) {
+          this.fencers = fencersData.map(f => this.fencerFromDb(f));
+        } else {
+          this.fencers = [...DEFAULT_FENCERS];
+        }
+
+        // B. Cargar combates del mes activo
+        const activeMonthKey = this.getActiveDbMonthKey();
+        const { data: matchesData, error: mError } = await this.supabase
+          .from('matches')
+          .select('*')
+          .eq('month_key', activeMonthKey)
+          .order('timestamp', { ascending: false });
+
+        if (mError) throw mError;
+
+        this.matches = (matchesData || []).map(m => this.matchFromDb(m));
+        this.saveLocalCache();
+
+        const syncLabel = this.isTestMode ? 'Supabase (Modo Pruebas)' : 'Conectado a Supabase';
+        this.setSyncStatus(syncLabel, 'emerald');
+        this.renderAll();
+        return;
       } catch (err) {
-        console.warn('Fallo al conectar con Google Sheets, usando almacenamiento local:', err);
-        this.setSyncStatus(this.isTestMode ? 'Pruebas Local (Offline)' : 'Modo Local (Offline)', 'amber');
+        console.warn('Fallo al conectar con Supabase, usando almacenamiento local:', err);
+        const offlineLabel = this.isTestMode ? 'Pruebas Local (Offline)' : 'Modo Local (Offline)';
+        this.setSyncStatus(offlineLabel, 'amber');
       }
     }
 
@@ -1151,34 +1296,24 @@ class LudoSportApp {
     this.renderAll();
     this.showToast(`Combate guardado: ${fencerA.name} ${sA} - ${sB} ${fencerB.name}`, 'emerald');
 
-    // Async sync with Google Sheets if configured
-    if (this.sheetsUrl && this.sheetsUrl.startsWith('http')) {
-      this.syncMatchToSheets(newMatch, 'saveMatch');
+    // Async sync with Supabase if configured
+    if (this.supabase) {
+      this.syncMatchToSupabase(newMatch);
     }
   }
 
-  async syncMatchToSheets(match, action = 'saveMatch') {
+  async syncMatchToSupabase(match) {
+    if (!this.supabase) return;
     try {
-      this.setSyncStatus('Sincronizando Sheets...', 'amber');
-      const response = await fetch(this.sheetsUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: action,
-          monthKey: this.getActiveSheetsMonthKey(),
-          match: match
-        })
-      });
-      const res = await response.json();
-      if (res.success) {
-        const syncLabel = this.isTestMode ? 'Sheets (Modo Pruebas)' : 'Conectado a Sheets';
-        this.setSyncStatus(syncLabel, 'emerald');
-      } else {
-        throw new Error(res.error || 'Error en Google Sheets');
-      }
+      this.setSyncStatus('Sincronizando Supabase...', 'amber');
+      const dbRow = this.matchToDb(match);
+      const { error } = await this.supabase.from('matches').upsert(dbRow);
+      if (error) throw error;
+      const syncLabel = this.isTestMode ? 'Supabase (Modo Pruebas)' : 'Conectado a Supabase';
+      this.setSyncStatus(syncLabel, 'emerald');
     } catch (err) {
-      console.warn('Error al sincronizar con Google Sheets:', err);
-      this.setSyncStatus('Guardado localmente (Sheets pendiente)', 'amber');
+      console.warn('Error al sincronizar con Supabase:', err);
+      this.setSyncStatus('Guardado localmente (Supabase pendiente)', 'amber');
     }
   }
 
@@ -1351,20 +1486,12 @@ class LudoSportApp {
     this.renderAll();
     this.showToast('Combate eliminado del historial', 'amber');
 
-    // Sync to Sheets
-    if (this.sheetsUrl && this.sheetsUrl.startsWith('http') && matchToDelete) {
+    // Sync to Supabase
+    if (this.supabase && matchToDelete) {
       try {
-        await fetch(this.sheetsUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'deleteMatch',
-            monthKey: this.getActiveSheetsMonthKey(),
-            matchId: matchId
-          })
-        });
+        await this.supabase.from('matches').delete().eq('id', matchId);
       } catch (e) {
-        console.warn('Error al borrar en Sheets:', e);
+        console.warn('Error al borrar en Supabase:', e);
       }
     }
   }
@@ -1395,7 +1522,7 @@ class LudoSportApp {
 
   async confirmResetMonth() {
     const monthLabel = this.formatMonthLabel(this.currentMonthKey);
-    const sheetsMonthKey = this.getActiveSheetsMonthKey();
+    const activeMonthKey = this.getActiveDbMonthKey();
 
     this.matches = [];
     this.saveLocalCache();
@@ -1403,22 +1530,15 @@ class LudoSportApp {
     this.renderAll();
     this.showToast(`Liga de ${monthLabel} reseteada`, 'amber');
 
-    // Sync to Sheets
-    if (this.sheetsUrl && this.sheetsUrl.startsWith('http')) {
+    // Sync to Supabase
+    if (this.supabase) {
       try {
-        this.setSyncStatus('Limpiando hoja en Sheets...', 'amber');
-        await fetch(this.sheetsUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'resetMonth',
-            monthKey: sheetsMonthKey
-          })
-        });
-        const syncLabel = this.isTestMode ? 'Sheets (Modo Pruebas)' : 'Conectado a Sheets';
+        this.setSyncStatus('Limpiando en Supabase...', 'amber');
+        await this.supabase.from('matches').delete().eq('month_key', activeMonthKey);
+        const syncLabel = this.isTestMode ? 'Supabase (Modo Pruebas)' : 'Conectado a Supabase';
         this.setSyncStatus(syncLabel, 'emerald');
       } catch (err) {
-        console.warn('Error al resetear hoja en Sheets:', err);
+        console.warn('Error al resetear en Supabase:', err);
       }
     }
   }
@@ -1512,16 +1632,16 @@ class LudoSportApp {
     this.closeFencerModal();
     this.renderAll();
 
-    // Async sync to Sheets if not in test mode (or test sync)
-    if (this.sheetsUrl && this.sheetsUrl.startsWith('http') && !this.isTestMode) {
-      fetch(this.sheetsUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'saveFencersList',
-          fencers: this.fencers
+    // Async sync to Supabase if not in test mode
+    if (this.supabase && !this.isTestMode) {
+      const targetFencer = editingFencer || newFencer;
+      this.supabase
+        .from('fencers')
+        .upsert(this.fencerToDb(targetFencer))
+        .then(({ error }) => {
+          if (error) console.warn('Sync fencer error in Supabase:', error);
         })
-      }).catch(err => console.warn('Sync fencers error:', err));
+        .catch(err => console.warn('Sync fencer exception:', err));
     }
   }
 
@@ -1536,6 +1656,18 @@ class LudoSportApp {
     this.saveLocalCache();
     this.renderAll();
     this.showToast(`Alumno eliminado`, 'amber');
+
+    // Async delete from Supabase
+    if (this.supabase && !this.isTestMode) {
+      this.supabase
+        .from('fencers')
+        .delete()
+        .eq('id', fencerId)
+        .then(({ error }) => {
+          if (error) console.warn('Error al borrar fencer en Supabase:', error);
+        })
+        .catch(err => console.warn('Delete fencer exception:', err));
+    }
   }
 
   updateAdminUI() {
@@ -2337,9 +2469,9 @@ class LudoSportApp {
     this.matches.unshift(newMatch);
     this.saveLocalCache();
 
-    // Sync to Sheets
-    if (this.sheetsUrl && this.sheetsUrl.startsWith('http')) {
-      this.syncMatchToSheets(newMatch, 'saveMatch');
+    // Sync to Supabase
+    if (this.supabase) {
+      this.syncMatchToSupabase(newMatch);
     }
 
     this.showToast(`¡Combate guardado! ${fA.name} ${sA} - ${sB} ${fB.name}`, 'emerald');
@@ -2655,35 +2787,58 @@ class LudoSportApp {
       }
     });
 
-    // Settings: Save Google Sheets URL
-    document.getElementById('saveSheetsUrlBtn')?.addEventListener('click', () => {
-      const input = document.getElementById('sheetsUrlInput');
-      const val = input ? input.value.trim() : '';
-      this.sheetsUrl = val;
-      localStorage.setItem('ls_sheets_url', val);
-      this.showToast('URL de Google Sheets guardada', 'emerald');
+    // Settings: Save Supabase Configuration
+    document.getElementById('saveSupabaseBtn')?.addEventListener('click', () => {
+      const urlInput = document.getElementById('supabaseUrlInput');
+      const keyInput = document.getElementById('supabaseKeyInput');
+      const rawUrl = urlInput ? urlInput.value.trim() : '';
+      const key = keyInput ? keyInput.value.trim() : '';
+
+      const normalizedUrl = normalizeSupabaseUrl(rawUrl);
+      this.supabaseUrl = normalizedUrl;
+      this.supabaseKey = key;
+
+      localStorage.setItem('ls_supabase_url', normalizedUrl);
+      localStorage.setItem('ls_supabase_key', key);
+
+      this.initSupabaseClient();
+      this.showToast('Configuración de Supabase guardada', 'emerald');
       this.loadData();
     });
 
-    // Settings: Test Sheets
-    document.getElementById('testSheetsBtn')?.addEventListener('click', async () => {
-      const input = document.getElementById('sheetsUrlInput');
-      const url = input?.value?.trim();
-      if (!url) {
-        alert('Por favor introduce primero la URL de Google Sheets.');
+    // Settings: Test Supabase Connection
+    document.getElementById('testSupabaseBtn')?.addEventListener('click', async () => {
+      const urlInput = document.getElementById('supabaseUrlInput');
+      const keyInput = document.getElementById('supabaseKeyInput');
+      const rawUrl = urlInput ? urlInput.value.trim() : this.supabaseUrl;
+      const key = keyInput ? keyInput.value.trim() : this.supabaseKey;
+
+      if (!rawUrl || !key) {
+        alert('Por favor introduce la URL y la API Key de Supabase.');
         return;
       }
+
+      const normalizedUrl = normalizeSupabaseUrl(rawUrl);
       try {
-        this.showToast('Probando conexión...', 'amber');
-        const res = await fetch(`${url}?action=ping`);
-        const json = await res.json();
-        if (json.success || json.status === 'ok') {
-          this.showToast('¡Conexión con Google Sheets exitosa!', 'emerald');
-        } else {
-          alert('Respuesta recibida pero sin formato esperado: ' + JSON.stringify(json));
+        this.showToast('Probando conexión con Supabase...', 'amber');
+        if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+          throw new Error('Librería de Supabase no cargada. Revisa la conexión a Internet.');
         }
+
+        const testClient = window.supabase.createClient(normalizedUrl, key);
+        const { data, error } = await testClient.from('fencers').select('id').limit(1);
+
+        if (error) {
+          if (error.code === 'PGRST205') {
+            alert('¡Conexión establecida con Supabase!\n\nAviso: Las tablas no existen todavía en la base de datos. Ejecuta el archivo "supabase_schema.sql" en el SQL Editor de tu Dashboard.');
+            return;
+          }
+          throw error;
+        }
+
+        this.showToast('¡Conexión con Supabase exitosa!', 'emerald');
       } catch (err) {
-        alert('Error al conectar con la URL: ' + err.message + '\n\nRevisa que hayas implementado la aplicación web con acceso "Cualquier usuario" (Anyone).');
+        alert('Error al conectar con Supabase: ' + (err.message || JSON.stringify(err)));
       }
     });
 

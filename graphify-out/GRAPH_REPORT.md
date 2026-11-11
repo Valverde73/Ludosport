@@ -1,17 +1,17 @@
 # Graph Report - LudoSport  (2026-11-11)
 
 ## Corpus Check
-- 110 files · ~223,123 words
+- 6 files · ~22,491 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 9 file(s) not represented in the graph (top: (none) 4, .cmd 1, .dot 1)
+- Unclassified: 4 file(s) not represented in the graph (top: (none) 1, .gs 1, .toml 1)
 
 ## Summary
-- 844 nodes · 1427 edges · 76 communities (42 shown, 34 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 24 edges (avg confidence: 0.73)
+- 853 nodes · 1445 edges · 82 communities (47 shown, 35 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 24 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `364c1ad1`
+- Built from commit: `03ffd3d6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -82,55 +82,61 @@
 - test-sdd-helper-paths.sh
 - test-no-dev-files-in-skills.sh
 - test-skill-size.sh
+- superpowers.js
+- ref_path
+- test-skill-registration.mjs
+- helper.test.js
+- render-graphs.js
+- ref_assert
 
 ## God Nodes (most connected - your core abstractions)
-1. `LudoSportApp` - 75 edges
+1. `LudoSportApp` - 81 edges
 2. `main()` - 27 edges
 3. `main()` - 16 edges
 4. `runTests()` - 16 edges
 5. `runTests()` - 16 edges
-6. `handleRequest()` - 14 edges
-7. `runTests()` - 13 edges
-8. `_load_plugin()` - 13 edges
-9. `sync-to-codex-plugin.sh script` - 12 edges
-10. `TestMonthlyBadgesSystem` - 12 edges
+6. `TestMonthlyBadgesSystem` - 14 edges
+7. `handleRequest()` - 14 edges
+8. `runTests()` - 13 edges
+9. `_load_plugin()` - 13 edges
+10. `sync-to-codex-plugin.sh script` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `run_and_check()` --calls--> `cleanup_test_project()`  [EXTRACTED]
-  .agents/skills/superpowers/tests/claude-code/test-worktree-native-preference.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
-- `test-subagent-driven-development.sh script` --calls--> `run_claude()`  [EXTRACTED]
-  .agents/skills/superpowers/tests/claude-code/test-subagent-driven-development.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
-- `run_and_check()` --calls--> `run_claude()`  [EXTRACTED]
   .agents/skills/superpowers/tests/claude-code/test-worktree-native-preference.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
 - `test-subagent-driven-development.sh script` --calls--> `assert_contains()`  [EXTRACTED]
   .agents/skills/superpowers/tests/claude-code/test-subagent-driven-development.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
 - `test-subagent-driven-development.sh script` --calls--> `assert_order()`  [EXTRACTED]
   .agents/skills/superpowers/tests/claude-code/test-subagent-driven-development.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
+- `test-subagent-driven-development-integration.sh script` --calls--> `create_test_project()`  [EXTRACTED]
+  .agents/skills/superpowers/tests/claude-code/test-subagent-driven-development-integration.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
+- `run_and_check()` --calls--> `create_test_project()`  [EXTRACTED]
+  .agents/skills/superpowers/tests/claude-code/test-worktree-native-preference.sh → .agents/skills/superpowers/tests/claude-code/test-helpers.sh
 
 ## Import Cycles
 - None detected.
 
-## Communities (76 total, 34 thin omitted)
+## Communities (82 total, 35 thin omitted)
 
 ### Community 0 - "LudoSportApp"
-Cohesion: 0.08
-Nodes (3): DEFAULT_FENCERS, LudoSportApp, MONTH_NAMES
+Cohesion: 0.07
+Nodes (4): DEFAULT_FENCERS, LudoSportApp, MONTH_NAMES, normalizeSupabaseUrl()
 
 ### Community 1 - "server.cjs"
 Cohesion: 0.05
 Nodes (57): bootstrapPage(), brandMarkup(), broadcast(), browserLauncherForPlatform(), chmodOwnerOnly(), RFC-6455, clients, companionUrl() (+49 more)
 
 ### Community 2 - "lifecycle.test.js"
-Cohesion: 0.06
-Nodes (39): combineGraphs(), extractDotBlocks(), extractGraphBody(), main(), renderToSvg(), assert, assert, fs (+31 more)
+Cohesion: 0.16
+Nodes (21): assert, firstServerStarted(), fs, httpStatus(), isWindowsLikeShell(), killAndWait(), makeShellTempDir(), newestSessionDir() (+13 more)
 
 ### Community 3 - "test_plugin.py"
 Cohesion: 0.07
 Nodes (12): _build_bootstrap(), _frontmatter_value(), register(), _skills_dir(), _strip_frontmatter(), mock_ctx(), _fire_pre_llm(), _load_plugin() (+4 more)
 
 ### Community 4 - "test-bootstrap-caching.mjs"
-Cohesion: 0.05
-Nodes (26): _bootstrapCache, _cacheChildSession(), _childSessionCache, __dirname, extractAndStripFrontmatter(), getBootstrapContent(), isChildSession(), setup() (+18 more)
+Cohesion: 0.12
+Nodes (6): afterFirst, afterSecond, firstOutput, mappingFailures, result, secondOutput
 
 ### Community 5 - "server.test.js"
 Cohesion: 0.09
@@ -141,7 +147,7 @@ Cohesion: 0.40
 Nodes (4): cleanUrls, name, routes, version
 
 ### Community 7 - ".calculate_badges"
-Cohesion: 0.16
+Cohesion: 0.14
 Nodes (3): format_month_name(), LeagueBadgesLogic, TestMonthlyBadgesSystem
 
 ### Community 8 - "test-sync-to-codex-plugin.sh"
@@ -280,25 +286,45 @@ Nodes (3): assert_contains(), assert_not_contains(), test-worktree-path-policy.s
 Cohesion: 0.83
 Nodes (3): fail(), pass(), test-skill-structure.sh script
 
+### Community 76 - "superpowers.js"
+Cohesion: 0.20
+Nodes (12): _bootstrapCache, _cacheChildSession(), _childSessionCache, __dirname, extractAndStripFrontmatter(), getBootstrapContent(), isChildSession(), setup() (+4 more)
+
+### Community 77 - "ref_path"
+Cohesion: 0.20
+Nodes (6): assert, crypto, RFC-6455, path, runTests(), SERVER_PATH
+
+### Community 78 - "test-skill-registration.mjs"
+Cohesion: 0.18
+Nodes (8): added, failures, fixtureRoot, frontmatterFixtures, pluginPath, result, skillsDir, survived
+
+### Community 79 - "helper.test.js"
+Cohesion: 0.20
+Nodes (6): assert, fs, HELPER, moduleShim, path, src
+
+### Community 80 - "render-graphs.js"
+Cohesion: 0.60
+Nodes (5): combineGraphs(), extractDotBlocks(), extractGraphBody(), main(), renderToSvg()
+
 ## Knowledge Gaps
-- **5 isolated node(s):** `RFC-6455`, `RFC-6455`, `HOME`, `XDG_CONFIG_HOME`, `OPENCODE_CONFIG_DIR`
-  These have ≤1 connection - possible missing edges. (Counts symbols only; 278 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **34 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 isolated node(s):** `RFC-6455`, `HOME`, `OPENCODE_CONFIG_DIR`, `XDG_CONFIG_HOME`, `RFC-6455`
+  These have ≤1 connection - possible missing edges. (Counts symbols only; 280 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **35 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `ws` connect `server.test.js` to `lifecycle.test.js`, `auth.test.js`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **What connects `RFC-6455`, `RFC-6455`, `HOME` to the rest of the system?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
+- **What connects `RFC-6455`, `HOME`, `OPENCODE_CONFIG_DIR` to the rest of the system?**
   _5 weakly-connected nodes found - possible missing edges._
 - **Should `LudoSportApp` be split into smaller, more focused modules?**
-  _Cohesion score 0.08325008325008325 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07450980392156863 - nodes in this community are weakly interconnected._
 - **Should `server.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05499735589635114 - nodes in this community are weakly interconnected._
-- **Should `lifecycle.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.055904961565338925 - nodes in this community are weakly interconnected._
 - **Should `test_plugin.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06914893617021277 - nodes in this community are weakly interconnected._
 - **Should `test-bootstrap-caching.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.05426356589147287 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
+- **Should `server.test.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.0944741532976827 - nodes in this community are weakly interconnected._

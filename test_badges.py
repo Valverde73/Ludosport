@@ -310,6 +310,34 @@ class TestMonthlyBadgesSystem(unittest.TestCase):
         self.assertIn('MOST_ACTIVE', content)
         self.assertIn('WIN_STREAK', content)
 
+    def test_supabase_schema_file_exists_and_valid(self):
+        schema_path = os.path.join(os.path.dirname(__file__), 'supabase_schema.sql')
+        self.assertTrue(os.path.exists(schema_path), "supabase_schema.sql must exist")
+        with open(schema_path, 'r', encoding='utf-8') as f:
+            sql = f.read()
+        self.assertIn('CREATE TABLE IF NOT EXISTS public.fencers', sql)
+        self.assertIn('CREATE TABLE IF NOT EXISTS public.matches', sql)
+        self.assertIn('ENABLE ROW LEVEL SECURITY', sql)
+        self.assertIn('INSERT INTO public.fencers', sql)
+        # Check all 14 seed fencers
+        for i in range(1, 15):
+            self.assertIn(f"'f-{i}'", sql)
+
+    def test_app_js_contains_supabase_client_and_endpoints(self):
+        app_js_path = os.path.join(os.path.dirname(__file__), 'app.js')
+        self.assertTrue(os.path.exists(app_js_path), "app.js must exist")
+        with open(app_js_path, 'r', encoding='utf-8') as f:
+            code = f.read()
+        self.assertIn('hvnwxeifiyysitoxorxy', code)
+        self.assertIn('sb_publishable_nZW3rlx3uJqF3Gl38eqymg_1mRvNzfR', code)
+        self.assertIn('initSupabaseClient', code)
+        self.assertIn('seedInitialFencers', code)
+        self.assertIn('syncMatchToSupabase', code)
+        self.assertIn('fencerToDb', code)
+        self.assertIn('fencerFromDb', code)
+        self.assertIn('matchToDb', code)
+        self.assertIn('matchFromDb', code)
+
 
 if __name__ == '__main__':
     unittest.main()
