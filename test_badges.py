@@ -328,8 +328,6 @@ class TestMonthlyBadgesSystem(unittest.TestCase):
         self.assertTrue(os.path.exists(app_js_path), "app.js must exist")
         with open(app_js_path, 'r', encoding='utf-8') as f:
             code = f.read()
-        self.assertIn('hvnwxeifiyysitoxorxy', code)
-        self.assertIn('sb_publishable_nZW3rlx3uJqF3Gl38eqymg_1mRvNzfR', code)
         self.assertIn('initSupabaseClient', code)
         self.assertIn('seedInitialFencers', code)
         self.assertIn('syncMatchToSupabase', code)
@@ -337,6 +335,17 @@ class TestMonthlyBadgesSystem(unittest.TestCase):
         self.assertIn('fencerFromDb', code)
         self.assertIn('matchToDb', code)
         self.assertIn('matchFromDb', code)
+
+    def test_no_api_keys_or_tokens_in_frontend(self):
+        # Guarantee no hardcoded secret, token, or api key exists in source files
+        frontend_files = ['app.js', 'index.html', 'badges.js']
+        forbidden_patterns = ['sb_publishable_', 'eyJh', 'service_role']
+        for fname in frontend_files:
+            fpath = os.path.join(os.path.dirname(__file__), fname)
+            with open(fpath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            for pattern in forbidden_patterns:
+                self.assertNotIn(pattern, content, f"Hardcoded secret/token '{pattern}' found in {fname}!")
 
 
 if __name__ == '__main__':

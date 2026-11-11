@@ -108,14 +108,14 @@ La aplicación calcula y asigna en tiempo real 5 títulos e insignias deportivas
 
 ## 🗄️ Configuración de Supabase (Paso a Paso)
 
-1. Entra en tu panel de control de [Supabase](https://supabase.com/dashboard/project/hvnwxeifiyysitoxorxy).
+1. Entra en tu panel de control de [Supabase](https://supabase.com/dashboard).
 2. En el menú lateral izquierdo, haz clic en **SQL Editor**.
 3. Abre el archivo [`supabase_schema.sql`](./supabase_schema.sql) de este repositorio, copia todo su contenido, pégalo en el editor SQL y pulsa **Run**.
 4. Este script creará automáticamente:
    - Tabla `fencers`: con los 14 alumnos oficiales de LudoSport Almería y sus sables.
    - Tabla `matches`: para los enfrentamientos, tanteos de OHs y fechas de cada mes.
    - Políticas RLS: para acceso seguro y directo desde la aplicación web.
-5. La aplicación ya incluye preconfigurados por defecto tu Project URL y Anon Key pública en la pestaña **Ajustes**. Si deseas personalizarlos, puedes modificarlos en cualquier momento desde dicha pestaña.
+5. Abre la aplicación, ve a la pestaña **Ajustes** (Modo Rector) e introduce la **Project URL** y **Anon Key** de tu proyecto Supabase. Las credenciales se almacenan localmente en tu dispositivo de forma segura y nunca se exponen en el repositorio ni en el código público.
 
 ---
 

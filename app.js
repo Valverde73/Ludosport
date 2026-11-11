@@ -27,10 +27,7 @@ const MONTH_NAMES = [
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 
-// Supabase Configuration Defaults (LudoSport Official Backend)
-const DEFAULT_SUPABASE_PROJECT_URL = 'https://hvnwxeifiyysitoxorxy.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_nZW3rlx3uJqF3Gl38eqymg_1mRvNzfR';
-
+// Supabase Configuration (Configurada dinámicamente por el usuario desde Ajustes y persistida en LocalStorage)
 function normalizeSupabaseUrl(raw) {
   if (!raw) return '';
   const trimmed = raw.trim();
@@ -46,8 +43,8 @@ class LudoSportApp {
     this.isAdmin = false;
     this.isTestMode = false;
     this.adminPin = '1234';
-    this.supabaseUrl = localStorage.getItem('ls_supabase_url') || DEFAULT_SUPABASE_PROJECT_URL;
-    this.supabaseKey = localStorage.getItem('ls_supabase_key') || DEFAULT_SUPABASE_ANON_KEY;
+    this.supabaseUrl = localStorage.getItem('ls_supabase_url') || '';
+    this.supabaseKey = localStorage.getItem('ls_supabase_key') || '';
     this.supabase = null;
     this.fencers = [];
     this.matches = []; // matches for the active month

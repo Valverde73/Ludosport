@@ -2,7 +2,7 @@
 -- LUDOSPORT ARENA - MIGRACIÓN DE TABLAS EN SUPABASE (POSTGRESQL)
 -- =========================================================================
 -- Ejecuta este script en el SQL Editor de tu proyecto Supabase:
--- https://supabase.com/dashboard/project/hvnwxeifiyysitoxorxy/sql/new
+-- https://supabase.com/dashboard (SQL Editor > New Query)
 -- =========================================================================
 
 -- 1. TABLA: TIRADORES (fencers)

@@ -679,16 +679,16 @@
           <div class="space-y-2.5 mt-3">
             <div>
               <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Project URL o Dashboard URL</label>
-              <input type="text" id="supabaseUrlInput" placeholder="https://hvnwxeifiyysitoxorxy.supabase.co" class="w-full bg-lsDark border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
+              <input type="text" id="supabaseUrlInput" placeholder="https://tu-proyecto.supabase.co" class="w-full bg-lsDark border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
             </div>
 
             <div>
               <label class="block text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Anon / Publishable API Key</label>
-              <input type="password" id="supabaseKeyInput" placeholder="sb_publishable_..." class="w-full bg-lsDark border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
+              <input type="password" id="supabaseKeyInput" placeholder="Tu API Key pública (anon / publishable)" class="w-full bg-lsDark border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
             </div>
 
             <p class="text-[10px] text-slate-500">
-              Si no se configura o no hay conexión, la app recurre automáticamente a LocalStorage con persistencia offline completa.
+              Las credenciales se guardan exclusivamente en el almacenamiento local seguro de este navegador. Si no se configuran, la app funciona al 100% en modo LocalStorage.
             </p>
           </div>
 
@@ -708,7 +708,7 @@
               ¿Cómo inicializar las tablas 'fencers' y 'matches' en Supabase?
             </summary>
             <div class="mt-2.5 space-y-2 text-slate-300 text-[11px] leading-relaxed">
-              <p>1. Entra en tu panel de Supabase: <a href="https://supabase.com/dashboard/project/hvnwxeifiyysitoxorxy" target="_blank" class="text-cyan-300 underline font-semibold">Dashboard de Supabase</a>.</p>
+              <p>1. Entra en tu panel de <a href="https://supabase.com/dashboard" target="_blank" class="text-cyan-300 underline font-semibold">Dashboard de Supabase</a> y selecciona tu proyecto.</p>
               <p>2. En el menú lateral izquierdo, haz clic en <b>SQL Editor</b>.</p>
               <p>3. Abre o copia el archivo <code class="text-cyan-300 bg-slate-800 px-1 py-0.5 rounded">supabase_schema.sql</code> de este repositorio y pulsa <b>Run</b>.</p>
               <p>4. Se crearán automáticamente las tablas <code class="text-slate-200">fencers</code> y <code class="text-slate-200">matches</code> con sus políticas públicas RLS y los 14 alumnos iniciales.</p>
