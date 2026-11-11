@@ -25,6 +25,20 @@ Aplicación web mobile-first para la gestión integral y en tiempo real de la **
 
 ---
 
+## 🏅 Medallero y Títulos Automáticos de la Liga Mensual
+La aplicación calcula y asigna en tiempo real 5 títulos e insignias deportivas al analizar los combates disputados en el mes:
+1. 🏆 **"Invicto del Mes":** Concedido a tiradores con el 100% de victorias (requiere un mínimo de 3 combates jugados).
+2. ⚡ **"Máximo Anotador de OHs":** Tirador que acumula la mayor cantidad de tocados ofensivos (*pointsFor*) en el mes.
+3. 🛡️ **"Defensa de Hierro":** Tirador con el menor promedio de OHs recibidos por combate (mínimo 3 combates jugados).
+4. ⚔️ **"Rival más Activo":** Tirador con el mayor volumen de combates disputados en el mes.
+5. 🔥 **"Racha de Victorias":** Tirador con la secuencia de victorias consecutivas más extensa (mínimo 2 victorias consecutivas).
+
+- **Sección en Vista Principal / Clasificación:** Bloque destacado con tarjetas estilizadas, avatares interactivos de los ganadores y soporte para empates.
+- **Palmarés en Ficha de Tirador:** Muestra los títulos obtenidos en el mes activo y el historial de meses anteriores.
+- **Tooltips Interactivos:** Información contextual al posar el cursor o pulsar sobre cualquier insignia con el detalle del rendimiento alcanzado.
+
+---
+
 ## 👤 Ficha / Perfil de Tirador con Estadísticas y Avatar Dinámico
 - **Acceso rápido con un toque:** Al hacer clic sobre cualquier tirador (en la tabla de clasificación, en las tarjetas del podio o en la lista de alumnos), se despliega su **Perfil Completo**.
 - **Avatar Dinámico:** Generación automática de avatar con las iniciales del alumno y un resplandor (*glow*) que replica el color oficial de su sable de luz (Azul, Verde, Amarillo, Púrpura, Rojo o Blanco). Permite además añadir una URL personalizada de foto real (`photoUrl`).

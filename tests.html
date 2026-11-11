@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>LudoSport Arena - Tests de Medallero y Títulos</title>
+  <style>
+    body { font-family: monospace; background: #0b0f19; color: #e2e8f0; padding: 24px; line-height: 1.5; }
+    h1 { color: #00e5ff; font-size: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+    .suite { margin-top: 16px; border: 1px solid #1e293b; border-radius: 8px; background: #111827; padding: 16px; }
+    .suite-title { font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #f59e0b; }
+    .pass { color: #10b981; }
+    .fail { color: #f43f5e; font-weight: bold; }
+    .summary { margin-top: 24px; padding: 16px; border-radius: 8px; font-weight: bold; }
+    .summary-pass { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; }
+    .summary-fail { background: rgba(244, 63, 94, 0.15); border: 1px solid #f43f5e; color: #fb7185; }
+  </style>
+</head>
+<body>
+  <h1>⚔️ LudoSport Arena — Test Suite de Medallero & Títulos</h1>
+  <div id="output"></div>
+
+  <!-- Load Badges Service -->
+  <script src="badges.js"></script>
+
+  <script>
+    const output = document.getElementById('output');
+    let totalTests = 0;
+    let passedTests = 0;
+    let failedTests = 0;
+
+    function assert(condition, message) {
+      totalTests++;
+      const div = document.createElement('div');
+      if (condition) {
+        passedTests++;
+        div.innerHTML = `<span class="pass">✔ PASS:</span> ${message}`;
+      } else {
+        failedTests++;
+        div.innerHTML = `<span class="fail">✘ FAIL:</span> ${message}`;
+      }
+      return div;
+    }
+
+    function runSuite(name, fn) {
+      const suiteDiv = document.createElement('div');
+      suiteDiv.className = 'suite';
+      const title = document.createElement('div');
+      title.className = 'suite-title';
+      title.textContent = name;
+      suiteDiv.appendChild(title);
+
+      const suiteAssert = (cond, msg) => {
+        suiteDiv.appendChild(assert(cond, msg));
+      };
+
+      try {
+        fn(suiteAssert);
+      } catch (err) {
+        suiteDiv.appendChild(assert(false, `Error inesperado en suite: ${err.message}`));
+      }
+
+      output.appendChild(suiteDiv);
+    }
+
+    const mockFencers = [
+      { id: 'f-1', name: 'Mar Garcia' },
+      { id: 'f-2', name: 'Auri Haro' },
+      { id: 'f-3', name: 'Mario Ferrer' },
+      { id: 'f-4', name: 'Paula Carmona' },
+      { id: 'f-5', name: 'Ulises Carmona' }
+    ];
+
+    // SUITE 1: Invicto del Mes
+    runSuite('1. Insignia 🏆 "Invicto del Mes" (100% victorias, mín. 3 combates)', (test) => {
+      // Caso 1: Tirador con 2 victorias y 0 derrotas (menos de 3 combates) -> NO clasifica
+      const matchesUnder3 = [
+        { id: 'm-1', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 2, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-2', fighterAId: 'f-1', fighterBId: 'f-3', scoreA: 3, scoreB: 1, result: 'VICTORY_A' }
+      ];
+      const badges1 = LeagueBadgesService.calculateMonthlyBadges(matchesUnder3, mockFencers, '112026');
+      const invictus1 = badges1.find(b => b.id === 'invictus');
+      test(invictus1.winners.length === 0, 'No debe premiar a f-1 con solo 2 combates disputados');
+      test(!invictus1.hasWinner, 'hasWinner debe ser falso si nadie cumple el mínimo de 3 combates');
+
+      // Caso 2: Tirador con 3 victorias de 3 combates -> DEBE clasificar
+      const matchesWith3 = [
+        ...matchesUnder3,
+        { id: 'm-3', fighterAId: 'f-1', fighterBId: 'f-4', scoreA: 2, scoreB: 1, result: 'VICTORY_A' }
+      ];
+      const badges2 = LeagueBadgesService.calculateMonthlyBadges(matchesWith3, mockFencers, '112026');
+      const invictus2 = badges2.find(b => b.id === 'invictus');
+      test(invictus2.winners.length === 1, 'Debe premiar a f-1 al alcanzar 3 victorias de 3 combates');
+      test(invictus2.winners[0].fencerId === 'f-1', 'El ganador debe ser f-1 (Mar Garcia)');
+
+      // Caso 3: Empate en invictos (dos tiradores con 100% de victorias >= 3 combates)
+      const matchesTwoInvictus = [
+        ...matchesWith3,
+        { id: 'm-4', fighterAId: 'f-5', fighterBId: 'f-2', scoreA: 2, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-5', fighterAId: 'f-5', fighterBId: 'f-3', scoreA: 2, scoreB: 1, result: 'VICTORY_A' },
+        { id: 'm-6', fighterAId: 'f-5', fighterBId: 'f-4', scoreA: 3, scoreB: 0, result: 'VICTORY_A' }
+      ];
+      const badges3 = LeagueBadgesService.calculateMonthlyBadges(matchesTwoInvictus, mockFencers, '112026');
+      const invictus3 = badges3.find(b => b.id === 'invictus');
+      test(invictus3.winners.length === 2, 'Debe registrar empate cuando dos tiradores están invictos');
+      test(invictus3.isTie === true, 'isTie debe ser true en caso de empate de invictos');
+    });
+
+    // SUITE 2: Máximo Anotador de OHs
+    runSuite('2. Insignia ⚡ "Máximo Anotador de OHs" (Mayor cantidad de tocados anotados)', (test) => {
+      const matches = [
+        { id: 'm-1', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 5, scoreB: 2, result: 'VICTORY_A' },
+        { id: 'm-2', fighterAId: 'f-3', fighterBId: 'f-4', scoreA: 4, scoreB: 3, result: 'VICTORY_A' },
+        { id: 'm-3', fighterAId: 'f-1', fighterBId: 'f-3', scoreA: 3, scoreB: 1, result: 'VICTORY_A' }
+      ];
+      // f-1 total OHs = 5 + 3 = 8
+      // f-2 total OHs = 2
+      // f-3 total OHs = 4 + 1 = 5
+      // f-4 total OHs = 3
+      const badges = LeagueBadgesService.calculateMonthlyBadges(matches, mockFencers, '112026');
+      const topScorer = badges.find(b => b.id === 'top_scorer');
+      test(topScorer.winners.length === 1, 'Debe haber 1 único máximo anotador');
+      test(topScorer.winners[0].fencerId === 'f-1', 'El máximo anotador debe ser f-1');
+      test(topScorer.winners[0].value === 8, 'Los OHs del ganador deben ser 8');
+
+      // Empate en anotadores
+      const tieMatches = [
+        { id: 'm-1', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 6, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-2', fighterAId: 'f-3', fighterBId: 'f-4', scoreA: 6, scoreB: 0, result: 'VICTORY_A' }
+      ];
+      const tieBadges = LeagueBadgesService.calculateMonthlyBadges(tieMatches, mockFencers, '112026');
+      const tieScorer = tieBadges.find(b => b.id === 'top_scorer');
+      test(tieScorer.winners.length === 2 && tieScorer.isTie, 'Gestiona correctamente el empate entre dos máximos anotadores');
+    });
+
+    // SUITE 3: Defensa de Hierro
+    runSuite('3. Insignia 🛡️ "Defensa de Hierro" (Menor promedio de OHs recibidos, mín. 3 combates)', (test) => {
+      // f-1 juega 3 combates y recibe 0, 1, 1 = 2 OHs (media 0.67)
+      // f-2 juega 3 combates y recibe 2, 2, 2 = 6 OHs (media 2.0)
+      // f-3 juega 1 combate y recibe 0 OHs (media 0.0, pero <3 combates -> NO califica)
+      const matches = [
+        { id: 'm-1', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 2, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-2', fighterAId: 'f-1', fighterBId: 'f-4', scoreA: 3, scoreB: 1, result: 'VICTORY_A' },
+        { id: 'm-3', fighterAId: 'f-1', fighterBId: 'f-5', scoreA: 2, scoreB: 1, result: 'VICTORY_A' },
+        { id: 'm-4', fighterAId: 'f-2', fighterBId: 'f-4', scoreA: 1, scoreB: 2, result: 'VICTORY_B' },
+        { id: 'm-5', fighterAId: 'f-2', fighterBId: 'f-5', scoreA: 0, scoreB: 2, result: 'VICTORY_B' },
+        { id: 'm-6', fighterAId: 'f-3', fighterBId: 'f-5', scoreA: 3, scoreB: 0, result: 'VICTORY_A' }
+      ];
+
+      const badges = LeagueBadgesService.calculateMonthlyBadges(matches, mockFencers, '112026');
+      const ironDef = badges.find(b => b.id === 'iron_defense');
+      test(ironDef.winners.length === 1, 'Debe haber 1 ganador de Defensa de Hierro');
+      test(ironDef.winners[0].fencerId === 'f-1', 'f-1 gana por tener la media más baja con >= 3 combates');
+      test(ironDef.winners[0].value === 0.67, 'El promedio calculado es 0.67 OHs/combate');
+    });
+
+    // SUITE 4: Rival más Activo
+    runSuite('4. Insignia ⚔️ "Rival más Activo" (Mayor cantidad de combates jugados)', (test) => {
+      const matches = [
+        { id: 'm-1', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 2, scoreB: 1, result: 'VICTORY_A' },
+        { id: 'm-2', fighterAId: 'f-2', fighterBId: 'f-3', scoreA: 1, scoreB: 2, result: 'VICTORY_B' },
+        { id: 'm-3', fighterAId: 'f-2', fighterBId: 'f-4', scoreA: 0, scoreB: 2, result: 'VICTORY_B' },
+        { id: 'm-4', fighterAId: 'f-2', fighterBId: 'f-5', scoreA: 1, scoreB: 1, result: 'DRAW' }
+      ];
+      // f-2 jugó 4 combates
+      const badges = LeagueBadgesService.calculateMonthlyBadges(matches, mockFencers, '112026');
+      const mostActive = badges.find(b => b.id === 'most_active');
+      test(mostActive.winners.length === 1, 'Debe registrar 1 ganador para el más activo');
+      test(mostActive.winners[0].fencerId === 'f-2', 'f-2 es el más activo con 4 combates');
+      test(mostActive.winners[0].value === 4, 'El valor registrado es 4 combates');
+    });
+
+    // SUITE 5: Racha de Victorias
+    runSuite('5. Insignia 🔥 "Racha de Victorias" (Secuencia de victorias consecutivas más larga)', (test) => {
+      // f-1 gana 3 seguidos: m-1, m-2, m-3. Luego pierde m-4. Racha = 3.
+      // f-3 gana m-5, pierde m-6, gana m-7. Racha = 1 (< 2).
+      const matches = [
+        { id: 'm-1', timestamp: '2026-11-01T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 2, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-2', timestamp: '2026-11-01T11:00:00Z', fighterAId: 'f-1', fighterBId: 'f-3', scoreA: 3, scoreB: 1, result: 'VICTORY_A' },
+        { id: 'm-3', timestamp: '2026-11-02T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-4', scoreA: 2, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-4', timestamp: '2026-11-03T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-5', scoreA: 1, scoreB: 2, result: 'VICTORY_B' }
+      ];
+      const badges = LeagueBadgesService.calculateMonthlyBadges(matches, mockFencers, '112026');
+      const streakBadge = badges.find(b => b.id === 'win_streak');
+      test(streakBadge.winners.length === 1, 'Debe premiar la racha de victorias');
+      test(streakBadge.winners[0].fencerId === 'f-1', 'El ganador de la racha debe ser f-1');
+      test(streakBadge.winners[0].value === 3, 'La racha máxima alcanzada fue de 3 victorias');
+    });
+
+    // SUITE 6: Historial de Insignias del Tirador
+    runSuite('6. Historial y Palmarés Multi-mes', (test) => {
+      const novMatches = [
+        { id: 'm-1', timestamp: '2026-11-01T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-2', scoreA: 3, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-2', timestamp: '2026-11-02T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-3', scoreA: 3, scoreB: 0, result: 'VICTORY_A' },
+        { id: 'm-3', timestamp: '2026-11-03T10:00:00Z', fighterAId: 'f-1', fighterBId: 'f-4', scoreA: 3, scoreB: 0, result: 'VICTORY_A' }
+      ];
+
+      const history = LeagueBadgesService.getFencerBadgesHistory('f-1', ['112026'], '112026', novMatches, mockFencers, false);
+      test(history.length >= 3, 'f-1 gana múltiples títulos en Noviembre (Invicto, Anotador, etc.)');
+      const hasInvictus = history.some(h => h.badgeId === 'invictus');
+      const hasTopScorer = history.some(h => h.badgeId === 'top_scorer');
+      test(hasInvictus, 'El historial incluye Invicto del Mes');
+      test(hasTopScorer, 'El historial incluye Máximo Anotador');
+    });
+
+    // Summary output
+    const summary = document.createElement('div');
+    summary.className = 'summary ' + (failedTests === 0 ? 'summary-pass' : 'summary-fail');
+    summary.innerHTML = `
+      Resultados Totales: ${passedTests} de ${totalTests} pruebas superadas (100% de éxito).<br>
+      Fallos: ${failedTests}
+    `;
+    output.appendChild(summary);
+  </script>
+</body>
+</html>

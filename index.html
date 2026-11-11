@@ -180,6 +180,11 @@
         <!-- Rendered by JS -->
       </div>
 
+      <!-- SECCIÓN DESTACADA: MEDALLERO Y TÍTULOS DEL MES -->
+      <div id="monthlyMedalsSection" class="mb-4">
+        <!-- Rendered by JS -->
+      </div>
+
       <!-- Search / Filter bar -->
       <div class="relative mb-3">
         <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-2.5"></i>
@@ -1062,6 +1067,20 @@
           </div>
         </div>
 
+        <!-- PALMARÉS & MEDALLERO DEL TIRADOR -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="medal" class="w-3.5 h-3.5 text-amber-400"></i>
+              Medallero & Títulos Obtenidos
+            </h4>
+            <span id="profileBadgesCount" class="text-[10px] text-slate-400 font-combat">0 títulos</span>
+          </div>
+          <div id="profileBadgesList" class="space-y-1.5">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
         <!-- Personal Match History -->
         <div>
           <div class="flex items-center justify-between mb-2">
@@ -1096,6 +1115,7 @@
   <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none"></div>
 
   <!-- Scripts -->
+  <script src="badges.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

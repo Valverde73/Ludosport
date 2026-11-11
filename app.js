@@ -603,6 +603,7 @@ class LudoSportApp {
   renderAll() {
     this.renderMonthSelector();
     this.renderRanking();
+    this.renderMonthlyMedals();
     this.renderDuelFormOptions();
     this.renderLiveScoreboardOptions();
     this.renderHistory();
@@ -757,6 +758,186 @@ class LudoSportApp {
         `;
       }).join('');
     }
+  }
+
+  // Render Monthly Medals and Badges block
+  renderMonthlyMedals() {
+    const container = document.getElementById('monthlyMedalsSection');
+    if (!container) return;
+
+    const badgesService = window.LeagueBadgesService;
+    if (!badgesService) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const badges = badgesService.calculateMonthlyBadges(
+      this.matches,
+      this.fencers,
+      this.currentMonthKey
+    );
+
+    const monthLabel = this.formatMonthLabel(this.currentMonthKey);
+
+    const badgesCardsHtml = badges.map(badge => {
+      const colorScheme = {
+        amber: {
+          border: 'border-amber-500/30 hover:border-amber-500/60',
+          bg: 'from-amber-500/10 via-lsCard to-lsCard',
+          iconBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+          badgeText: 'text-amber-300',
+          statText: 'text-amber-400'
+        },
+        cyan: {
+          border: 'border-cyan-500/30 hover:border-cyan-500/60',
+          bg: 'from-cyan-500/10 via-lsCard to-lsCard',
+          iconBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+          badgeText: 'text-cyan-300',
+          statText: 'text-cyan-400'
+        },
+        emerald: {
+          border: 'border-emerald-500/30 hover:border-emerald-500/60',
+          bg: 'from-emerald-500/10 via-lsCard to-lsCard',
+          iconBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+          badgeText: 'text-emerald-300',
+          statText: 'text-emerald-400'
+        },
+        purple: {
+          border: 'border-purple-500/30 hover:border-purple-500/60',
+          bg: 'from-purple-500/10 via-lsCard to-lsCard',
+          iconBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+          badgeText: 'text-purple-300',
+          statText: 'text-purple-400'
+        },
+        rose: {
+          border: 'border-rose-500/30 hover:border-rose-500/60',
+          bg: 'from-rose-500/10 via-lsCard to-lsCard',
+          iconBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+          badgeText: 'text-rose-300',
+          statText: 'text-rose-400'
+        }
+      }[badge.color] || {
+        border: 'border-slate-700/60 hover:border-slate-500',
+        bg: 'from-slate-800/40 via-lsCard to-lsCard',
+        iconBg: 'bg-slate-800 text-slate-300 border-slate-700',
+        badgeText: 'text-slate-200',
+        statText: 'text-slate-400'
+      };
+
+      let winnersHtml = '';
+      let tooltipContent = '';
+
+      if (badge.hasWinner) {
+        if (badge.isTie) {
+          const names = badge.winners.map(w => w.fencer ? w.fencer.name : 'Tirador').join(', ');
+          const avatars = badge.winners.map(w => 
+            `<div data-fencer-profile="${w.fencerId}" title="Ver perfil de ${w.fencer ? w.fencer.name : ''}" class="hover:scale-110 transition-transform">
+              ${this.getFencerAvatarHtml(w.fencer, 'w-6 h-6', true)}
+            </div>`
+          ).join('');
+
+          winnersHtml = `
+            <div class="flex items-center gap-2 mt-2">
+              <div class="flex items-center -space-x-1.5 shrink-0">
+                ${avatars}
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-xs text-slate-200 truncate" title="${names}">
+                  ${names} <span class="text-[10px] text-amber-400/90 font-normal">(Empate)</span>
+                </div>
+                <div class="text-[11px] font-combat font-bold ${colorScheme.statText}">
+                  ${badge.winners[0].formattedValue}
+                </div>
+              </div>
+            </div>
+          `;
+          tooltipContent = `${badge.title}: ${names} (${badge.winners[0].formattedValue} en ${monthLabel}). ${badge.description}`;
+        } else {
+          const winner = badge.winners[0];
+          winnersHtml = `
+            <div data-fencer-profile="${winner.fencerId}" title="Ver perfil de ${winner.fencer ? winner.fencer.name : ''}" class="flex items-center gap-2.5 mt-2 cursor-pointer group/winner">
+              <div class="group-hover/winner:scale-105 transition-transform">
+                ${this.getFencerAvatarHtml(winner.fencer, 'w-8 h-8', true)}
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-xs text-slate-100 truncate group-hover/winner:text-cyan-300 transition-colors">
+                  ${winner.fencer ? winner.fencer.name : ''}
+                </div>
+                <div class="text-[11px] font-combat font-bold ${colorScheme.statText}">
+                  ${winner.formattedValue}
+                </div>
+              </div>
+            </div>
+          `;
+          tooltipContent = `${badge.title}: ${winner.fencer ? winner.fencer.name : ''} (${winner.formattedValue} en ${monthLabel}). ${badge.description}`;
+        }
+      } else {
+        winnersHtml = `
+          <div class="mt-2.5 py-1.5 px-2 rounded-lg bg-slate-900/60 border border-slate-800/80 text-[10px] text-slate-500 italic flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-3 h-3 text-slate-600 shrink-0"></i>
+            <span class="truncate">${badge.emptyStateText}</span>
+          </div>
+        `;
+        tooltipContent = `${badge.title}: ${badge.description} (Actualmente sin clasificados)`;
+      }
+
+      return `
+        <div class="badge-card relative p-3 rounded-2xl bg-gradient-to-br ${colorScheme.bg} border ${colorScheme.border} shadow-lg transition-all"
+             tabindex="0"
+             role="region"
+             aria-label="${badge.title}">
+          
+          <!-- Tooltip Popover (Hover & Touch focus) -->
+          <div class="badge-tooltip bg-slate-950/95 text-slate-200 border border-slate-700/80 rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
+            <div class="font-bold text-xs flex items-center gap-1 mb-1 ${colorScheme.badgeText}">
+              <span>${badge.emoji}</span>
+              <span>${badge.title}</span>
+            </div>
+            <p class="text-slate-300 text-[10px] leading-normal">${tooltipContent}</p>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <div class="w-6 h-6 rounded-lg ${colorScheme.iconBg} border flex items-center justify-center text-xs shrink-0">
+                <i data-lucide="${badge.icon}" class="w-3.5 h-3.5"></i>
+              </div>
+              <span class="font-display font-bold text-xs ${colorScheme.badgeText} truncate">
+                ${badge.title}
+              </span>
+            </div>
+            <span class="text-xs select-none">${badge.emoji}</span>
+          </div>
+
+          ${winnersHtml}
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="bg-lsCard border border-lsBorder rounded-2xl p-3.5 shadow-xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <i data-lucide="medal" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="font-display text-xs sm:text-sm font-bold text-slate-100 tracking-wide flex items-center gap-1.5">
+                <span>Medallero & Títulos del Mes</span>
+                <span class="text-[10px] font-semibold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                  ${monthLabel}
+                </span>
+              </h3>
+              <p class="text-[10px] text-slate-400">Premios automáticos calculados en vivo según rendimiento de la liga</p>
+            </div>
+          </div>
+          <span class="text-[10px] text-slate-500 font-combat">5 Categorías</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+          ${badgesCardsHtml}
+        </div>
+      </div>
+    `;
   }
 
   renderDuelFormOptions() {
@@ -1703,6 +1884,78 @@ class LudoSportApp {
     if (statOHDiff) {
       statOHDiff.textContent = (stats.diff > 0 ? '+' : '') + stats.diff;
       statOHDiff.className = `font-combat font-bold text-base ${stats.diff > 0 ? 'text-emerald-400' : stats.diff < 0 ? 'text-rose-400' : 'text-slate-300'}`;
+    }
+
+    // Render Fencer Badges (current month & past months history)
+    const badgesListEl = document.getElementById('profileBadgesList');
+    const badgesCountEl = document.getElementById('profileBadgesCount');
+
+    if (badgesListEl) {
+      const badgesService = window.LeagueBadgesService;
+      if (badgesService) {
+        const earnedBadges = badgesService.getFencerBadgesHistory(
+          fencerId,
+          this.availableMonths,
+          this.currentMonthKey,
+          this.matches,
+          this.fencers,
+          this.isTestMode
+        );
+
+        if (badgesCountEl) {
+          badgesCountEl.textContent = `${earnedBadges.length} título${earnedBadges.length === 1 ? '' : 's'}`;
+        }
+
+        if (earnedBadges.length === 0) {
+          badgesListEl.innerHTML = `
+            <div class="p-3 text-center text-slate-500 text-xs bg-slate-900/60 rounded-xl border border-slate-800">
+              Aún no ha obtenido insignias. ¡Compite para conquistar títulos en la arena!
+            </div>
+          `;
+        } else {
+          badgesListEl.innerHTML = earnedBadges.map(b => {
+            const isCur = b.isCurrentMonth;
+            return `
+              <div class="badge-item relative group p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-2 shadow-sm transition-all"
+                   tabindex="0"
+                   role="article"
+                   title="${b.tooltip}">
+                
+                <!-- Tooltip Popover -->
+                <div class="badge-tooltip bg-slate-950/95 text-slate-200 border border-slate-700/80 rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
+                  <div class="font-bold text-xs flex items-center gap-1 mb-1 text-amber-300">
+                    <span>${b.emoji}</span>
+                    <span>${b.title}</span>
+                  </div>
+                  <p class="text-slate-300 text-[10px] leading-normal">${b.detail}</p>
+                  <div class="mt-1 text-[9px] text-cyan-400 font-semibold">${b.monthLabel}${isCur ? ' (Mes Activo)' : ''}</div>
+                </div>
+
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="text-base shrink-0 select-none">${b.emoji}</span>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-200 truncate flex items-center gap-1.5">
+                      <span>${b.title}</span>
+                      ${isCur ? '<span class="px-1.5 py-0.2 rounded text-[9px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase font-black">Activo</span>' : ''}
+                    </div>
+                    <div class="text-[10px] text-slate-400 truncate">
+                      ${b.monthLabel} &bull; <span class="text-slate-300 font-semibold">${b.formattedValue}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="shrink-0 text-right">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-combat font-bold bg-slate-950 border border-slate-800 text-slate-300">
+                    ${b.formattedValue}
+                  </span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } else {
+        badgesListEl.innerHTML = '';
+      }
     }
 
     if (matchCountEl) {

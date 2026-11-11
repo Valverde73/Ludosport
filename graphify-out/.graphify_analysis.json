@@ -1,0 +1,157 @@
+{
+  "communities": {
+    "0": [
+      "app_ludosportapp_closefencermodal",
+      "app_ludosportapp_closepinmodal",
+      "app_ludosportapp_createnewmonth",
+      "app_ludosportapp_deletefencer",
+      "app_ludosportapp_opendeletematchmodal",
+      "app_ludosportapp_openpinmodal",
+      "app_ludosportapp_openresetmonthmodal",
+      "app_ludosportapp_saveavailablemonths",
+      "app_ludosportapp_savefencerfrommodal",
+      "app_ludosportapp_setupeventlisteners",
+      "app_ludosportapp_showtoast",
+      "app_ludosportapp_submitpin",
+      "app_ludosportapp_switchmonth",
+      "app_ludosportapp_switchtab",
+      "app_ludosportapp_togglelivefullscreen",
+      "app_ludosportapp_updateadminui"
+    ],
+    "1": [
+      "app_ludosportapp_closedeletematchmodal",
+      "app_ludosportapp_closeresetmonthmodal",
+      "app_ludosportapp_confirmdeletematch",
+      "app_ludosportapp_confirmresetmonth",
+      "app_ludosportapp_getactivesheetsmonthkey",
+      "app_ludosportapp_getactivestoragefencerskey",
+      "app_ludosportapp_getactivestoragemonthkey",
+      "app_ludosportapp_loaddata",
+      "app_ludosportapp_loadfromlocalstorage",
+      "app_ludosportapp_renderall",
+      "app_ludosportapp_savecombat",
+      "app_ludosportapp_savelocalcache",
+      "app_ludosportapp_setsyncstatus",
+      "app_ludosportapp_syncmatchtosheets",
+      "app_ludosportapp_updatequickstats"
+    ],
+    "2": [
+      "app_ludosportapp_addlivetimerseconds",
+      "app_ludosportapp_adjustlivescorea",
+      "app_ludosportapp_adjustlivescoreb",
+      "app_ludosportapp_finishandsavelivecombat",
+      "app_ludosportapp_pauselivetimer",
+      "app_ludosportapp_playbeep",
+      "app_ludosportapp_resetlivetimer",
+      "app_ludosportapp_startlivetimer",
+      "app_ludosportapp_togglelivetimer",
+      "app_ludosportapp_updateliveoutcomebanner",
+      "app_ludosportapp_updatelivetimerdisplay"
+    ],
+    "3": [
+      "app_ludosportapp",
+      "app_ludosportapp_closefencerprofilemodal",
+      "app_ludosportapp_findexistingmatch",
+      "app_ludosportapp_getpendingmatchups",
+      "app_ludosportapp_openfencermodal",
+      "app_ludosportapp_renderduelformoptions",
+      "app_ludosportapp_renderpendingduels",
+      "app_ludosportapp_updateduelscoreandoutcome",
+      "app_ludosportapp_validateduelform"
+    ],
+    "4": [
+      "app_ludosportapp_constructor",
+      "app_ludosportapp_getdefaultmonthkey",
+      "app_ludosportapp_init",
+      "app_ludosportapp_loadlocalconfig",
+      "app_ludosportapp_loadsampletestdata",
+      "app_ludosportapp_toggletestmode",
+      "app_ludosportapp_updatetestmodeui"
+    ],
+    "5": [
+      "app_ludosportapp_getfencerstats",
+      "app_ludosportapp_getrankbadge",
+      "app_ludosportapp_getsabercolorname",
+      "app_ludosportapp_openfencerprofilemodal",
+      "app_ludosportapp_renderfencerslist"
+    ],
+    "6": [
+      "vercel",
+      "vercel_cleanurls",
+      "vercel_name",
+      "vercel_routes",
+      "vercel_version"
+    ],
+    "7": [
+      "app_ludosportapp_calculatestandings",
+      "app_ludosportapp_getfenceravatarhtml",
+      "app_ludosportapp_getinitials",
+      "app_ludosportapp_renderranking"
+    ],
+    "8": [
+      "app_ludosportapp_formatmonthlabel",
+      "app_ludosportapp_renderhistory",
+      "app_ludosportapp_renderhistorypastmonthslist",
+      "app_ludosportapp_rendermonthselector"
+    ],
+    "9": [
+      "app",
+      "app_default_fencers",
+      "app_month_names"
+    ],
+    "10": [
+      "app_ludosportapp_initlivescoreboard",
+      "app_ludosportapp_renderlivescoreboardoptions",
+      "app_ludosportapp_updatelivefightersui"
+    ],
+    "11": [
+      "start_server"
+    ]
+  },
+  "cohesion": {
+    "0": 0.26666666666666666,
+    "1": 0.22857142857142856,
+    "2": 0.32727272727272727,
+    "3": 0.3888888888888889,
+    "4": 0.2857142857142857,
+    "5": 0.5,
+    "6": 0.4,
+    "7": 0.5,
+    "8": 0.5,
+    "9": 0.6666666666666666,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "app_ludosportapp",
+      "label": "LudoSportApp",
+      "degree": 74
+    },
+    {
+      "id": "app_default_fencers",
+      "label": "DEFAULT_FENCERS",
+      "degree": 1
+    },
+    {
+      "id": "app_month_names",
+      "label": "MONTH_NAMES",
+      "degree": 1
+    },
+    {
+      "id": "vercel_cleanurls",
+      "label": "cleanUrls",
+      "degree": 1
+    },
+    {
+      "id": "vercel_routes",
+      "label": "routes",
+      "degree": 1
+    }
+  ],
+  "surprises": [],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

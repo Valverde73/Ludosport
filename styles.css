@@ -247,4 +247,45 @@ body.piste-mode #tab-live {
   }
 }
 
+/* Badges, Medals & Interactive Tooltips System */
+.badge-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge-card:hover {
+  transform: translateY(-2px);
+}
+
+.badge-card:focus,
+.badge-card:focus-visible {
+  outline: 2px solid rgba(0, 229, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.badge-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: normal;
+  min-width: 200px;
+  max-width: 280px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+.badge-card:hover .badge-tooltip,
+.badge-card:focus .badge-tooltip,
+.badge-card:focus-within .badge-tooltip,
+.badge-item:hover .badge-tooltip,
+.badge-item:focus .badge-tooltip,
+.badge-item:focus-within .badge-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+
 
