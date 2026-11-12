@@ -42,7 +42,7 @@ class LudoSportApp {
     this.currentMonthKey = this.getDefaultMonthKey();
     this.isAdmin = false;
     this.isTestMode = false;
-    this.adminPin = '1234';
+    this.adminPin = '2023';
     this.supabaseUrl = localStorage.getItem('ls_supabase_url') || '';
     this.supabaseKey = localStorage.getItem('ls_supabase_key') || '';
     this.supabase = null;
