@@ -7,3 +7,7 @@ dist/
 *.log
 graphify-out/cache/
 .agents/skills/
+
+__pycache__/
+*.pyc
+

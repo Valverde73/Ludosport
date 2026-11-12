@@ -60,9 +60,11 @@ class LudoSportApp {
     this.liveFighterBId = '';
     this.liveScoreA = 0;
     this.liveScoreB = 0;
-    this.timerSeconds = 120; // 2 minutes official bout
+    this.timerBaseSeconds = 90; // 01:30 base official bout duration
+    this.timerSeconds = 90;
     this.timerInterval = null;
     this.timerRunning = false;
+    this.timerStarted = false;
     this.isSoundEnabled = true;
     this.isPisteMode = false;
     this.currentProfileFencerId = null;
@@ -838,38 +840,82 @@ class LudoSportApp {
         const second = standings[1];
         const third = standings[2];
 
-        podiumContainer.innerHTML = `
-          <!-- 2nd Place -->
-          <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-slate-700/60 flex flex-col items-center justify-end text-center pt-4 hover:border-slate-500 transition-all">
-            <span class="w-6 h-6 rounded-full bg-slate-400/20 text-slate-300 font-bold text-xs flex items-center justify-center mb-1">2</span>
-            <div class="mb-1.5 shadow-md">
-              ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', true)}
-            </div>
-            <div class="font-bold text-xs text-slate-200 truncate w-full">${second.fencer.name}</div>
-            <div class="text-[10px] text-slate-400">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
-          </div>
+        // R2: Active podium format is enabled dynamically only when at least one fighter registers >= 1 victory
+        const isPodiumActive = standings.some(s => (s.won || 0) >= 1);
+        podiumContainer.setAttribute('data-podium-state', isPodiumActive ? 'active' : 'zero');
 
-          <!-- 1st Place (Gold / Crown) -->
-          <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card cursor-pointer p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-lsCard to-lsCard border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10 hover:border-amber-400 transition-all">
-            <i data-lucide="crown" class="w-5 h-5 text-amber-400 mb-0.5 animate-bounce"></i>
-            <div class="mb-1.5 shadow-lg shadow-amber-500/30">
-              ${this.getFencerAvatarHtml(first.fencer, 'w-12 h-12', true)}
+        if (isPodiumActive) {
+          // ACTIVE PODIUM FORMAT: Highlighted champion card, bouncing gold crown, amber glowing gradients & neon halos
+          podiumContainer.innerHTML = `
+            <!-- 2nd Place -->
+            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card podium-silver cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-slate-700/60 flex flex-col items-center justify-end text-center pt-4 hover:border-slate-500 transition-all">
+              <span class="w-6 h-6 rounded-full bg-slate-400/20 text-slate-300 font-bold text-xs flex items-center justify-center mb-1">2</span>
+              <div class="mb-1.5 shadow-md">
+                ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', true)}
+              </div>
+              <div class="font-bold text-xs text-slate-200 truncate w-full">${second.fencer.name}</div>
+              <div class="text-[10px] text-slate-400">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
             </div>
-            <div class="font-bold text-xs text-amber-300 truncate w-full">${first.fencer.name}</div>
-            <div class="text-[11px] font-bold text-slate-200">${first.points} pts</div>
-            <div class="text-[10px] text-amber-400/80">${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
-          </div>
 
-          <!-- 3rd Place -->
-          <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4 hover:border-amber-600 transition-all">
-            <span class="w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs flex items-center justify-center mb-1">3</span>
-            <div class="mb-1.5 shadow-md">
-              ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', true)}
+            <!-- 1st Place (Gold / Crown Highlighted Hero) -->
+            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card podium-gold pulse-laser-amber cursor-pointer p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-lsCard to-lsCard border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10 hover:border-amber-400 transition-all">
+              <i data-lucide="crown" class="w-5 h-5 text-amber-400 mb-0.5 animate-bounce"></i>
+              <div class="mb-1.5 shadow-lg shadow-amber-500/30">
+                ${this.getFencerAvatarHtml(first.fencer, 'w-12 h-12', true)}
+              </div>
+              <div class="font-bold text-xs text-amber-300 truncate w-full">${first.fencer.name}</div>
+              <div class="text-[11px] font-bold text-slate-200">${first.points} pts</div>
+              <div class="text-[10px] text-amber-400/80">${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
             </div>
-            <div class="font-bold text-xs text-slate-200 truncate w-full">${third.fencer.name}</div>
-            <div class="text-[10px] text-slate-400">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
-          </div>
-        `;
+
+            <!-- 3rd Place -->
+            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card podium-bronze cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4 hover:border-amber-600 transition-all">
+              <span class="w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs flex items-center justify-center mb-1">3</span>
+              <div class="mb-1.5 shadow-md">
+                ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', true)}
+              </div>
+              <div class="font-bold text-xs text-slate-200 truncate w-full">${third.fencer.name}</div>
+              <div class="text-[10px] text-slate-400">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
+            </div>
+          `;
+        } else {
+          // ZERO-STATE FORMAT: Attenuated neon colors, uniform non-elevated cards, disabled crown/glows
+          podiumContainer.innerHTML = `
+            <!-- 2nd Position (Attenuated) -->
+            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
+              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">2</span>
+              <div class="mb-1.5">
+                ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', false)}
+              </div>
+              <div class="font-bold text-xs text-slate-300 truncate w-full">${second.fencer.name}</div>
+              <div class="text-[10px] text-slate-500">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
+            </div>
+
+            <!-- 1st Position (Attenuated - No Crown, Flat Layout) -->
+            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
+              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">1</span>
+              <div class="mb-1.5">
+                ${this.getFencerAvatarHtml(first.fencer, 'w-10 h-10', false)}
+              </div>
+              <div class="font-bold text-xs text-slate-300 truncate w-full">${first.fencer.name}</div>
+              <div class="text-[10px] text-slate-500">${first.points} pts &bull; ${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
+            </div>
+
+            <!-- 3rd Position (Attenuated) -->
+            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
+              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">3</span>
+              <div class="mb-1.5">
+                ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', false)}
+              </div>
+              <div class="font-bold text-xs text-slate-300 truncate w-full">${third.fencer.name}</div>
+              <div class="text-[10px] text-slate-500">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
+            </div>
+          `;
+        }
+
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
       } else {
         podiumContainer.innerHTML = '';
       }
@@ -918,12 +964,12 @@ class LudoSportApp {
                 </div>
               </div>
             </td>
-            <td class="py-2.5 px-1.5 text-center text-slate-400 font-combat text-xs font-semibold">${item.matchesPlayed}</td>
-            <td class="py-2.5 px-1.5 text-center text-emerald-400 font-combat text-xs font-bold">${item.won}</td>
-            <td class="py-2.5 px-1.5 text-center text-amber-400 font-combat text-xs font-bold">${item.drawn}</td>
-            <td class="py-2.5 px-1.5 text-center text-rose-400 font-combat text-xs font-bold">${item.lost}</td>
-            <td class="py-2.5 px-1.5 text-center">${diffBadge}</td>
-            <td class="py-2.5 pr-3 pl-2 text-center font-combat font-black text-sm text-cyan-300">${item.points}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-slate-400 font-combat text-xs font-semibold">${item.matchesPlayed}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-emerald-400 font-combat text-xs font-bold">${item.won}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-amber-400 font-combat text-xs font-bold">${item.drawn}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-rose-400 font-combat text-xs font-bold">${item.lost}</td>
+            <td class="py-2.5 px-1.5 w-[46px] min-w-[46px] text-center">${diffBadge}</td>
+            <td class="py-2.5 pr-3 pl-2 w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-cyan-300">${item.points}</td>
           </tr>
         `;
       }).join('');
@@ -1043,8 +1089,8 @@ class LudoSportApp {
         }
       } else {
         winnersHtml = `
-          <div class="mt-2.5 py-1.5 px-2 rounded-lg bg-slate-900/60 border border-slate-800/80 text-[10px] text-slate-500 italic flex items-center gap-1.5">
-            <i data-lucide="clock" class="w-3 h-3 text-slate-600 shrink-0"></i>
+          <div class="mt-2.5 py-1.5 px-2 rounded-lg bg-slate-900/70 border border-slate-800/80 text-[10px] text-white/70 italic flex items-center gap-1.5" title="${badge.emptyStateText}">
+            <i data-lucide="clock" class="w-3 h-3 text-white/60 shrink-0"></i>
             <span class="truncate">${badge.emptyStateText}</span>
           </div>
         `;
@@ -1052,7 +1098,7 @@ class LudoSportApp {
       }
 
       return `
-        <div class="badge-card relative p-3 rounded-2xl bg-gradient-to-br ${colorScheme.bg} border ${colorScheme.border} shadow-lg transition-all"
+        <div class="badge-card relative p-3 rounded-2xl bg-gradient-to-br ${colorScheme.bg} border ${colorScheme.border} shadow-lg transition-all flex flex-col justify-between"
              tabindex="0"
              role="region"
              aria-label="${badge.title}">
@@ -1066,16 +1112,16 @@ class LudoSportApp {
             <p class="text-slate-300 text-[10px] leading-normal">${tooltipContent}</p>
           </div>
 
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <div class="w-6 h-6 rounded-lg ${colorScheme.iconBg} border flex items-center justify-center text-xs shrink-0">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-start gap-1.5 min-w-0 flex-1">
+              <div class="w-6 h-6 rounded-lg ${colorScheme.iconBg} border flex items-center justify-center text-xs shrink-0 mt-0.5">
                 <i data-lucide="${badge.icon}" class="w-3.5 h-3.5"></i>
               </div>
-              <span class="font-display font-bold text-xs ${colorScheme.badgeText} truncate">
+              <span class="font-display font-bold text-xs ${colorScheme.badgeText} whitespace-normal leading-tight line-clamp-2" title="${badge.title}">
                 ${badge.title}
               </span>
             </div>
-            <span class="text-xs select-none">${badge.emoji}</span>
+            <span class="text-xs select-none shrink-0 mt-0.5">${badge.emoji}</span>
           </div>
 
           ${winnersHtml}
@@ -1084,7 +1130,7 @@ class LudoSportApp {
     }).join('');
 
     container.innerHTML = `
-      <div class="bg-lsCard border border-lsBorder rounded-2xl p-3.5 shadow-xl relative overflow-hidden">
+      <div class="bg-lsCard border border-lsBorder rounded-2xl p-3.5 shadow-xl relative">
         <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
@@ -1491,7 +1537,11 @@ class LudoSportApp {
     }
 
     if (modal) modal.classList.remove('hidden');
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   closeDeleteMatchModal() {
@@ -1537,7 +1587,11 @@ class LudoSportApp {
     }
 
     if (modal) modal.classList.remove('hidden');
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   closeResetMonthModal() {
@@ -2177,7 +2231,11 @@ class LudoSportApp {
     }
 
     if (modal) modal.classList.remove('hidden');
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   closeFencerProfileModal() {
@@ -2271,10 +2329,15 @@ class LudoSportApp {
     if (avatarB) avatarB.innerHTML = this.getFencerAvatarHtml(fB, 'w-10 h-10', true);
 
     this.updateLiveOutcomeBanner();
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   adjustLiveScoreA(delta) {
+    if (this.timerRunning) return;
     this.liveScoreA = Math.max(0, this.liveScoreA + delta);
     const display = document.getElementById('liveScoreADisplay');
     if (display) display.textContent = this.liveScoreA;
@@ -2283,6 +2346,7 @@ class LudoSportApp {
   }
 
   adjustLiveScoreB(delta) {
+    if (this.timerRunning) return;
     this.liveScoreB = Math.max(0, this.liveScoreB + delta);
     const display = document.getElementById('liveScoreBDisplay');
     if (display) display.textContent = this.liveScoreB;
@@ -2313,7 +2377,11 @@ class LudoSportApp {
       banner.innerHTML = `<i data-lucide="scale" class="w-4 h-4 text-slate-400"></i><span>Empate Técnico &bull; [${sA} - ${sB}]</span>`;
     }
 
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   updateLiveTimerDisplay() {
@@ -2322,6 +2390,18 @@ class LudoSportApp {
     const toggleBtn = document.getElementById('liveTimerToggleBtn');
     const icon = document.getElementById('liveTimerIcon');
     const label = document.getElementById('liveTimerActionLabel');
+    const finishBtn = document.getElementById('liveFinishAndSaveBtn');
+
+    // R5: Accidental touch prevention: disabled while timer is running
+    if (finishBtn) {
+      finishBtn.disabled = this.timerRunning;
+    }
+
+    // Score buttons disabled while timer is active
+    ['liveBtnScoreADec', 'liveBtnScoreAInc', 'liveBtnScoreBDec', 'liveBtnScoreBInc'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.disabled = this.timerRunning;
+    });
 
     if (display) {
       const mins = Math.floor(this.timerSeconds / 60);
@@ -2338,7 +2418,7 @@ class LudoSportApp {
     if (toggleBtn && label) {
       if (this.timerRunning) {
         label.textContent = 'Pausar';
-        toggleBtn.className = 'flex-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'pause');
         if (statusText) {
           statusText.textContent = 'Combate en curso';
@@ -2346,13 +2426,13 @@ class LudoSportApp {
         }
       } else {
         label.textContent = this.timerSeconds === 0 ? 'Reiniciar' : 'Iniciar';
-        toggleBtn.className = 'flex-1 py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'play');
         if (statusText) {
           if (this.timerSeconds === 0) {
             statusText.textContent = '¡Tiempo agotado!';
             statusText.className = 'text-[11px] font-bold text-rose-400 mt-1';
-          } else if (this.timerSeconds < 120) {
+          } else if (this.timerStarted) {
             statusText.textContent = 'Combate en pausa';
             statusText.className = 'text-[11px] font-semibold text-amber-400 mt-1';
           } else {
@@ -2363,14 +2443,21 @@ class LudoSportApp {
       }
     }
 
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   startLiveTimer() {
     if (this.timerInterval) clearInterval(this.timerInterval);
-    if (this.timerSeconds === 0) this.timerSeconds = 120;
+    if (this.timerSeconds === 0) {
+      this.timerSeconds = Math.max(90, this.timerBaseSeconds || 90);
+    }
 
     this.timerRunning = true;
+    this.timerStarted = true;
     this.playBeep(750, 0.15);
     this.updateLiveTimerDisplay();
 
@@ -2380,9 +2467,18 @@ class LudoSportApp {
         if (this.timerSeconds <= 5 && this.timerSeconds > 0) {
           this.playBeep(600, 0.08);
         }
-        this.updateLiveTimerDisplay();
+        if (this.timerSeconds === 0) {
+          // Bout time over! Immediately pause timer and enable controls
+          this.pauseLiveTimer();
+          this.playBeep(880, 0.25);
+          setTimeout(() => this.playBeep(880, 0.25), 300);
+          setTimeout(() => this.playBeep(1100, 0.5), 600);
+          this.showToast('🔔 ¡Tiempo de asalto finalizado!', 'rose');
+        } else {
+          this.updateLiveTimerDisplay();
+        }
       } else {
-        // Bout time over!
+        // Bout time over fallback!
         this.pauseLiveTimer();
         this.playBeep(880, 0.25);
         setTimeout(() => this.playBeep(880, 0.25), 300);
@@ -2412,17 +2508,35 @@ class LudoSportApp {
 
   resetLiveTimer() {
     this.pauseLiveTimer();
-    this.timerSeconds = 120;
+    this.timerStarted = false;
+    this.timerSeconds = Math.max(90, this.timerBaseSeconds || 90);
     this.updateLiveTimerDisplay();
     this.playBeep(500, 0.1);
   }
 
   addLiveTimerSeconds(extra = 30) {
-    this.timerSeconds += extra;
+    if (extra < 0 && !this.timerRunning) {
+      this.timerSeconds = Math.max(90, this.timerSeconds + extra);
+    } else {
+      this.timerSeconds += extra;
+    }
     this.updateLiveTimerDisplay();
   }
 
+  setRoundDuration(sec) {
+    this.timerBaseSeconds = Math.max(90, Number(sec) || 90);
+    if (!this.timerRunning && !this.timerStarted) {
+      this.timerSeconds = this.timerBaseSeconds;
+      this.updateLiveTimerDisplay();
+    }
+  }
+
   async finishAndSaveLiveCombat() {
+    if (this.timerRunning) {
+      this.showToast('Pausa o detén el cronómetro antes de finalizar el combate', 'amber');
+      return;
+    }
+
     const fA = this.fencers.find(f => f.id === this.liveFighterAId);
     const fB = this.fencers.find(f => f.id === this.liveFighterBId);
 
@@ -2445,6 +2559,7 @@ class LudoSportApp {
     }
 
     this.pauseLiveTimer();
+    this.timerStarted = false;
 
     const sA = this.liveScoreA;
     const sB = this.liveScoreB;
@@ -2510,6 +2625,7 @@ class LudoSportApp {
     if (dispA) dispA.textContent = '0';
     if (dispB) dispB.textContent = '0';
     this.resetLiveTimer();
+    this.updateLiveOutcomeBanner();
 
     // Re-render other tabs
     this.renderAll();
@@ -2531,7 +2647,11 @@ class LudoSportApp {
       if (label) label.textContent = 'Modo Pista';
     }
 
-    if (window.lucide) window.lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
   }
 
   setupEventListeners() {
@@ -2685,7 +2805,11 @@ class LudoSportApp {
     // History search
     document.getElementById('historySearchInput')?.addEventListener('input', () => {
       this.renderHistory();
-      if (window.lucide) window.lucide.createIcons();
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
     });
 
     // Duel fighter selects change & input
@@ -2970,7 +3094,11 @@ class LudoSportApp {
         icon.setAttribute('data-lucide', this.isSoundEnabled ? 'volume-2' : 'volume-x');
       }
       this.showToast(this.isSoundEnabled ? 'Sonido activado' : 'Sonido silenciado', 'cyan');
-      if (window.lucide) window.lucide.createIcons();
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {}
+    }
     });
   }
 }

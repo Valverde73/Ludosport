@@ -45,6 +45,43 @@ body {
   }
 }
 
+/* Laser Border Pulse Keyframes */
+@keyframes laserPulseCyan {
+  0%, 100% {
+    border-color: rgba(0, 229, 255, 0.35);
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.2), inset 0 0 4px rgba(0, 229, 255, 0.08);
+  }
+  50% {
+    border-color: rgba(0, 229, 255, 0.85);
+    box-shadow: 
+      0 0 16px rgba(0, 229, 255, 0.5),
+      0 0 28px rgba(0, 229, 255, 0.25),
+      inset 0 0 8px rgba(0, 229, 255, 0.15);
+  }
+}
+
+@keyframes laserPulseAmber {
+  0%, 100% {
+    border-color: rgba(245, 158, 11, 0.35);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2), inset 0 0 4px rgba(245, 158, 11, 0.1);
+  }
+  50% {
+    border-color: rgba(245, 158, 11, 0.9);
+    box-shadow: 
+      0 0 18px rgba(245, 158, 11, 0.55),
+      0 0 30px rgba(245, 158, 11, 0.28),
+      inset 0 0 8px rgba(245, 158, 11, 0.2);
+  }
+}
+
+.pulse-laser-cyan {
+  animation: laserPulseCyan 2.4s infinite ease-in-out;
+}
+
+.pulse-laser-amber {
+  animation: laserPulseAmber 2.4s infinite ease-in-out;
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -126,11 +163,38 @@ input[type=number] {
 /* Podium Styling */
 .podium-card {
   position: relative;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .podium-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.45),
+    0 0 22px rgba(0, 229, 255, 0.25),
+    0 0 36px rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.65) !important;
+}
+
+/* Gold Podium Card Hover (1st Place Active) */
+.podium-card.podium-gold:hover,
+[data-podium-state="active"] .podium-card:has(.text-amber-400):hover,
+[data-podium-state="active"] .podium-card:has(.animate-bounce):hover {
+  box-shadow: 
+    0 0 12px rgba(245, 158, 11, 0.55),
+    0 0 24px rgba(245, 158, 11, 0.3),
+    0 0 40px rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.8) !important;
+}
+
+/* Podium Zero-State Attenuation */
+[data-podium-state="zero"] .podium-card {
+  box-shadow: none !important;
+}
+
+[data-podium-state="zero"] .podium-card:hover {
+  transform: none;
+  box-shadow: none !important;
+  border-color: #334155 !important;
 }
 
 /* Saber Colors for Avatar Rings */
@@ -179,14 +243,44 @@ input[type=number] {
 }
 
 /* Interactive Fencer Profile Row & Card Targets */
-tr[data-fencer-profile],
-div[data-fencer-profile] {
+.ranking-table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+tr[data-fencer-profile] {
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 tr[data-fencer-profile]:hover {
-  background-color: rgba(0, 229, 255, 0.08) !important;
+  background-color: rgba(0, 229, 255, 0.1) !important;
+  box-shadow: 
+    0 0 8px rgba(0, 229, 255, 0.45),
+    0 0 18px rgba(0, 229, 255, 0.22),
+    0 0 32px rgba(0, 229, 255, 0.1) !important;
+  z-index: 10;
+}
+
+tr[data-fencer-profile]:hover td {
+  border-top-color: rgba(0, 229, 255, 0.6) !important;
+  border-bottom-color: rgba(0, 229, 255, 0.6) !important;
+}
+
+div[data-fencer-profile] {
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Fencer list cards */
+#fencersGridList > div:hover,
+.fencer-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 229, 255, 0.5) !important;
+  box-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.35),
+    0 0 20px rgba(0, 229, 255, 0.18);
 }
 
 /* Timer Warning Animation */
@@ -253,13 +347,27 @@ body.piste-mode #tab-live {
 }
 
 .badge-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.4),
+    0 0 20px rgba(0, 229, 255, 0.2),
+    0 0 35px rgba(0, 229, 255, 0.1) !important;
 }
 
 .badge-card:focus,
 .badge-card:focus-visible {
   outline: 2px solid rgba(0, 229, 255, 0.6);
   outline-offset: 2px;
+}
+
+.badge-card {
+  position: relative;
+  z-index: 1;
+}
+
+.badge-card:hover,
+.badge-card:focus-within {
+  z-index: 40;
 }
 
 .badge-tooltip {
@@ -277,6 +385,7 @@ body.piste-mode #tab-live {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 }
 
+/* En pantallas táctiles o cuando la tarjeta está en la fila superior, si se desea abrir hacia abajo o centrar */
 .badge-card:hover .badge-tooltip,
 .badge-card:focus .badge-tooltip,
 .badge-card:focus-within .badge-tooltip,
@@ -286,6 +395,115 @@ body.piste-mode #tab-live {
   opacity: 1;
   transform: translateX(-50%) translateY(-10px);
 }
+
+/* En la primera fila o cuando no hay espacio arriba, soporte para despliegue hacia abajo si el contenedor lo requiere */
+@media (max-width: 640px) {
+  .badge-tooltip {
+    left: 0;
+    transform: translateY(-6px);
+  }
+  .badge-card:hover .badge-tooltip,
+  .badge-card:focus .badge-tooltip,
+  .badge-card:focus-within .badge-tooltip {
+    transform: translateY(-10px);
+  }
+}
+
+/* ==========================================================================
+   R4: Classification Table Metrics Stability (Fixed min-width & Centering)
+   ========================================================================== */
+
+/* Universal tabular digits to eliminate character-width jitter */
+.ranking-table th,
+.ranking-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Metric Columns: PJ, V, E, D */
+.col-metric-num,
+.ranking-table th:nth-child(3), .ranking-table td:nth-child(3),
+.ranking-table th:nth-child(4), .ranking-table td:nth-child(4),
+.ranking-table th:nth-child(5), .ranking-table td:nth-child(5),
+.ranking-table th:nth-child(6), .ranking-table td:nth-child(6) {
+  min-width: 38px !important;
+  width: 38px !important;
+  text-align: center !important;
+}
+
+/* Metric Column: DIF (+/- difference) */
+.col-metric-dif,
+.ranking-table th:nth-child(7), .ranking-table td:nth-child(7) {
+  min-width: 46px !important;
+  width: 46px !important;
+  text-align: center !important;
+}
+
+/* Metric Column: PTS (Total League Points) */
+.col-metric-pts,
+.ranking-table th:nth-child(8), .ranking-table td:nth-child(8) {
+  min-width: 48px !important;
+  width: 48px !important;
+  text-align: center !important;
+}
+
+/* ==========================================================================
+   R4: Scroll Clearance (Bottom Dock & Floating Duelo Button)
+   ========================================================================== */
+body:not(.piste-mode) {
+  padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* ==========================================================================
+   Marcador en Directo: Refactor & Usability Enhancement (R1, R3, R5, R6)
+   ========================================================================== */
+
+/* R1: Shooter Card Name Wrapping & Multi-line Display (Up to 2 lines) */
+.live-corner-card h3,
+#liveFighterAName,
+#liveFighterBName {
+  white-space: normal !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+/* R3: WCAG AA Compliant Contrast for Live Scoreboard OHs Label */
+.live-corner-card span.tracking-widest {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* R5: Accidental Touch Prevention: Live Finish Button Disabled State */
+#liveFinishAndSaveBtn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.5) !important;
+}
+
+/* R6: Tactile hit-areas >= 48x48px for point buttons (WCAG 2.5.5 / 2.5.8) */
+#liveBtnScoreADec,
+#liveBtnScoreAInc,
+#liveBtnScoreBDec,
+#liveBtnScoreBInc {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Accidental Touch Prevention: Live Score Buttons Disabled State while timer is running */
+#liveBtnScoreADec:disabled,
+#liveBtnScoreAInc:disabled,
+#liveBtnScoreBDec:disabled,
+#liveBtnScoreBInc:disabled {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.6) !important;
+}
+
 
 
 
