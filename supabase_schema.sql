@@ -13,8 +13,12 @@ CREATE TABLE IF NOT EXISTS public.fencers (
     color TEXT NOT NULL DEFAULT 'cyan',
     joined_at TEXT DEFAULT '',
     photo_url TEXT DEFAULT '',
+    academy TEXT NOT NULL DEFAULT 'Almería',
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Migración idónea en caso de tabla preexistente sin columna academy
+ALTER TABLE public.fencers ADD COLUMN IF NOT EXISTS academy TEXT NOT NULL DEFAULT 'Almería';
 
 -- Habilitar Row Level Security (RLS) en fencers
 ALTER TABLE public.fencers ENABLE ROW LEVEL SECURITY;
@@ -69,23 +73,24 @@ EXCEPTION WHEN undefined_table THEN
 END $$;
 
 -- 3. SEMILLA INICIAL DE LOS 14 TIRADORES OFICIALES (LudoSport Almería)
-INSERT INTO public.fencers (id, name, rank, color, joined_at, photo_url)
+INSERT INTO public.fencers (id, name, rank, color, joined_at, photo_url, academy)
 VALUES
-    ('f-1', 'Mar Garcia', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-2', 'Auri Haro', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-3', 'Mario Ferrer', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-4', 'Isa Liria', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-5', 'Ulises Carmona', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-6', 'Paula Carmona', 'Novizio', 'cyan', '2026-01-01', ''),
-    ('f-7', 'Alberto Delgado', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-8', 'Rogelio Carceles', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-9', 'Patricia Urquiza', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-10', 'Saúl García-Abadillo', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-11', 'Virginia García', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-12', 'Andrés Saavedra', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-13', 'Emilio Valverde', 'Inizziato', 'cyan', '2026-01-01', ''),
-    ('f-14', 'Trino Góngora', 'Instructor', 'emerald', '2026-01-01', '')
+    ('f-1', 'Mar Garcia', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-2', 'Auri Haro', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-3', 'Mario Ferrer', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-4', 'Isa Liria', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-5', 'Ulises Carmona', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-6', 'Paula Carmona', 'Novizio', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-7', 'Alberto Delgado', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-8', 'Rogelio Carceles', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-9', 'Patricia Urquiza', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-10', 'Saúl García-Abadillo', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-11', 'Virginia García', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-12', 'Andrés Saavedra', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-13', 'Emilio Valverde', 'Inizziato', 'cyan', '2026-01-01', '', 'Almería'),
+    ('f-14', 'Trino Góngora', 'Instructor', 'emerald', '2026-01-01', '', 'Almería')
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     rank = EXCLUDED.rank,
-    color = EXCLUDED.color;
+    color = EXCLUDED.color,
+    academy = EXCLUDED.academy;

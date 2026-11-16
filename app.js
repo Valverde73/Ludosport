@@ -5,20 +5,20 @@
 
 // Initial Seed Fencers (LudoSport School Pupils)
 const DEFAULT_FENCERS = [
-  { id: 'f-1', name: 'Mar Garcia', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-2', name: 'Auri Haro', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-3', name: 'Mario Ferrer', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-4', name: 'Isa Liria', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-5', name: 'Ulises Carmona', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-6', name: 'Paula Carmona', rank: 'Novizio', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-7', name: 'Alberto Delgado', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-8', name: 'Rogelio Carceles', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-9', name: 'Patricia Urquiza', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-10', name: 'Saúl García-Abadillo', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-11', name: 'Virginia García', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-12', name: 'Andrés Saavedra', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-13', name: 'Emilio Valverde', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '' },
-  { id: 'f-14', name: 'Trino Góngora', rank: 'Instructor', color: 'emerald', joinedAt: '2026-01-01', photoUrl: '' }
+  { id: 'f-1', name: 'Mar Garcia', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-2', name: 'Auri Haro', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-3', name: 'Mario Ferrer', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-4', name: 'Isa Liria', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-5', name: 'Ulises Carmona', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-6', name: 'Paula Carmona', rank: 'Novizio', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-7', name: 'Alberto Delgado', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-8', name: 'Rogelio Carceles', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-9', name: 'Patricia Urquiza', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-10', name: 'Saúl García-Abadillo', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-11', name: 'Virginia García', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-12', name: 'Andrés Saavedra', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-13', name: 'Emilio Valverde', rank: 'Inizziato', color: 'cyan', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' },
+  { id: 'f-14', name: 'Trino Góngora', rank: 'Instructor', color: 'emerald', joinedAt: '2026-01-01', photoUrl: '', academy: 'Almería' }
 ];
 
 // Months Name Dictionary (Spanish)
@@ -140,24 +140,30 @@ class LudoSportApp {
 
   // --- Mappers between Frontend (camelCase) and Supabase (snake_case) ---
   fencerToDb(f) {
+    const rawAcademy = f.academy;
+    const academy = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
     return {
       id: String(f.id),
       name: String(f.name),
       rank: String(f.rank || 'Inizziato'),
       color: String(f.color || 'cyan'),
       joined_at: String(f.joinedAt || new Date().toISOString().split('T')[0]),
-      photo_url: String(f.photoUrl || '')
+      photo_url: String(f.photoUrl || ''),
+      academy: String(academy)
     };
   }
 
   fencerFromDb(row) {
+    const rawAcademy = row.academy;
+    const academy = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
     return {
       id: String(row.id),
       name: String(row.name),
       rank: String(row.rank || 'Inizziato'),
       color: String(row.color || 'cyan'),
       joinedAt: String(row.joined_at || ''),
-      photoUrl: String(row.photo_url || '')
+      photoUrl: String(row.photo_url || ''),
+      academy: String(academy)
     };
   }
 
@@ -540,6 +546,7 @@ class LudoSportApp {
         this.fencers = JSON.parse(storedFencers);
         this.fencers.forEach(f => {
           if (f.photoUrl === undefined) f.photoUrl = '';
+          if (!f.academy || f.academy === 'Almeria') f.academy = 'Almería';
         });
       } catch (e) {
         this.fencers = [...DEFAULT_FENCERS];
@@ -1675,22 +1682,28 @@ class LudoSportApp {
 
     const editId = document.getElementById('fencerEditId').value;
     const nameInput = document.getElementById('fencerNameInput');
+    const academyInput = document.getElementById('fencerAcademyInput');
     const rankInput = document.getElementById('fencerRankInput');
     const colorInput = document.getElementById('fencerColorInput');
     const photoInput = document.getElementById('fencerPhotoUrlInput');
 
     const name = nameInput.value.trim();
     if (!name) return;
+    const academy = academyInput ? academyInput.value : 'Almería';
     const photoUrl = photoInput ? photoInput.value.trim() : '';
+
+    let targetFencer = null;
 
     if (editId) {
       // Edit
       const f = this.fencers.find(item => item.id === editId);
       if (f) {
         f.name = name;
+        f.academy = academy;
         f.rank = rankInput.value;
         f.color = colorInput.value;
         f.photoUrl = photoUrl;
+        targetFencer = f;
       }
       this.showToast(`Tirador actualizado: ${name}`, 'emerald');
     } else {
@@ -1698,12 +1711,14 @@ class LudoSportApp {
       const newFencer = {
         id: 'f-' + Date.now(),
         name: name,
+        academy: academy,
         rank: rankInput.value,
         color: colorInput.value,
         photoUrl: photoUrl,
         joinedAt: new Date().toISOString().split('T')[0]
       };
       this.fencers.push(newFencer);
+      targetFencer = newFencer;
       this.showToast(`Nuevo alumno inscrito: ${name}`, 'emerald');
     }
 
@@ -1712,8 +1727,7 @@ class LudoSportApp {
     this.renderAll();
 
     // Async sync to Supabase if not in test mode
-    if (this.supabase && !this.isTestMode) {
-      const targetFencer = editingFencer || newFencer;
+    if (this.supabase && !this.isTestMode && targetFencer) {
       this.supabase
         .from('fencers')
         .upsert(this.fencerToDb(targetFencer))
@@ -1862,6 +1876,7 @@ class LudoSportApp {
     const title = document.getElementById('fencerModalTitle');
     const editId = document.getElementById('fencerEditId');
     const nameInput = document.getElementById('fencerNameInput');
+    const academyInput = document.getElementById('fencerAcademyInput');
     const rankInput = document.getElementById('fencerRankInput');
     const colorInput = document.getElementById('fencerColorInput');
     const photoInput = document.getElementById('fencerPhotoUrlInput');
@@ -1870,6 +1885,10 @@ class LudoSportApp {
       title.textContent = 'Modificar Tirador';
       editId.value = editFencer.id;
       nameInput.value = editFencer.name;
+      if (academyInput) {
+        const rawAcademy = editFencer.academy;
+        academyInput.value = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
+      }
       rankInput.value = editFencer.rank || 'Inizziato';
       colorInput.value = editFencer.color || 'cyan';
       if (photoInput) photoInput.value = editFencer.photoUrl || '';
@@ -1877,6 +1896,7 @@ class LudoSportApp {
       title.textContent = 'Añadir Nuevo Tirador';
       editId.value = '';
       nameInput.value = '';
+      if (academyInput) academyInput.value = 'Almería';
       rankInput.value = 'Inizziato';
       colorInput.value = 'cyan';
       if (photoInput) photoInput.value = '';

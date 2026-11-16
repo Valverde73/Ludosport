@@ -1,8 +1,8 @@
 {
   "app.js": {
-    "mtime": 1794484147.4593782,
-    "seen": 1794484216.016897,
-    "ast_hash": "a48c0efb8fde69d562ad340fdb42582d",
+    "mtime": 1794848283.115445,
+    "seen": 1794848470.747002,
+    "ast_hash": "90c231a8d616ffe8fa398e3eff2f9666",
     "semantic_hash": ""
   },
   "start-server.ps1": {
@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794482381.5530353,
-    "seen": 1794482512.0427985,
-    "ast_hash": "faffaa72dc56f95dd80f156e44213e1a",
+    "mtime": 1794848221.1385987,
+    "seen": 1794848470.923423,
+    "ast_hash": "ca5cb32ca2b9f51c73200b988dc57996",
     "semantic_hash": ""
   },
   "tests.html": {
@@ -216,9 +216,9 @@
     "semantic_hash": ""
   },
   ".agents/teamwork/sentinel/BRIEFING.md": {
-    "mtime": 1794481975.0991888,
-    "seen": 1794482512.0427985,
-    "ast_hash": "014e6db5ea475f09f49c689d367909c7",
+    "mtime": 1794484890.8054855,
+    "seen": 1794846956.2248664,
+    "ast_hash": "fe1d2f7e27ee77e2a01db293fcb02848",
     "semantic_hash": ""
   },
   ".agents/teamwork/worker_1/BRIEFING.md": {
@@ -468,9 +468,9 @@
     "semantic_hash": ""
   },
   ".agents/teamwork/sentinel/handoff.md": {
-    "mtime": 1794479565.0492618,
-    "seen": 1794482512.0427985,
-    "ast_hash": "4fe762af9705ffe60c193b098a6cf2c6",
+    "mtime": 1794484898.5521479,
+    "seen": 1794846956.2248664,
+    "ast_hash": "2a1b587c903a9eaebf33e051492a0f5b",
     "semantic_hash": ""
   },
   ".agents/teamwork/victory_auditor/BRIEFING.md": {
@@ -684,9 +684,9 @@
     "semantic_hash": ""
   },
   ".agents/teamwork/swe/BRIEFING.md": {
-    "mtime": 1794483859.0332544,
-    "seen": 1794484216.0501468,
-    "ast_hash": "0e3c16ef6315762b77b6d9ca3f194c4f",
+    "mtime": 1794484578.4300654,
+    "seen": 1794846956.2248664,
+    "ast_hash": "2fd012cb28d5dbb72bb311f1c99cc2f5",
     "semantic_hash": ""
   },
   ".agents/teamwork/swe/DISPATCH.md": {
@@ -696,9 +696,9 @@
     "semantic_hash": ""
   },
   ".agents/teamwork/swe/progress.md": {
-    "mtime": 1794484026.04916,
-    "seen": 1794484216.0501468,
-    "ast_hash": "29d7d11b94d04a9e9779efdc50a2455e",
+    "mtime": 1794484585.8290582,
+    "seen": 1794846956.2248664,
+    "ast_hash": "9b55ce8a4466354750084f3424db9ff1",
     "semantic_hash": ""
   },
   ".agents/teamwork/teamwork_implementer_r1/progress.md": {
@@ -735,6 +735,90 @@
     "mtime": 1794483755.0422611,
     "seen": 1794484216.0501468,
     "ast_hash": "c2e07881120ac37cded7d8d946153cf1",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/swe/handoff.md": {
+    "mtime": 1794484595.7171905,
+    "seen": 1794846956.2248664,
+    "ast_hash": "4be3948e6d382e380e8faf2e7a95f28e",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_reviewer_r3/handoff.md": {
+    "mtime": 1794484265.1228619,
+    "seen": 1794846956.2313197,
+    "ast_hash": "19010f3e5703394760a676c8c7d1f24c",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_reviewer_r3/progress.md": {
+    "mtime": 1794484248.4465232,
+    "seen": 1794846956.2313197,
+    "ast_hash": "aa03519cb338fb97593ece0556dc2535",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_victory_auditor/BRIEFING.md": {
+    "mtime": 1794484546.3065765,
+    "seen": 1794846956.2313197,
+    "ast_hash": "9ddb4a9e994897c8f95c2823d21674e8",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_victory_auditor/DISPATCH.md": {
+    "mtime": 1794484340.8906858,
+    "seen": 1794846956.2313197,
+    "ast_hash": "11c4989f434934702579ab186257dc21",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_victory_auditor/audit_report.md": {
+    "mtime": 1794484516.35555,
+    "seen": 1794846956.2313197,
+    "ast_hash": "27a683c2bed9c70b30ced41a854dbfe5",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_victory_auditor/handoff.md": {
+    "mtime": 1794484532.1584241,
+    "seen": 1794846956.2313197,
+    "ast_hash": "7077237ee164e7fd415bb281b1bf11d8",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/teamwork_victory_auditor/progress.md": {
+    "mtime": 1794484549.240873,
+    "seen": 1794846956.2313197,
+    "ast_hash": "c5cbe3cb98844b2ff191388a1da47e68",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/victory_auditor_2/BRIEFING.md": {
+    "mtime": 1794484844.6859043,
+    "seen": 1794846956.2348425,
+    "ast_hash": "9d71f3ac0a690a8fd1c60ef424a7bcb2",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/victory_auditor_2/DISPATCH.md": {
+    "mtime": 1794484634.2778728,
+    "seen": 1794846956.2348425,
+    "ast_hash": "67434ec3a6cf15c8046222054849a09c",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/victory_auditor_2/handoff.md": {
+    "mtime": 1794484858.794767,
+    "seen": 1794846956.2348425,
+    "ast_hash": "750d9d779ab2fad9b1fb4c17a0b0d0ea",
+    "semantic_hash": ""
+  },
+  ".agents/teamwork/victory_auditor_2/progress.md": {
+    "mtime": 1794484848.407537,
+    "seen": 1794846956.2348425,
+    "ast_hash": "c496e7a267c00e0fb3c3f4fdd3b546aa",
+    "semantic_hash": ""
+  },
+  "test_fencer_academy.js": {
+    "mtime": 1794848420.571028,
+    "seen": 1794848470.7551174,
+    "ast_hash": "e6f9a2364f12125d7d786263c2283e43",
+    "semantic_hash": ""
+  },
+  "test_fencer_academy.py": {
+    "mtime": 1794848440.6216414,
+    "seen": 1794848470.7551174,
+    "ast_hash": "29bb891e85aa309395d6ab366d1bea87",
     "semantic_hash": ""
   }
 }
