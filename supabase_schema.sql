@@ -39,8 +39,10 @@ CREATE TABLE IF NOT EXISTS public.matches (
     date TEXT NOT NULL,
     fighter_a_id TEXT NOT NULL,
     fighter_a_name TEXT NOT NULL,
+    fighter_a_academy TEXT NOT NULL DEFAULT '',
     fighter_b_id TEXT NOT NULL,
     fighter_b_name TEXT NOT NULL,
+    fighter_b_academy TEXT NOT NULL DEFAULT '',
     result TEXT NOT NULL,
     points_a INTEGER NOT NULL DEFAULT 0,
     points_b INTEGER NOT NULL DEFAULT 0,
@@ -53,6 +55,9 @@ CREATE TABLE IF NOT EXISTS public.matches (
     "timestamp" TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Migración idónea en caso de tabla preexistente sin columnas de academia
+ALTER TABLE public.matches ADD COLUMN IF NOT EXISTS fighter_a_academy TEXT NOT NULL DEFAULT '', ADD COLUMN IF NOT EXISTS fighter_b_academy TEXT NOT NULL DEFAULT '';
 
 -- Índices para optimizar consultas de liga mensual
 CREATE INDEX IF NOT EXISTS idx_matches_month_key ON public.matches (month_key);

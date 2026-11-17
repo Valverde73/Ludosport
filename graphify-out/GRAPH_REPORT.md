@@ -1,17 +1,17 @@
-# Graph Report - LudoSport  (2026-11-16)
+# Graph Report - LudoSport  (2026-11-17)
 
 ## Corpus Check
-- 20 files · ~108,115 words
+- 21 files · ~111,093 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 1, .gs 1, .toml 1)
 
 ## Summary
-- 592 nodes · 836 edges · 37 communities (9 shown, 28 thin omitted)
+- 659 nodes · 925 edges · 40 communities (11 shown, 29 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `06de9d25`
+- Built from commit: `447d035a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,42 +41,46 @@
 - test_challenger_marcador_ui.py
 - TestR1NameWrappingAdversarial
 - TestR4VisualHierarchyAdversarial
-- TestAdversarialEdgeCases
+- test_ranking_academy.js
 - test_score_buttons_timer.js
 - MockElement
 - TestPodiumZeroStateVsActiveStateEdgeCases
 - TestScoreButtonsDisabledDuringTimer
 - TestScoreButtonsTimerContracts
-- TestFencerAcademyModalUI
+- MockElement
 - ClassListMock
+- TestR6TactileHitAreas
+- ClassListMock
+- getOrCreateMockElement
 
 ## God Nodes (most connected - your core abstractions)
-1. `LudoSportApp` - 83 edges
+1. `LudoSportApp` - 85 edges
 2. `TestMonthlyBadgesSystem` - 16 edges
-3. `MockElement` - 10 edges
-4. `TestFencerAcademySupabaseSync` - 10 edges
-5. `TestR1NameWrappingAdversarial` - 9 edges
-6. `TestScoreButtonsTimerContracts` - 9 edges
-7. `TestR2OfficialTimerLogic` - 9 edges
-8. `ClassListMock` - 8 edges
-9. `TestTableMetricsStability` - 8 edges
-10. `TestLaserHoverEffectsAndKeyframes` - 8 edges
+3. `MockElement` - 11 edges
+4. `MockElement` - 10 edges
+5. `TestFencerAcademySupabaseSync` - 10 edges
+6. `TestR1NameWrappingAdversarial` - 9 edges
+7. `TestScoreButtonsTimerContracts` - 9 edges
+8. `TestR2OfficialTimerLogic` - 9 edges
+9. `ClassListMock` - 8 edges
+10. `TestTableMetricsStability` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `getOrCreateMockElement()` --calls--> `MockElement`  [EXTRACTED]
+  test_ranking_academy.js → test_ranking_academy.js  _Bridges community 34 → community 38_
 
 ## Import Cycles
 - None detected.
 
-## Communities (37 total, 28 thin omitted)
+## Communities (40 total, 29 thin omitted)
 
 ### Community 0 - "LudoSportApp"
 Cohesion: 0.07
 Nodes (4): DEFAULT_FENCERS, LudoSportApp, MONTH_NAMES, normalizeSupabaseUrl()
 
 ### Community 1 - "test_challenger_marcador_ui.py"
-Cohesion: 0.08
-Nodes (6): channel_luminance(), composite_alpha(), contrast_ratio(), relative_luminance(), TestMedalleroAndWcagContrastStress, TestR6TactileHitAreas
+Cohesion: 0.06
+Nodes (7): TestAdversarialEdgeCases, channel_luminance(), composite_alpha(), contrast_ratio(), relative_luminance(), TestMedalleroAndWcagContrastStress, TestFencerAcademyModalUI
 
 ### Community 5 - "test_empirical_timer_r2_r5.js"
 Cohesion: 0.05
@@ -102,24 +106,32 @@ Nodes (29): academyInput, app, appJs, appModule, appSource, assert, blockedFence
 Cohesion: 0.07
 Nodes (7): alpha_composite(), contrast_ratio(), relative_luminance(), srgb_channel_to_linear(), TestR3WCAGContrastAdversarial, TestR5AndR2DefensiveGuards, TestR6TactileHitAreasAdversarial
 
+### Community 28 - "test_ranking_academy.js"
+Cohesion: 0.04
+Nodes (41): a1Stats, a2Stats, allStandings, almeriaStandings, app, appModule, appSource, assert (+33 more)
+
 ### Community 29 - "test_score_buttons_timer.js"
 Cohesion: 0.07
 Nodes (17): app, appModule, appSource, assert, btnADec, btnAInc, btnBDec, btnBInc (+9 more)
 
+### Community 38 - "getOrCreateMockElement"
+Cohesion: 0.67
+Nodes (3): createApp(), getOrCreateMockElement(), testCombatRecording()
+
 ## Knowledge Gaps
-- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `TestFencerAcademySupabaseSync` connect `TestFencerAcademySupabaseSync` to `test_challenger_marcador_ui.py`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
 - **Should `LudoSportApp` be split into smaller, more focused modules?**
-  _Cohesion score 0.0727078321304464 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0735444330949949 - nodes in this community are weakly interconnected._
 - **Why does `TestR1NameWrappingAdversarial` connect `TestR1NameWrappingAdversarial` to `test_challenger_marcador_ui.py`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **Should `test_challenger_marcador_ui.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.08253968253968254 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058279370952821465 - nodes in this community are weakly interconnected._
 - **Should `test_empirical_timer_r2_r5.js` be split into smaller, more focused modules?**
   _Cohesion score 0.05204872646733112 - nodes in this community are weakly interconnected._
 - **Should `.calculate_badges` be split into smaller, more focused modules?**

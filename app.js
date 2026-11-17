@@ -68,6 +68,7 @@ class LudoSportApp {
     this.isSoundEnabled = true;
     this.isPisteMode = false;
     this.currentProfileFencerId = null;
+    this.rankingAcademyFilter = 'all';
 
     this.init();
   }
@@ -138,10 +139,20 @@ class LudoSportApp {
     return false;
   }
 
+  // --- Academy Normalization & Legacy Fallback Helpers ---
+  normalizeAcademy(value, fallback = '') {
+    if (value === null || value === undefined) return fallback;
+    const trimmed = String(value).trim();
+    if (!trimmed) return fallback;
+    const lower = trimmed.toLowerCase();
+    if (lower === 'almeria' || lower === 'almería') return 'Almería';
+    if (lower === 'granada') return 'Granada';
+    return trimmed;
+  }
+
   // --- Mappers between Frontend (camelCase) and Supabase (snake_case) ---
   fencerToDb(f) {
-    const rawAcademy = f.academy;
-    const academy = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
+    const academy = this.normalizeAcademy(f.academy, 'Almería');
     return {
       id: String(f.id),
       name: String(f.name),
@@ -154,8 +165,7 @@ class LudoSportApp {
   }
 
   fencerFromDb(row) {
-    const rawAcademy = row.academy;
-    const academy = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
+    const academy = this.normalizeAcademy(row.academy, 'Almería');
     return {
       id: String(row.id),
       name: String(row.name),
@@ -173,8 +183,10 @@ class LudoSportApp {
       date: String(m.date),
       fighter_a_id: String(m.fighterAId),
       fighter_a_name: String(m.fighterAName),
+      fighter_a_academy: String(this.normalizeAcademy(m.fighterAAcademy)),
       fighter_b_id: String(m.fighterBId),
       fighter_b_name: String(m.fighterBName),
+      fighter_b_academy: String(this.normalizeAcademy(m.fighterBAcademy)),
       result: String(m.result),
       points_a: Number(m.pointsA || 0),
       points_b: Number(m.pointsB || 0),
@@ -194,8 +206,10 @@ class LudoSportApp {
       date: String(row.date),
       fighterAId: String(row.fighter_a_id),
       fighterAName: String(row.fighter_a_name),
+      fighterAAcademy: this.normalizeAcademy(row.fighter_a_academy),
       fighterBId: String(row.fighter_b_id),
       fighterBName: String(row.fighter_b_name),
+      fighterBAcademy: this.normalizeAcademy(row.fighter_b_academy),
       result: String(row.result),
       pointsA: Number(row.points_a || 0),
       pointsB: Number(row.points_b || 0),
@@ -207,6 +221,24 @@ class LudoSportApp {
       scoreText: String(row.score_text || `${row.score_a || 0} - ${row.score_b || 0}`),
       monthKey: String(row.month_key || '')
     };
+  }
+
+  resolveMatchAcademies(match) {
+    if (!match) return { fighterAAcademy: '', fighterBAcademy: '' };
+    let fighterAAcademy = this.normalizeAcademy(match.fighterAAcademy);
+    let fighterBAcademy = this.normalizeAcademy(match.fighterBAcademy);
+
+    if (!fighterAAcademy && match.fighterAId && Array.isArray(this.fencers)) {
+      const fA = this.fencers.find(f => f.id === match.fighterAId);
+      if (fA) fighterAAcademy = this.normalizeAcademy(fA.academy, 'Almería');
+    }
+
+    if (!fighterBAcademy && match.fighterBId && Array.isArray(this.fencers)) {
+      const fB = this.fencers.find(f => f.id === match.fighterBId);
+      if (fB) fighterBAcademy = this.normalizeAcademy(fB.academy, 'Almería');
+    }
+
+    return { fighterAAcademy, fighterBAcademy };
   }
 
   async seedInitialFencers() {
@@ -546,7 +578,7 @@ class LudoSportApp {
         this.fencers = JSON.parse(storedFencers);
         this.fencers.forEach(f => {
           if (f.photoUrl === undefined) f.photoUrl = '';
-          if (!f.academy || f.academy === 'Almeria') f.academy = 'Almería';
+          f.academy = this.normalizeAcademy(f.academy, 'Almería');
         });
       } catch (e) {
         this.fencers = [...DEFAULT_FENCERS];
@@ -588,11 +620,16 @@ class LudoSportApp {
 
   // Calculate standings from current month matches and fencer list
   // Standings include Points, Victories, Draws, Losses, PF, PC, and Goal Difference (DIF)
-  calculateStandings() {
+  calculateStandings(academyFilter = this.rankingAcademyFilter) {
+    const rawFilter = academyFilter || 'all';
+    const normalizedFilter = rawFilter === 'all' ? 'all' : this.normalizeAcademy(rawFilter, 'all');
     const statsMap = {};
 
-    // Initialize every fencer with 0
+    // Initialize every fencer matching the selected academy filter with 0
     this.fencers.forEach(f => {
+      if (normalizedFilter !== 'all' && this.normalizeAcademy(f.academy, 'Almería') !== normalizedFilter) {
+        return;
+      }
       statsMap[f.id] = {
         fencer: f,
         matchesPlayed: 0,
@@ -835,7 +872,19 @@ class LudoSportApp {
   }
 
   renderRanking() {
-    const standings = this.calculateStandings();
+    const activeAcademy = this.rankingAcademyFilter || 'all';
+    if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+      document.querySelectorAll('[data-ranking-academy]').forEach(btn => {
+        const btnAcademy = btn.getAttribute('data-ranking-academy');
+        const isActive = btnAcademy === activeAcademy;
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        btn.className = isActive
+          ? 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-1.5 transition-all'
+          : 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-slate-200 border border-transparent flex items-center justify-center gap-1.5 transition-all';
+      });
+    }
+
+    const standings = this.calculateStandings(activeAcademy);
     const tableBody = document.getElementById('rankingTableBody');
     const podiumContainer = document.getElementById('podiumContainer');
     const searchFilter = (document.getElementById('rankingSearchInput')?.value || '').toLowerCase().trim();
@@ -994,9 +1043,25 @@ class LudoSportApp {
       return;
     }
 
+    const activeAcademy = this.rankingAcademyFilter || 'all';
+    const normalizedFilter = activeAcademy === 'all' ? 'all' : this.normalizeAcademy(activeAcademy, 'all');
+
+    let fencersForBadges = this.fencers;
+    let matchesForBadges = this.matches;
+
+    if (normalizedFilter !== 'all') {
+      fencersForBadges = this.fencers.filter(
+        f => this.normalizeAcademy(f.academy, 'Almería') === normalizedFilter
+      );
+      matchesForBadges = this.matches.filter(m => {
+        const { fighterAAcademy, fighterBAcademy } = this.resolveMatchAcademies(m);
+        return fighterAAcademy === normalizedFilter || fighterBAcademy === normalizedFilter;
+      });
+    }
+
     const badges = badgesService.calculateMonthlyBadges(
-      this.matches,
-      this.fencers,
+      matchesForBadges,
+      fencersForBadges,
       this.currentMonthKey
     );
 
@@ -1231,7 +1296,7 @@ class LudoSportApp {
     const idB = selectB.value;
 
     // Update stats preview
-    const standings = this.calculateStandings();
+    const standings = this.calculateStandings('all');
     if (idA) {
       const sA = standings.find(s => s.fencer.id === idA);
       if (previewA && sA) previewA.textContent = `${sA.points} pts | ${sA.won}V-${sA.drawn}E-${sA.lost}D (Dif ${sA.diff >= 0 ? '+' : ''}${sA.diff})`;
@@ -1343,8 +1408,10 @@ class LudoSportApp {
       date: matchDate,
       fighterAId: fencerA.id,
       fighterAName: fencerA.name,
+      fighterAAcademy: this.normalizeAcademy(fencerA.academy, 'Almería'),
       fighterBId: fencerB.id,
       fighterBName: fencerB.name,
+      fighterBAcademy: this.normalizeAcademy(fencerB.academy, 'Almería'),
       scoreA: sA,
       scoreB: sB,
       scoreText: `${sA} - ${sB}`,
@@ -1886,8 +1953,7 @@ class LudoSportApp {
       editId.value = editFencer.id;
       nameInput.value = editFencer.name;
       if (academyInput) {
-        const rawAcademy = editFencer.academy;
-        academyInput.value = (rawAcademy === 'Almeria') ? 'Almería' : (rawAcademy || 'Almería');
+        academyInput.value = this.normalizeAcademy(editFencer.academy, 'Almería');
       }
       rankInput.value = editFencer.rank || 'Inizziato';
       colorInput.value = editFencer.color || 'cyan';
@@ -2612,8 +2678,10 @@ class LudoSportApp {
       date: matchDate,
       fighterAId: fA.id,
       fighterAName: fA.name,
+      fighterAAcademy: this.normalizeAcademy(fA.academy, 'Almería'),
       fighterBId: fB.id,
       fighterBName: fB.name,
+      fighterBAcademy: this.normalizeAcademy(fB.academy, 'Almería'),
       scoreA: sA,
       scoreB: sB,
       scoreText: `${sA} - ${sB}`,
@@ -2816,6 +2884,23 @@ class LudoSportApp {
       this.loadData();
       this.showToast('Datos actualizados', 'cyan');
     });
+
+    // Ranking academy segmented switcher
+    if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+      document.querySelectorAll('[data-ranking-academy]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = btn.getAttribute('data-ranking-academy');
+          this.rankingAcademyFilter = (!val || val === 'all') ? 'all' : this.normalizeAcademy(val, 'all');
+          this.renderRanking();
+          this.renderMonthlyMedals();
+          if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            try {
+              window.lucide.createIcons();
+            } catch (e) {}
+          }
+        });
+      });
+    }
 
     // Ranking search
     document.getElementById('rankingSearchInput')?.addEventListener('input', () => {

@@ -27,13 +27,16 @@
   "25": "test_challenger_marcador_ui.py",
   "26": "TestR1NameWrappingAdversarial",
   "27": "TestR4VisualHierarchyAdversarial",
-  "28": "TestAdversarialEdgeCases",
+  "28": "test_ranking_academy.js",
   "29": "test_score_buttons_timer.js",
   "30": "MockElement",
   "31": "TestPodiumZeroStateVsActiveStateEdgeCases",
   "32": "TestScoreButtonsDisabledDuringTimer",
   "33": "TestScoreButtonsTimerContracts",
-  "34": "TestFencerAcademyModalUI",
+  "34": "MockElement",
   "35": "ClassListMock",
+  "36": "TestR6TactileHitAreas",
+  "37": "ClassListMock",
+  "38": "getOrCreateMockElement",
   "82": "config.js"
 }
