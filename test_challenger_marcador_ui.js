@@ -57,8 +57,8 @@ function alphaComposite(fg, alpha, bg) {
 
 console.log('--- TEST GROUP 1: Mathematical WCAG Contrast Ratios (R3) ---');
 {
-  const navyBg = [15, 23, 42];        // #0f172a (Tailwind slate-900)
-  const slate950Bg = [2, 6, 23];      // #020617 (Tailwind slate-950)
+  const navyBg = [36, 35, 35];        // #0f172a (Tailwind slate-900)
+  const slate950Bg = [0, 0, 0];      // #020617 (Tailwind slate-950)
   const whiteFg = [255, 255, 255];
   const oldSlate500 = [100, 116, 139]; // #64748b
 
@@ -70,15 +70,15 @@ console.log('--- TEST GROUP 1: Mathematical WCAG Contrast Ratios (R3) ---');
   testAssert(oldContrast < 4.5, 'Old text-slate-500 failed WCAG AA');
 
   // 2. New color on solid #0f172a
-  const compositeNavy = alphaComposite(whiteFg, 0.6, navyBg);
+  const compositeNavy = alphaComposite(whiteFg, 0.7, navyBg);
   const compNavyLum = relativeLuminance(...compositeNavy);
   const contrastNavy = contrastRatio(compNavyLum, navyLum);
   console.log(`  [R3 Solid #0f172a] rgba(255,255,255,0.6) on #0f172a: Contrast = ${contrastNavy.toFixed(2)}:1`);
   testAssert(contrastNavy >= 4.5, 'Must satisfy WCAG AA (>= 4.5:1)');
-  testAssert(Math.abs(contrastNavy - 6.99) < 0.1, 'Navy contrast should be ~6.99:1');
+  testAssert(Math.abs(contrastNavy - 8.34) < 0.1, 'Surface contrast should be ~8.34:1');
 
-  // 3. New color on deep background #020617
-  const compositeDeep = alphaComposite(whiteFg, 0.6, slate950Bg);
+  // 3. New color on deep background #000000
+  const compositeDeep = alphaComposite(whiteFg, 0.7, slate950Bg);
   const deepLum = relativeLuminance(...slate950Bg);
   const compDeepLum = relativeLuminance(...compositeDeep);
   const contrastDeep = contrastRatio(compDeepLum, deepLum);
@@ -86,10 +86,10 @@ console.log('--- TEST GROUP 1: Mathematical WCAG Contrast Ratios (R3) ---');
   testAssert(contrastDeep >= 7.0, 'Deep background satisfies WCAG AAA (>= 7.0:1)');
 
   // 4. HTML and CSS verification
-  testAssert(htmlContent.includes('text-white/60 tracking-widest'), 'HTML must declare text-white/60 on tracking-widest');
+  testAssert(htmlContent.includes('text-white/70 tracking-widest'), 'HTML must declare text-white/70 on tracking-widest');
   testAssert(!htmlContent.includes('text-slate-500 tracking-widest'), 'HTML must NOT have text-slate-500 on tracking-widest');
   testAssert(cssContent.includes('.live-corner-card span.tracking-widest'), 'CSS must target .live-corner-card span.tracking-widest');
-  testAssert(cssContent.includes('color: rgba(255, 255, 255, 0.6) !important;'), 'CSS must declare rgba(255, 255, 255, 0.6) !important');
+  testAssert(cssContent.includes('color: rgba(255, 255, 255, 0.7) !important;'), 'CSS must declare rgba(255, 255, 255, 0.7) !important');
   console.log('  ✓ WCAG contrast tests passed.');
 }
 
@@ -215,14 +215,14 @@ console.log('\n--- TEST GROUP 3: Visual Hierarchy & Full-Width Button States (R4
     if (toggleBtn && label) {
       if (state.running) {
         label.textContent = 'Pausar';
-        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'pause');
         if (statusText) {
           statusText.textContent = 'Combate en curso';
         }
       } else {
         label.textContent = state.seconds === 0 ? 'Reiniciar' : 'Iniciar';
-        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'play');
         if (statusText) {
           if (state.seconds === 0) {

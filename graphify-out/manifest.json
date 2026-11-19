@@ -1,8 +1,8 @@
 {
   "app.js": {
-    "mtime": 1794914340.7313225,
-    "seen": 1794914436.7983303,
-    "ast_hash": "139a8ea84b6c8b3ac2fe2b60349a7770",
+    "mtime": 1795104355.8191166,
+    "seen": 1795104708.3822985,
+    "ast_hash": "14b4038d1c5973317586533c8afa99f6",
     "semantic_hash": ""
   },
   "start-server.ps1": {
@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794914306.282676,
-    "seen": 1794914436.8498342,
-    "ast_hash": "13eb9fa2921b73c7a4027781e591505b",
+    "mtime": 1795103286.5331757,
+    "seen": 1795104708.4320753,
+    "ast_hash": "657ce2966b1b2cc9bf9a02f20ed361c9",
     "semantic_hash": ""
   },
   "tests.html": {
@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "test_ui_refactor.py": {
-    "mtime": 1794433793.220657,
-    "seen": 1794433879.3611257,
-    "ast_hash": "831bf8c66617b4ae1f49cd54e3ac9625",
+    "mtime": 1795102085.5538042,
+    "seen": 1795102601.638379,
+    "ast_hash": "32a3284fe528745564972476b522afa2",
     "semantic_hash": ""
   },
   ".agents/references/accessibility-checklist.md": {
@@ -240,33 +240,33 @@
     "semantic_hash": ""
   },
   "test_challenger_m1.py": {
-    "mtime": 1794434414.050411,
-    "seen": 1794478128.408072,
-    "ast_hash": "ae3a5fe5c13f9e3bbe3e6b6d30d0d48a",
+    "mtime": 1795102102.5795684,
+    "seen": 1795102601.630868,
+    "ast_hash": "6bf3042e3f788c19755ff7babefe62c4",
     "semantic_hash": ""
   },
   "test_empirical_challenger.js": {
-    "mtime": 1794434312.2516716,
-    "seen": 1794478128.408072,
-    "ast_hash": "e7772fd01c276f545daab9b9cd0c0e89",
+    "mtime": 1795102129.2704325,
+    "seen": 1795102601.630868,
+    "ast_hash": "e4864398d007e5e627be24266496f16a",
     "semantic_hash": ""
   },
   "test_empirical_challenger.py": {
-    "mtime": 1794434359.771732,
-    "seen": 1794478128.408072,
-    "ast_hash": "973638364c8a8d705bb4d01979c9c0fa",
+    "mtime": 1795102106.6810076,
+    "seen": 1795102601.630868,
+    "ast_hash": "7bb5c6db42e320532d14a394ee338eca",
     "semantic_hash": ""
   },
   "test_marcador_live.py": {
-    "mtime": 1794482457.4848788,
-    "seen": 1794482512.0260885,
-    "ast_hash": "22cf07edc16ef7d0c1dcf84951ab7951",
+    "mtime": 1795102130.835374,
+    "seen": 1795102601.638379,
+    "ast_hash": "04cb457968da524981535786f8c87e5d",
     "semantic_hash": ""
   },
   "test_table_simulation.py": {
-    "mtime": 1794434441.5666327,
-    "seen": 1794478128.408072,
-    "ast_hash": "2aa345f3e374548dfe33f4d08dd21b3b",
+    "mtime": 1795102085.5538042,
+    "seen": 1795102601.638379,
+    "ast_hash": "68374e46ee9310332c6fe350046dec6c",
     "semantic_hash": ""
   },
   ".agents/teamwork/auditor_1/BRIEFING.md": {
@@ -576,9 +576,9 @@
     "semantic_hash": ""
   },
   "test_challenger_marcador_ui.py": {
-    "mtime": 1794479021.0179293,
-    "seen": 1794479081.21858,
-    "ast_hash": "130a7cd096ee5f35778f1a9a53c20052",
+    "mtime": 1795102085.5538042,
+    "seen": 1795102601.630868,
+    "ast_hash": "cf0359ee6c0b7633beb8cc5bd3c58d98",
     "semantic_hash": ""
   },
   "test_empirical_timer_r2_r5.js": {
@@ -648,9 +648,9 @@
     "semantic_hash": ""
   },
   "test_challenger_marcador_ui.js": {
-    "mtime": 1794479057.981264,
-    "seen": 1794479081.21858,
-    "ast_hash": "0f0a8f59dd7222732bdcd7c7d06ee550",
+    "mtime": 1795102123.6095567,
+    "seen": 1795102601.630868,
+    "ast_hash": "93ee9659c352e79b44e749cfff18010d",
     "semantic_hash": ""
   },
   ".agents/teamwork/auditor_marcador_1/handoff.md": {
@@ -822,9 +822,57 @@
     "semantic_hash": ""
   },
   "test_ranking_academy.js": {
-    "mtime": 1794914415.1478212,
-    "seen": 1794914436.804263,
-    "ast_hash": "d25d5c61f00c8d17f8b1b36039348114",
+    "mtime": 1795102085.5538042,
+    "seen": 1795102601.638379,
+    "ast_hash": "927a16781532d95ccf721e759903e799",
+    "semantic_hash": ""
+  },
+  "comprehension_report.md": {
+    "mtime": 1795018537.570246,
+    "seen": 1795102601.6765842,
+    "ast_hash": "b96aca385793d23da4fca05c7b668cab",
+    "semantic_hash": ""
+  },
+  "consolidated_review_report.md": {
+    "mtime": 1795082468.064478,
+    "seen": 1795102601.6765842,
+    "ast_hash": "fa73e1b9a022daeb7fdfe1f1d266cf91",
+    "semantic_hash": ""
+  },
+  "critic_report.md": {
+    "mtime": 1795018829.933179,
+    "seen": 1795102601.6765842,
+    "ast_hash": "0a6d4d725e914e561d12e8235e90de6f",
+    "semantic_hash": ""
+  },
+  "design_draft.md": {
+    "mtime": 1795017167.514256,
+    "seen": 1795102601.6765842,
+    "ast_hash": "759cd6cc0a8e376f3aaa85fe3ad0ad9a",
+    "semantic_hash": ""
+  },
+  "docs/designs/ludosport-atlas-brand-colors.md": {
+    "mtime": 1795101302.8588893,
+    "seen": 1795102601.6765842,
+    "ast_hash": "fcfde2a7c97a8b7236ec90097021e73a",
+    "semantic_hash": ""
+  },
+  "implementation_readiness_report.md": {
+    "mtime": 1795018919.4133246,
+    "seen": 1795102601.6765842,
+    "ast_hash": "b4619770956cc6f6637e00d9a7c07f0b",
+    "semantic_hash": ""
+  },
+  "intermediate_zoom_out_report.md": {
+    "mtime": 1795019628.0325308,
+    "seen": 1795102601.6765842,
+    "ast_hash": "df74369afbe12eef2ebc755bbd7429b6",
+    "semantic_hash": ""
+  },
+  "zoom_out_report.md": {
+    "mtime": 1795018730.4397159,
+    "seen": 1795102601.6765842,
+    "ast_hash": "726099e25af3aa86af83f39f34e3396a",
     "semantic_hash": ""
   }
 }

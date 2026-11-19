@@ -29,36 +29,36 @@ class TestTableRenderingStressHarness(unittest.TestCase):
         elif pos == 3:
             pos_badge = f'<span class="inline-flex w-5 h-5 rounded-full bg-amber-700/20 text-amber-500 font-bold items-center justify-center text-[10px] border border-amber-700/40">{pos}</span>'
         else:
-            pos_badge = f'<span class="text-slate-400 font-bold">{pos}</span>'
+            pos_badge = f'<span class="text-white/70 font-bold">{pos}</span>'
 
         if item["diff"] > 0:
             diff_badge = f'<span class="text-emerald-400 font-combat font-bold text-xs">+{item["diff"]}</span>'
         elif item["diff"] < 0:
             diff_badge = f'<span class="text-rose-400 font-combat font-bold text-xs">{item["diff"]}</span>'
         else:
-            diff_badge = '<span class="text-slate-500 font-combat font-semibold text-xs">0</span>'
+            diff_badge = '<span class="text-white/60 font-combat font-semibold text-xs">0</span>'
 
         fencer_name = item["fencer"]["name"]
         fencer_id = item["fencer"]["id"]
 
         row_html = f"""
-          <tr data-fencer-profile="{fencer_id}" title="Clic para ver perfil y estadísticas de {fencer_name}" class="hover:bg-slate-800/40 transition-colors cursor-pointer">
+          <tr data-fencer-profile="{fencer_id}" title="Clic para ver perfil y estadísticas de {fencer_name}" class="hover:bg-white/10 transition-colors cursor-pointer">
             <td class="py-2.5 pl-3 pr-2 text-center">{pos_badge}</td>
             <td class="py-2.5 px-2">
               <div class="flex items-center gap-2">
                 <div>
-                  <div class="font-bold text-slate-100 flex items-center gap-1.5 hover:text-cyan-300 transition-colors">
+                  <div class="font-bold text-white flex items-center gap-1.5 hover:text-atlasAccentLight transition-colors">
                     {fencer_name}
                   </div>
                 </div>
               </div>
             </td>
-            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-slate-400 font-combat text-xs font-semibold">{item["matchesPlayed"]}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-white/70 font-combat text-xs font-semibold">{item["matchesPlayed"]}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-emerald-400 font-combat text-xs font-bold">{item["won"]}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-amber-400 font-combat text-xs font-bold">{item["drawn"]}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-rose-400 font-combat text-xs font-bold">{item["lost"]}</td>
             <td class="py-2.5 px-1.5 w-[46px] min-w-[46px] text-center">{diff_badge}</td>
-            <td class="py-2.5 pr-3 pl-2 w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-cyan-300">{item["points"]}</td>
+            <td class="py-2.5 pr-3 pl-2 w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-atlasAccentLight">{item["points"]}</td>
           </tr>
         """
         return row_html
@@ -129,7 +129,7 @@ class TestTableRenderingStressHarness(unittest.TestCase):
                 self.assertIn("text-rose-400", dif_content)
             else:
                 self.assertIn(">0<", dif_content)
-                self.assertIn("text-slate-500", dif_content)
+                self.assertIn("text-white/60", dif_content)
 
             # Col 8: PTS
             pts_class, pts_content = cells[7]

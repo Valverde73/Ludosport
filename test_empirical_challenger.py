@@ -60,8 +60,8 @@ class TestPodiumZeroStateVsActiveStateEdgeCases(unittest.TestCase):
         self.assertIn("podiumContainer.setAttribute('data-podium-state', isPodiumActive ? 'active' : 'zero')", self.app_js)
         ranking_func = self.app_js.split("renderRanking() {")[1].split("renderMonthlyMedals() {")[0]
         zero_branch = ranking_func.split("} else {")[1].split("if (window.lucide)")[0]
-        self.assertIn("bg-lsCard/60", zero_branch)
-        self.assertIn("border-slate-800/80", zero_branch)
+        self.assertIn("bg-atlasSurface/60", zero_branch)
+        self.assertIn("border-atlasBorder", zero_branch)
         self.assertNotIn("animate-bounce", zero_branch)
         self.assertNotIn('data-lucide="crown"', zero_branch)
 
@@ -122,7 +122,7 @@ class TestMedalleroAndWcagContrastStress(unittest.TestCase):
 
     def test_mathematical_contrast_wcag_21(self):
         """Empirical proof of WCAG 2.1 contrast ratios for text-white/70 and text-white/60 against #0f172a."""
-        bg = (15, 23, 42)  # #0f172a (navy background)
+        bg = (36, 35, 35)  # #0f172a (navy background)
         bg_lum = relative_luminance(*bg)
 
         # text-white/70

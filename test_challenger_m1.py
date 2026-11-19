@@ -92,7 +92,7 @@ class TestTableMetricsStability(unittest.TestCase):
         row_template = ranking_func.split("tableBody.innerHTML = filtered.map")[1].split("}).join('')")[0]
 
         # Cells 3-6 (PJ, V, E, D)
-        self.assertIn('w-[38px] min-w-[38px] text-center text-slate-400 font-combat', row_template)
+        self.assertIn('w-[38px] min-w-[38px] text-center text-white/70 font-combat', row_template)
         self.assertIn('w-[38px] min-w-[38px] text-center text-emerald-400 font-combat', row_template)
         self.assertIn('w-[38px] min-w-[38px] text-center text-amber-400 font-combat', row_template)
         self.assertIn('w-[38px] min-w-[38px] text-center text-rose-400 font-combat', row_template)
@@ -101,7 +101,7 @@ class TestTableMetricsStability(unittest.TestCase):
         self.assertIn('w-[46px] min-w-[46px] text-center', row_template)
 
         # Cell 8 (PTS)
-        self.assertIn('w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-cyan-300', row_template)
+        self.assertIn('w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-atlasAccentLight', row_template)
 
     def test_empirical_character_widths_and_padding_clearance(self):
         """
@@ -217,10 +217,10 @@ class TestLaserHoverEffectsAndKeyframes(unittest.TestCase):
         self.html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.css = (BASE_DIR / "styles.css").read_text(encoding="utf-8")
 
-    def test_keyframes_laserPulseCyan_syntax(self):
-        """Verify @keyframes laserPulseCyan has valid syntax, 0%/50%/100%, and modulated properties."""
-        cyan_match = re.search(r'@keyframes laserPulseCyan\s*\{([^}]+(?:\{[^}]+\}[^}]*)+)\}', self.css)
-        self.assertIsNotNone(cyan_match, "@keyframes laserPulseCyan not found or invalid syntax")
+    def test_keyframes_laserPulseAccent_syntax(self):
+        """Verify @keyframes laserPulseAccent has valid syntax, 0%/50%/100%, and modulated properties."""
+        cyan_match = re.search(r'@keyframes laserPulseAccent\s*\{([^}]+(?:\{[^}]+\}[^}]*)+)\}', self.css)
+        self.assertIsNotNone(cyan_match, "@keyframes laserPulseAccent not found or invalid syntax")
         block = cyan_match.group(1)
 
         self.assertIn("0%, 100%", block)
@@ -247,13 +247,13 @@ class TestLaserHoverEffectsAndKeyframes(unittest.TestCase):
         tr_hover = re.search(r'tr\[data-fencer-profile\]:hover\s*\{([^}]+)\}', self.css)
         self.assertIsNotNone(tr_hover)
         tr_block = tr_hover.group(1)
-        self.assertGreaterEqual(tr_block.count("rgba(0, 229, 255"), 3, "Table row hover must have >= 3 cyan shadow layers")
+        self.assertGreaterEqual(tr_block.count("rgba(211, 115, 43"), 3, "Table row hover must have >= 3 cyan shadow layers")
 
         # Podium card hover
         podium_hover = re.search(r'\.podium-card:hover\s*\{([^}]+)\}', self.css)
         self.assertIsNotNone(podium_hover)
         podium_block = podium_hover.group(1)
-        self.assertGreaterEqual(podium_block.count("rgba(0, 229, 255"), 3, "Podium card hover must have >= 3 cyan shadow layers")
+        self.assertGreaterEqual(podium_block.count("rgba(211, 115, 43"), 3, "Podium card hover must have >= 3 cyan shadow layers")
 
         # Podium gold card hover
         gold_hover = re.search(r'\.podium-card\.podium-gold:hover[^\{]*\{([^}]+)\}', self.css)
@@ -265,7 +265,7 @@ class TestLaserHoverEffectsAndKeyframes(unittest.TestCase):
         badge_hover = re.search(r'\.badge-card:hover\s*\{([^}]+)\}', self.css)
         self.assertIsNotNone(badge_hover)
         badge_block = badge_hover.group(1)
-        self.assertGreaterEqual(badge_block.count("rgba(0, 229, 255"), 3, "Badge card hover must have >= 3 cyan shadow layers")
+        self.assertGreaterEqual(badge_block.count("rgba(211, 115, 43"), 3, "Badge card hover must have >= 3 cyan shadow layers")
 
     def test_table_border_separate_for_box_shadow_support(self):
         """
@@ -324,7 +324,7 @@ class TestAdversarialEdgeCases(unittest.TestCase):
     def test_zero_difference_is_neutral(self):
         """Adversarial: Zero difference must output neutral '0' without sign."""
         ranking_func = self.js.split("renderRanking() {")[1].split("renderMonthlyMedals() {")[0]
-        self.assertIn('diffBadge = `<span class="text-slate-500 font-combat font-semibold text-xs">0</span>`;', ranking_func)
+        self.assertIn('diffBadge = `<span class="text-white/60 font-combat font-semibold text-xs">0</span>`;', ranking_func)
 
 
 if __name__ == "__main__":

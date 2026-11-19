@@ -96,17 +96,17 @@ class TestR3TextContrast(unittest.TestCase):
     def test_r3_html_ohs_label_color(self):
         """OHs Anotados spans in live corner cards must use text-white/60, not text-slate-500."""
         corner_alfa = self.html.split('id="liveScoreADisplay"')[1].split('id="liveBtnScoreADec"')[0]
-        self.assertIn("text-white/60", corner_alfa)
+        self.assertIn("text-white/70", corner_alfa)
         self.assertNotIn("text-slate-500", corner_alfa)
 
         corner_beta = self.html.split('id="liveScoreBDisplay"')[1].split('id="liveBtnScoreBDec"')[0]
-        self.assertIn("text-white/60", corner_beta)
+        self.assertIn("text-white/70", corner_beta)
         self.assertNotIn("text-slate-500", corner_beta)
 
     def test_r3_css_rule(self):
-        """styles.css must enforce high-contrast rgba(255, 255, 255, 0.6) for tracking-widest label."""
+        """styles.css must enforce high-contrast rgba(255, 255, 255, 0.7) for tracking-widest label."""
         self.assertIn(".live-corner-card span.tracking-widest", self.css)
-        self.assertIn("rgba(255, 255, 255, 0.6)", self.css)
+        self.assertIn("rgba(255, 255, 255, 0.7)", self.css)
 
     def test_r3_mathematical_contrast_wcag_aa(self):
         """Mathematical computation of contrast ratio of text-white/60 on navy #0f172a."""
@@ -116,13 +116,13 @@ class TestR3TextContrast(unittest.TestCase):
                 return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
             return 0.2126 * ch(r) + 0.7152 * ch(g) + 0.0722 * ch(b)
 
-        # Background: #0f172a -> (15, 23, 42)
-        bg_lum = relative_luminance(15, 23, 42)
+        # Background: #0f172a -> (36, 35, 35)
+        bg_lum = relative_luminance(36, 35, 35)
 
         # Alpha composite white (255, 255, 255) with alpha=0.6 over #0f172a
-        fg_r = round(255 * 0.6 + 15 * 0.4)
-        fg_g = round(255 * 0.6 + 23 * 0.4)
-        fg_b = round(255 * 0.6 + 42 * 0.4)
+        fg_r = round(255 * 0.7 + 36 * 0.3)
+        fg_g = round(255 * 0.7 + 35 * 0.3)
+        fg_b = round(255 * 0.7 + 35 * 0.3)
         fg_lum = relative_luminance(fg_r, fg_g, fg_b)
 
         contrast = (fg_lum + 0.05) / (bg_lum + 0.05)

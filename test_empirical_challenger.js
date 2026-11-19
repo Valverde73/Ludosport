@@ -127,8 +127,8 @@ console.log('\n[Case 1.1] 0 Matches: 5 Fencers registered, 0 matches played');
   assert(!podium.innerHTML.includes('pulse-laser-amber'), 'Zero-state does NOT contain pulse-laser-amber');
   assert(!podium.innerHTML.includes('podium-gold'), 'Zero-state does NOT contain podium-gold');
   assert(!podium.innerHTML.includes('from-amber-500'), 'Zero-state does NOT contain amber gradient');
-  assert(podium.innerHTML.includes('bg-lsCard/60'), 'Zero-state uses attenuated bg-lsCard/60');
-  assert(podium.innerHTML.includes('border-slate-800/80'), 'Zero-state uses attenuated border-slate-800/80');
+  assert(podium.innerHTML.includes('bg-atlasSurface/60'), 'Zero-state uses attenuated bg-lsCard/60');
+  assert(podium.innerHTML.includes('border-atlasBorder'), 'Zero-state uses attenuated border-atlasBorder');
   assert(podium.innerHTML.includes('0 pts &bull; 0V &bull; Dif +0'), 'Cards correctly display "0 pts • 0V • Dif +0"');
 }
 
@@ -263,8 +263,8 @@ function compositeAlpha(fgR, fgG, fgB, alpha, bgR, bgG, bgB) {
 
 console.log('\n[Case 2.1] Mathematical WCAG 2.1 Contrast Calculations on Navy #0f172a');
 {
-  // Background: #0f172a (15, 23, 42)
-  const [bgR, bgG, bgB] = [15, 23, 42];
+  // Background: #0f172a (36, 35, 35)
+  const [bgR, bgG, bgB] = [36, 35, 35];
   const bgLum = relativeLuminance(bgR, bgG, bgB);
 
   // text-white/70 (rgba(255, 255, 255, 0.70)) over #0f172a
@@ -341,7 +341,7 @@ console.log('\n[Case 2.2] Badge Titles of Varying Lengths (7 to 30 characters)')
   // Verify CSS classes on badge-card and title
   assert(medalsSection.innerHTML.includes('whitespace-normal leading-tight line-clamp-2'),
     'All badge titles have whitespace-normal, leading-tight, and line-clamp-2');
-  assert(!medalsSection.innerHTML.includes('font-display font-bold text-xs text-cyan-300 truncate'),
+  assert(!medalsSection.innerHTML.includes('font-display font-bold text-xs text-atlasAccentLight truncate'),
     'Badge titles do NOT have the old truncate class');
   assert(medalsSection.innerHTML.includes('flex flex-col justify-between'),
     'Badge cards use flex flex-col justify-between for stable vertical card grid alignment');
@@ -373,11 +373,11 @@ console.log('\n[Case 3.1] Table Metric Columns Geometry & Classes');
     'Header PTS column has fixed w-[48px] min-w-[48px] text-center');
 
   // Verify <td> widths in app.js
-  assert(appJs.includes('w-[38px] min-w-[38px] text-center text-slate-400 font-combat text-xs font-semibold'),
+  assert(appJs.includes('w-[38px] min-w-[38px] text-center text-white/70 font-combat text-xs font-semibold'),
     'app.js sets fixed 38px width on PJ td');
   assert(appJs.includes('w-[46px] min-w-[46px] text-center'),
     'app.js sets fixed 46px width on DIF td');
-  assert(appJs.includes('w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-cyan-300'),
+  assert(appJs.includes('w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-atlasAccentLight'),
     'app.js sets fixed 48px width on PTS td');
 
   // Verify tabular-nums in styles.css

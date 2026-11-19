@@ -62,20 +62,20 @@ class TestR1MedalleroAndAccessibility(unittest.TestCase):
             darker = min(l1, l2)
             return (lighter + 0.05) / (darker + 0.05)
 
-        # Background: lsCard #0f172a
-        bg_lum = relative_luminance(15, 23, 42)
+        # Background: lsCard #242323
+        bg_lum = relative_luminance(36, 35, 35)
 
-        # Alpha composite white (255, 255, 255) with alpha=0.7 over #0f172a
-        r_70 = round(255 * 0.7 + 15 * 0.3)
-        g_70 = round(255 * 0.7 + 23 * 0.3)
-        b_70 = round(255 * 0.7 + 42 * 0.3)
+        # Alpha composite white (255, 255, 255) with alpha=0.7 over #242323
+        r_70 = round(255 * 0.7 + 36 * 0.3)
+        g_70 = round(255 * 0.7 + 35 * 0.3)
+        b_70 = round(255 * 0.7 + 35 * 0.3)
         lum_70 = relative_luminance(r_70, g_70, b_70)
         cr_70 = contrast_ratio(lum_70, bg_lum)
 
-        # Alpha composite white (255, 255, 255) with alpha=0.6 over #0f172a
-        r_60 = round(255 * 0.6 + 15 * 0.4)
-        g_60 = round(255 * 0.6 + 23 * 0.4)
-        b_60 = round(255 * 0.6 + 42 * 0.4)
+        # Alpha composite white (255, 255, 255) with alpha=0.6 over #242323
+        r_60 = round(255 * 0.6 + 36 * 0.4)
+        g_60 = round(255 * 0.6 + 35 * 0.4)
+        b_60 = round(255 * 0.6 + 35 * 0.4)
         lum_60 = relative_luminance(r_60, g_60, b_60)
         cr_60 = contrast_ratio(lum_60, bg_lum)
 
@@ -116,8 +116,8 @@ class TestR2PodiumZeroStateAndDynamicActivation(unittest.TestCase):
         zero_branch = ranking_func.split("} else {")[1].split("if (window.lucide)")[0]
         self.assertNotIn("animate-bounce", zero_branch)
         self.assertNotIn('data-lucide="crown"', zero_branch)
-        self.assertIn("border-slate-800", zero_branch)
-        self.assertIn("bg-lsCard/60", zero_branch)
+        self.assertIn("border-atlasBorder", zero_branch)
+        self.assertIn("bg-atlasSurface/60", zero_branch)
 
         # All 3 avatar calls in zero state must pass borderGlow=false
         avatar_calls = re.findall(r'this\.getFencerAvatarHtml\([^)]+\)', zero_branch)
@@ -152,14 +152,14 @@ class TestR3LaserVisualThemeAndAnimations(unittest.TestCase):
         self.app_js = (BASE_DIR / "app.js").read_text(encoding="utf-8")
 
     def test_r3_keyframes_defined(self):
-        """laserPulseCyan and laserPulseAmber keyframes and utility classes must be declared."""
-        self.assertIn("@keyframes laserPulseCyan", self.styles_css)
+        """laserPulseAccent and laserPulseAmber keyframes and utility classes must be declared."""
+        self.assertIn("@keyframes laserPulseAccent", self.styles_css)
         self.assertIn("@keyframes laserPulseAmber", self.styles_css)
-        self.assertIn(".pulse-laser-cyan", self.styles_css)
+        self.assertIn(".pulse-laser-accent", self.styles_css)
         self.assertIn(".pulse-laser-amber", self.styles_css)
 
         # Verify keyframes animate both border-color and box-shadow
-        cyan_kf = re.search(r'@keyframes laserPulseCyan\s*\{([^}]+(\{[^}]+\})*[^}]*)\}', self.styles_css)
+        cyan_kf = re.search(r'@keyframes laserPulseAccent\s*\{([^}]+(\{[^}]+\})*[^}]*)\}', self.styles_css)
         self.assertIsNotNone(cyan_kf)
         self.assertIn("border-color", cyan_kf.group(0))
         self.assertIn("box-shadow", cyan_kf.group(0))
@@ -170,8 +170,8 @@ class TestR3LaserVisualThemeAndAnimations(unittest.TestCase):
         self.assertIn("box-shadow", amber_kf.group(0))
 
     def test_r3_pulse_classes_applied(self):
-        """pulse-laser-cyan must be on Duelo button, pulse-laser-amber on active 1st place podium."""
-        self.assertIn("pulse-laser-cyan", self.index_html)
+        """pulse-laser-accent must be on Duelo button, pulse-laser-amber on active 1st place podium."""
+        self.assertIn("pulse-laser-accent", self.index_html)
         self.assertIn("pulse-laser-amber", self.app_js)
 
     def test_r3_laser_hover_halos(self):

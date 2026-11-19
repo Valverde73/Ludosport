@@ -362,7 +362,7 @@ class LudoSportApp {
       if (banner) banner.classList.add('hidden');
 
       if (headerBtn) {
-        headerBtn.className = 'flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border transition-all border-slate-700 bg-slate-800/80 text-slate-400 hover:text-amber-300';
+        headerBtn.className = 'flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border transition-all border-atlasBorder bg-atlasSurface/80 text-white/70 hover:text-amber-300';
       }
       if (navLabel) navLabel.textContent = 'Oficial';
 
@@ -370,7 +370,7 @@ class LudoSportApp {
         switchBall.className = 'inline-block h-4 w-4 transform rounded-full bg-slate-400 transition-transform translate-x-1';
       }
       if (switchContainer) {
-        switchContainer.className = 'relative inline-flex h-6 w-11 items-center rounded-full bg-slate-800 border border-slate-700 transition-colors focus:outline-none';
+        switchContainer.className = 'relative inline-flex h-6 w-11 items-center rounded-full bg-atlasSurface border border-atlasBorder transition-colors focus:outline-none';
       }
     }
   }
@@ -860,11 +860,11 @@ class LudoSportApp {
       container.innerHTML = this.availableMonths.map(mKey => {
         const isSelected = mKey === this.currentMonthKey;
         return `
-          <button data-month="${mKey}" class="month-option-btn w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-slate-800 transition-colors ${
-            isSelected ? 'text-cyan-400 font-bold bg-cyan-500/10' : 'text-slate-300'
+          <button data-month="${mKey}" class="month-option-btn w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-atlasSurface transition-colors ${
+            isSelected ? 'text-atlasAccentLight font-bold bg-atlasAccent/10' : 'text-white/80'
           }">
             <span>${this.formatMonthLabel(mKey)}</span>
-            ${isSelected ? '<i data-lucide="check" class="w-3.5 h-3.5 text-cyan-400"></i>' : ''}
+            ${isSelected ? '<i data-lucide="check" class="w-3.5 h-3.5 text-atlasAccentLight"></i>' : ''}
           </button>
         `;
       }).join('');
@@ -879,8 +879,8 @@ class LudoSportApp {
         const isActive = btnAcademy === activeAcademy;
         btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
         btn.className = isActive
-          ? 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-1.5 transition-all'
-          : 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-slate-200 border border-transparent flex items-center justify-center gap-1.5 transition-all';
+          ? 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold bg-atlasAccent/20 text-white border border-atlasAccent/30 flex items-center justify-center gap-1.5 transition-all'
+          : 'ranking-academy-btn flex-1 py-1.5 px-2 rounded-lg font-semibold text-white/70 hover:text-white border border-transparent flex items-center justify-center gap-1.5 transition-all';
       });
     }
 
@@ -904,67 +904,67 @@ class LudoSportApp {
           // ACTIVE PODIUM FORMAT: Highlighted champion card, bouncing gold crown, amber glowing gradients & neon halos
           podiumContainer.innerHTML = `
             <!-- 2nd Place -->
-            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card podium-silver cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-slate-700/60 flex flex-col items-center justify-end text-center pt-4 hover:border-slate-500 transition-all">
-              <span class="w-6 h-6 rounded-full bg-slate-400/20 text-slate-300 font-bold text-xs flex items-center justify-center mb-1">2</span>
-              <div class="mb-1.5 shadow-md">
+            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card podium-silver cursor-pointer p-2.5 rounded-2xl bg-atlasSurface/90 border border-atlasBorder flex flex-col items-center justify-end text-center pt-4 hover:border-white/50 transition-all">
+              <span class="w-6 h-6 rounded-full bg-slate-400/20 text-white/80 font-bold text-xs flex items-center justify-center mb-1">2</span>
+              <div class="mb-1.5 rounded-full">
                 ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', true)}
               </div>
-              <div class="font-bold text-xs text-slate-200 truncate w-full">${second.fencer.name}</div>
-              <div class="text-[10px] text-slate-400">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
+              <div class="font-bold text-xs text-white truncate w-full">${second.fencer.name}</div>
+              <div class="text-[10px] text-white/70">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
             </div>
 
             <!-- 1st Place (Gold / Crown Highlighted Hero) -->
-            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card podium-gold pulse-laser-amber cursor-pointer p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-lsCard to-lsCard border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10 hover:border-amber-400 transition-all">
+            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card podium-gold pulse-laser-amber cursor-pointer p-3 rounded-2xl bg-gradient-to-b from-amber-500/15 via-atlasSurface to-atlasSurface border border-amber-500/50 flex flex-col items-center justify-end text-center pt-2 relative shadow-lg shadow-amber-500/10 hover:border-amber-400 transition-all">
               <i data-lucide="crown" class="w-5 h-5 text-amber-400 mb-0.5 animate-bounce"></i>
-              <div class="mb-1.5 shadow-lg shadow-amber-500/30">
+              <div class="mb-1.5 rounded-full">
                 ${this.getFencerAvatarHtml(first.fencer, 'w-12 h-12', true)}
               </div>
               <div class="font-bold text-xs text-amber-300 truncate w-full">${first.fencer.name}</div>
-              <div class="text-[11px] font-bold text-slate-200">${first.points} pts</div>
+              <div class="text-[11px] font-bold text-white">${first.points} pts</div>
               <div class="text-[10px] text-amber-400/80">${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
             </div>
 
             <!-- 3rd Place -->
-            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card podium-bronze cursor-pointer p-2.5 rounded-2xl bg-lsCard/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4 hover:border-amber-600 transition-all">
+            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card podium-bronze cursor-pointer p-2.5 rounded-2xl bg-atlasSurface/90 border border-amber-700/40 flex flex-col items-center justify-end text-center pt-4 hover:border-amber-600 transition-all">
               <span class="w-6 h-6 rounded-full bg-amber-800/20 text-amber-500 font-bold text-xs flex items-center justify-center mb-1">3</span>
-              <div class="mb-1.5 shadow-md">
+              <div class="mb-1.5 rounded-full">
                 ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', true)}
               </div>
-              <div class="font-bold text-xs text-slate-200 truncate w-full">${third.fencer.name}</div>
-              <div class="text-[10px] text-slate-400">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
+              <div class="font-bold text-xs text-white truncate w-full">${third.fencer.name}</div>
+              <div class="text-[10px] text-white/70">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
             </div>
           `;
         } else {
           // ZERO-STATE FORMAT: Attenuated neon colors, uniform non-elevated cards, disabled crown/glows
           podiumContainer.innerHTML = `
             <!-- 2nd Position (Attenuated) -->
-            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
-              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">2</span>
+            <div data-fencer-profile="${second.fencer.id}" title="Ver perfil de ${second.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-atlasSurface/60 border border-atlasBorder flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-atlasBorder transition-all">
+              <span class="w-6 h-6 rounded-full bg-atlasSurface/60 text-white/70 font-bold text-xs flex items-center justify-center mb-1 border border-atlasBorder">2</span>
               <div class="mb-1.5">
                 ${this.getFencerAvatarHtml(second.fencer, 'w-10 h-10', false)}
               </div>
-              <div class="font-bold text-xs text-slate-300 truncate w-full">${second.fencer.name}</div>
-              <div class="text-[10px] text-slate-500">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
+              <div class="font-bold text-xs text-white/80 truncate w-full">${second.fencer.name}</div>
+              <div class="text-[10px] text-white/60">${second.points} pts &bull; ${second.won}V &bull; Dif ${second.diff >= 0 ? '+' : ''}${second.diff}</div>
             </div>
 
             <!-- 1st Position (Attenuated - No Crown, Flat Layout) -->
-            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
-              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">1</span>
+            <div data-fencer-profile="${first.fencer.id}" title="Ver perfil de ${first.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-atlasSurface/60 border border-atlasBorder flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-atlasBorder transition-all">
+              <span class="w-6 h-6 rounded-full bg-atlasSurface/60 text-white/70 font-bold text-xs flex items-center justify-center mb-1 border border-atlasBorder">1</span>
               <div class="mb-1.5">
                 ${this.getFencerAvatarHtml(first.fencer, 'w-10 h-10', false)}
               </div>
-              <div class="font-bold text-xs text-slate-300 truncate w-full">${first.fencer.name}</div>
-              <div class="text-[10px] text-slate-500">${first.points} pts &bull; ${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
+              <div class="font-bold text-xs text-white/80 truncate w-full">${first.fencer.name}</div>
+              <div class="text-[10px] text-white/60">${first.points} pts &bull; ${first.won}V &bull; Dif ${first.diff >= 0 ? '+' : ''}${first.diff}</div>
             </div>
 
             <!-- 3rd Position (Attenuated) -->
-            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-lsCard/60 border border-slate-800/80 flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-slate-700 transition-all">
-              <span class="w-6 h-6 rounded-full bg-slate-800/60 text-slate-400 font-bold text-xs flex items-center justify-center mb-1 border border-slate-700/50">3</span>
+            <div data-fencer-profile="${third.fencer.id}" title="Ver perfil de ${third.fencer.name}" class="podium-card cursor-pointer p-2.5 rounded-2xl bg-atlasSurface/60 border border-atlasBorder flex flex-col items-center justify-end text-center pt-4 opacity-85 hover:opacity-100 hover:border-atlasBorder transition-all">
+              <span class="w-6 h-6 rounded-full bg-atlasSurface/60 text-white/70 font-bold text-xs flex items-center justify-center mb-1 border border-atlasBorder">3</span>
               <div class="mb-1.5">
                 ${this.getFencerAvatarHtml(third.fencer, 'w-10 h-10', false)}
               </div>
-              <div class="font-bold text-xs text-slate-300 truncate w-full">${third.fencer.name}</div>
-              <div class="text-[10px] text-slate-500">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
+              <div class="font-bold text-xs text-white/80 truncate w-full">${third.fencer.name}</div>
+              <div class="text-[10px] text-white/60">${third.points} pts &bull; ${third.won}V &bull; Dif ${third.diff >= 0 ? '+' : ''}${third.diff}</div>
             </div>
           `;
         }
@@ -984,7 +984,7 @@ class LudoSportApp {
       if (filtered.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="8" class="py-8 text-center text-slate-500 text-xs">
+            <td colspan="8" class="py-8 text-center text-white/60 text-xs">
               No se han encontrado tiradores registrados.
             </td>
           </tr>
@@ -994,12 +994,12 @@ class LudoSportApp {
 
       tableBody.innerHTML = filtered.map((item, index) => {
         const pos = index + 1;
-        let posBadge = `<span class="text-slate-400 font-bold">${pos}</span>`;
+        let posBadge = `<span class="text-white/70 font-bold">${pos}</span>`;
         if (pos === 1) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-amber-400/20 text-amber-400 font-bold items-center justify-center text-[10px] border border-amber-400/40">1</span>`;
-        if (pos === 2) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-slate-400/20 text-slate-300 font-bold items-center justify-center text-[10px] border border-slate-400/40">2</span>`;
+        if (pos === 2) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-slate-400/20 text-white/80 font-bold items-center justify-center text-[10px] border border-slate-400/40">2</span>`;
         if (pos === 3) posBadge = `<span class="inline-flex w-5 h-5 rounded-full bg-amber-700/20 text-amber-500 font-bold items-center justify-center text-[10px] border border-amber-700/40">3</span>`;
 
-        let diffBadge = `<span class="text-slate-500 font-combat font-semibold text-xs">0</span>`;
+        let diffBadge = `<span class="text-white/60 font-combat font-semibold text-xs">0</span>`;
         if (item.diff > 0) {
           diffBadge = `<span class="text-emerald-400 font-combat font-bold text-xs">+${item.diff}</span>`;
         } else if (item.diff < 0) {
@@ -1007,25 +1007,25 @@ class LudoSportApp {
         }
 
         return `
-          <tr data-fencer-profile="${item.fencer.id}" title="Clic para ver perfil y estadísticas de ${item.fencer.name}" class="hover:bg-slate-800/40 transition-colors cursor-pointer">
+          <tr data-fencer-profile="${item.fencer.id}" title="Clic para ver perfil y estadísticas de ${item.fencer.name}" class="hover:bg-atlasSurface/40 transition-colors cursor-pointer">
             <td class="py-2.5 pl-3 pr-2 text-center">${posBadge}</td>
             <td class="py-2.5 px-2">
               <div class="flex items-center gap-2">
                 ${this.getFencerAvatarHtml(item.fencer, 'w-7 h-7', true)}
                 <div>
-                  <div class="font-bold text-slate-100 flex items-center gap-1.5 hover:text-cyan-300 transition-colors">
+                  <div class="font-bold text-white flex items-center gap-1.5 hover:text-atlasAccentLight transition-colors">
                     ${item.fencer.name}
                   </div>
-                  <div class="mt-0.5">${this.getRankBadge(item.fencer.rank)}</div>
+                  <div class="mt-0.5">${this.getRankBadge(item.fencer.rank, item.fencer.color)}</div>
                 </div>
               </div>
             </td>
-            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-slate-400 font-combat text-xs font-semibold">${item.matchesPlayed}</td>
+            <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-white/70 font-combat text-xs font-semibold">${item.matchesPlayed}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-emerald-400 font-combat text-xs font-bold">${item.won}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-amber-400 font-combat text-xs font-bold">${item.drawn}</td>
             <td class="py-2.5 px-1.5 w-[38px] min-w-[38px] text-center text-rose-400 font-combat text-xs font-bold">${item.lost}</td>
             <td class="py-2.5 px-1.5 w-[46px] min-w-[46px] text-center">${diffBadge}</td>
-            <td class="py-2.5 pr-3 pl-2 w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-cyan-300">${item.points}</td>
+            <td class="py-2.5 pr-3 pl-2 w-[48px] min-w-[48px] text-center font-combat font-black text-sm text-atlasAccentLight">${item.points}</td>
           </tr>
         `;
       }).join('');
@@ -1071,45 +1071,45 @@ class LudoSportApp {
       const colorScheme = {
         amber: {
           border: 'border-amber-500/30 hover:border-amber-500/60',
-          bg: 'from-amber-500/10 via-lsCard to-lsCard',
+          bg: 'from-amber-500/10 via-atlasSurface to-atlasSurface',
           iconBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
           badgeText: 'text-amber-300',
           statText: 'text-amber-400'
         },
         cyan: {
           border: 'border-cyan-500/30 hover:border-cyan-500/60',
-          bg: 'from-cyan-500/10 via-lsCard to-lsCard',
+          bg: 'from-cyan-500/10 via-atlasSurface to-atlasSurface',
           iconBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
           badgeText: 'text-cyan-300',
           statText: 'text-cyan-400'
         },
         emerald: {
           border: 'border-emerald-500/30 hover:border-emerald-500/60',
-          bg: 'from-emerald-500/10 via-lsCard to-lsCard',
+          bg: 'from-emerald-500/10 via-atlasSurface to-atlasSurface',
           iconBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
           badgeText: 'text-emerald-300',
           statText: 'text-emerald-400'
         },
         purple: {
           border: 'border-purple-500/30 hover:border-purple-500/60',
-          bg: 'from-purple-500/10 via-lsCard to-lsCard',
+          bg: 'from-purple-500/10 via-atlasSurface to-atlasSurface',
           iconBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
           badgeText: 'text-purple-300',
           statText: 'text-purple-400'
         },
         rose: {
           border: 'border-rose-500/30 hover:border-rose-500/60',
-          bg: 'from-rose-500/10 via-lsCard to-lsCard',
+          bg: 'from-rose-500/10 via-atlasSurface to-atlasSurface',
           iconBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
           badgeText: 'text-rose-300',
           statText: 'text-rose-400'
         }
       }[badge.color] || {
-        border: 'border-slate-700/60 hover:border-slate-500',
-        bg: 'from-slate-800/40 via-lsCard to-lsCard',
-        iconBg: 'bg-slate-800 text-slate-300 border-slate-700',
-        badgeText: 'text-slate-200',
-        statText: 'text-slate-400'
+        border: 'border-atlasBorder hover:border-white/50',
+        bg: 'from-white/5 via-atlasSurface to-atlasSurface',
+        iconBg: 'bg-atlasSurface text-white/80 border-atlasBorder',
+        badgeText: 'text-white',
+        statText: 'text-white/70'
       };
 
       let winnersHtml = '';
@@ -1130,7 +1130,7 @@ class LudoSportApp {
                 ${avatars}
               </div>
               <div class="min-w-0 flex-1">
-                <div class="font-bold text-xs text-slate-200 truncate" title="${names}">
+                <div class="font-bold text-xs text-white truncate" title="${names}">
                   ${names} <span class="text-[10px] text-amber-400/90 font-normal">(Empate)</span>
                 </div>
                 <div class="text-[11px] font-combat font-bold ${colorScheme.statText}">
@@ -1148,7 +1148,7 @@ class LudoSportApp {
                 ${this.getFencerAvatarHtml(winner.fencer, 'w-8 h-8', true)}
               </div>
               <div class="min-w-0 flex-1">
-                <div class="font-bold text-xs text-slate-100 truncate group-hover/winner:text-cyan-300 transition-colors">
+                <div class="font-bold text-xs text-white truncate group-hover/winner:text-atlasAccentLight transition-colors">
                   ${winner.fencer ? winner.fencer.name : ''}
                 </div>
                 <div class="text-[11px] font-combat font-bold ${colorScheme.statText}">
@@ -1161,7 +1161,7 @@ class LudoSportApp {
         }
       } else {
         winnersHtml = `
-          <div class="mt-2.5 py-1.5 px-2 rounded-lg bg-slate-900/70 border border-slate-800/80 text-[10px] text-white/70 italic flex items-center gap-1.5" title="${badge.emptyStateText}">
+          <div class="mt-2.5 py-1.5 px-2 rounded-lg bg-atlasSurface/70 border border-atlasBorder text-[10px] text-white/70 italic flex items-center gap-1.5" title="${badge.emptyStateText}">
             <i data-lucide="clock" class="w-3 h-3 text-white/60 shrink-0"></i>
             <span class="truncate">${badge.emptyStateText}</span>
           </div>
@@ -1176,12 +1176,12 @@ class LudoSportApp {
              aria-label="${badge.title}">
           
           <!-- Tooltip Popover (Hover & Touch focus) -->
-          <div class="badge-tooltip bg-slate-950/95 text-slate-200 border border-slate-700/80 rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
+          <div class="badge-tooltip bg-atlasBg/95 text-white border border-atlasBorder rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
             <div class="font-bold text-xs flex items-center gap-1 mb-1 ${colorScheme.badgeText}">
               <span>${badge.emoji}</span>
               <span>${badge.title}</span>
             </div>
-            <p class="text-slate-300 text-[10px] leading-normal">${tooltipContent}</p>
+            <p class="text-white/80 text-[10px] leading-normal">${tooltipContent}</p>
           </div>
 
           <div class="flex items-start justify-between gap-2">
@@ -1202,23 +1202,23 @@ class LudoSportApp {
     }).join('');
 
     container.innerHTML = `
-      <div class="bg-lsCard border border-lsBorder rounded-2xl p-3.5 shadow-xl relative">
+      <div class="bg-atlasSurface border border-atlasBorder rounded-2xl p-3.5 shadow-xl relative">
         <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <i data-lucide="medal" class="w-4 h-4"></i>
             </div>
             <div>
-              <h3 class="font-display text-xs sm:text-sm font-bold text-slate-100 tracking-wide flex items-center gap-1.5">
+              <h3 class="font-display text-xs sm:text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
                 <span>Medallero & Títulos del Mes</span>
-                <span class="text-[10px] font-semibold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                <span class="text-[10px] font-semibold text-atlasAccentLight bg-atlasAccent/10 px-2 py-0.5 rounded-full border border-atlasAccent/20">
                   ${monthLabel}
                 </span>
               </h3>
-              <p class="text-[10px] text-slate-400">Premios automáticos calculados en vivo según rendimiento de la liga</p>
+              <p class="text-[10px] text-white/70">Premios automáticos calculados en vivo según rendimiento de la liga</p>
             </div>
           </div>
-          <span class="text-[10px] text-slate-500 font-combat">5 Categorías</span>
+          <span class="text-[10px] text-white/60 font-combat">5 Categorías</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -1273,9 +1273,9 @@ class LudoSportApp {
     }
 
     container.innerHTML = pending.map(item => `
-      <button type="button" data-fa="${item.fencerA.id}" data-fb="${item.fencerB.id}" class="quick-pair-btn px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-cyan-400 text-[11px] text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+      <button type="button" data-fa="${item.fencerA.id}" data-fb="${item.fencerB.id}" class="quick-pair-btn px-2.5 py-1 rounded-lg bg-atlasSurface border border-atlasBorder hover:border-atlasAccentLight text-[11px] text-white/80 hover:text-atlasAccentLight transition-colors flex items-center gap-1.5">
         <span>${item.fencerA.name.split(' ')[0]}</span>
-        <span class="text-slate-500 font-bold text-[9px]">vs</span>
+        <span class="text-white/60 font-bold text-[9px]">vs</span>
         <span>${item.fencerB.name.split(' ')[0]}</span>
       </button>
     `).join('');
@@ -1481,8 +1481,8 @@ class LudoSportApp {
 
     if (filtered.length === 0) {
       list.innerHTML = `
-        <div class="bg-lsCard border border-lsBorder rounded-2xl p-8 text-center text-slate-500 text-xs">
-          <i data-lucide="calendar-x" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>
+        <div class="bg-atlasSurface border border-atlasBorder rounded-2xl p-8 text-center text-white/60 text-xs">
+          <i data-lucide="calendar-x" class="w-8 h-8 mx-auto mb-2 text-white/60"></i>
           No hay combates registrados en este mes.
         </div>
       `;
@@ -1500,16 +1500,16 @@ class LudoSportApp {
         resultBadge = `
           <div class="flex items-center gap-1 text-xs font-combat font-black">
             <span class="text-cyan-400 text-sm px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/25">${sA}</span>
-            <span class="text-slate-600">-</span>
-            <span class="text-slate-400 text-xs px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">${sB}</span>
+            <span class="text-white/60">-</span>
+            <span class="text-white/70 text-xs px-1.5 py-0.5 rounded bg-atlasSurface border border-atlasBorder">${sB}</span>
           </div>
           <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mt-0.5">Victoria A</span>
         `;
       } else if (m.result === 'VICTORY_B') {
         resultBadge = `
           <div class="flex items-center gap-1 text-xs font-combat font-black">
-            <span class="text-slate-400 text-xs px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">${sA}</span>
-            <span class="text-slate-600">-</span>
+            <span class="text-white/70 text-xs px-1.5 py-0.5 rounded bg-atlasSurface border border-atlasBorder">${sA}</span>
+            <span class="text-white/60">-</span>
             <span class="text-rose-400 text-sm px-1.5 py-0.5 rounded bg-rose-500/10 border border-rose-500/25">${sB}</span>
           </div>
           <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 mt-0.5">Victoria B</span>
@@ -1518,7 +1518,7 @@ class LudoSportApp {
         resultBadge = `
           <div class="flex items-center gap-1 text-xs font-combat font-black">
             <span class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/25">${sA}</span>
-            <span class="text-slate-600">-</span>
+            <span class="text-white/60">-</span>
             <span class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/25">${sB}</span>
           </div>
           <span class="text-[9px] uppercase px-1.5 py-0.5 rounded font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-0.5">Empate</span>
@@ -1526,24 +1526,24 @@ class LudoSportApp {
       }
 
       return `
-        <div class="bg-lsCard border border-lsBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-slate-700 transition-colors">
+        <div class="bg-atlasSurface border border-atlasBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-atlasBorder transition-colors">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
-              <span class="text-[10px] text-slate-500 font-semibold">${m.date}</span>
-              ${m.notes ? `<span class="text-[10px] text-slate-400 bg-slate-900 px-1.5 py-0.2 rounded border border-slate-800">${m.notes}</span>` : ''}
+              <span class="text-[10px] text-white/60 font-semibold">${m.date}</span>
+              ${m.notes ? `<span class="text-[10px] text-white/70 bg-atlasSurface px-1.5 py-0.2 rounded border border-atlasBorder">${m.notes}</span>` : ''}
             </div>
-            <div class="flex items-center justify-between text-xs font-bold text-slate-200">
-              <span class="${m.result === 'VICTORY_A' ? 'text-cyan-300' : 'text-slate-300'} truncate">
+            <div class="flex items-center justify-between text-xs font-bold text-white">
+              <span class="${m.result === 'VICTORY_A' ? 'text-cyan-300' : 'text-white/80'} truncate">
                 ${m.fighterAName}
               </span>
-              <span class="text-slate-600 px-2 font-display text-[10px]">VS</span>
-              <span class="${m.result === 'VICTORY_B' ? 'text-rose-300' : 'text-slate-300'} truncate text-right">
+              <span class="text-white/60 px-2 font-display text-[10px]">VS</span>
+              <span class="${m.result === 'VICTORY_B' ? 'text-rose-300' : 'text-white/80'} truncate text-right">
                 ${m.fighterBName}
               </span>
             </div>
           </div>
 
-          <div class="flex flex-col items-end gap-1 shrink-0 border-l border-slate-800/80 pl-3">
+          <div class="flex flex-col items-end gap-1 shrink-0 border-l border-atlasBorder pl-3">
             ${resultBadge}
             ${canDelete ? `
               <button data-match-id="${m.id}" class="delete-match-btn text-[10px] text-rose-400/80 hover:text-rose-400 mt-1 transition-colors flex items-center gap-0.5 p-0.5 rounded hover:bg-rose-500/10">
@@ -1571,11 +1571,11 @@ class LudoSportApp {
       return `
         <button type="button" data-month="${mKey}" class="history-month-pill-btn px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
           isSelected 
-            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-sm shadow-cyan-500/20' 
-            : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-slate-500 hover:text-white'
+            ? 'bg-atlasAccent/20 text-white border-atlasAccent/50 shadow-sm shadow-atlasAccent/20' 
+            : 'bg-atlasSurface text-white/80 border-atlasBorder hover:border-white/50 hover:text-white'
         }">
           <span>${this.formatMonthLabel(mKey)}</span>
-          ${isSelected ? ' <span class="text-cyan-400 font-bold">&bull;</span>' : ''}
+          ${isSelected ? ' <span class="text-atlasAccentLight font-bold">&bull;</span>' : ''}
         </button>
       `;
     }).join('');
@@ -1605,8 +1605,8 @@ class LudoSportApp {
 
     if (detailsContainer) {
       detailsContainer.innerHTML = `
-        <div class="font-bold text-slate-100">${match.fighterAName} vs ${match.fighterBName}</div>
-        <div class="text-[10px] text-slate-400 mt-1">Fecha: ${match.date} &bull; ${resDesc}</div>
+        <div class="font-bold text-white">${match.fighterAName} vs ${match.fighterBName}</div>
+        <div class="text-[10px] text-white/70 mt-1">Fecha: ${match.date} &bull; ${resDesc}</div>
       `;
     }
 
@@ -1703,17 +1703,17 @@ class LudoSportApp {
     container.innerHTML = this.fencers.map(f => {
       const saberColorLabel = this.getSaberColorName(f.color);
       return `
-        <div class="bg-lsCard border border-lsBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-slate-700 transition-all">
+        <div class="bg-atlasSurface border border-atlasBorder rounded-xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-atlasBorder transition-all">
           <div data-fencer-profile="${f.id}" title="Ver perfil de ${f.name}" class="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group">
             ${this.getFencerAvatarHtml(f, 'w-10 h-10', true)}
             <div class="min-w-0">
-              <div class="font-bold text-xs text-slate-100 truncate group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+              <div class="font-bold text-xs text-white truncate group-hover:text-atlasAccentLight transition-colors flex items-center gap-1.5">
                 <span>${f.name}</span>
-                <i data-lucide="chevron-right" class="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                <i data-lucide="chevron-right" class="w-3 h-3 text-white/60 opacity-0 group-hover:opacity-100 transition-opacity"></i>
               </div>
               <div class="mt-1 flex items-center gap-1.5 flex-wrap">
-                ${this.getRankBadge(f.rank)}
-                <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                ${this.getRankBadge(f.rank, f.color)}
+                <span class="text-[10px] text-white/70 flex items-center gap-1">
                   <span class="w-1.5 h-1.5 rounded-full ${f.color === 'emerald' ? 'bg-emerald-400' : 'bg-cyan-400'}"></span>
                   ${saberColorLabel}
                 </span>
@@ -1722,16 +1722,16 @@ class LudoSportApp {
           </div>
 
           ${this.isAdmin || this.isTestMode ? `
-            <div class="flex items-center gap-1 shrink-0 border-l border-slate-800 pl-2">
-              <button data-edit-fencer="${f.id}" title="Editar Tirador" class="edit-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition-colors">
+            <div class="flex items-center gap-1 shrink-0 border-l border-atlasBorder pl-2">
+              <button data-edit-fencer="${f.id}" title="Editar Tirador" class="edit-fencer-btn p-1.5 rounded-lg text-white/70 hover:text-atlasAccentLight hover:bg-atlasSurface transition-colors">
                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
               </button>
-              <button data-delete-fencer="${f.id}" title="Eliminar Tirador" class="delete-fencer-btn p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors">
+              <button data-delete-fencer="${f.id}" title="Eliminar Tirador" class="delete-fencer-btn p-1.5 rounded-lg text-white/70 hover:text-rose-400 hover:bg-atlasSurface transition-colors">
                 <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           ` : `
-            <button data-fencer-profile="${f.id}" title="Ver estadísticas" class="p-1.5 rounded-lg text-slate-500 hover:text-cyan-400 hover:bg-slate-800 transition-colors shrink-0">
+            <button data-fencer-profile="${f.id}" title="Ver estadísticas" class="p-1.5 rounded-lg text-white/60 hover:text-atlasAccentLight hover:bg-atlasSurface transition-colors shrink-0">
               <i data-lucide="user" class="w-4 h-4"></i>
             </button>
           `}
@@ -1840,12 +1840,12 @@ class LudoSportApp {
     if (this.isAdmin) {
       if (text) text.textContent = 'Rector Activo';
       if (btn) {
-        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-cyan-500/50 bg-cyan-500/15 text-cyan-300 hover:border-cyan-400 shadow-sm shadow-cyan-500/20';
+        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-atlasAccent/50 bg-atlasAccent/15 text-atlasAccentLight hover:border-atlasAccentLight shadow-sm shadow-atlasAccent/20';
         btn.title = 'Modo Rector Activo (clic para cerrar sesión)';
         btn.innerHTML = `
-          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-atlasAccentLight"></i>
           <span id="adminStatusText">Rector Activo</span>
-          <i data-lucide="log-out" class="w-3 h-3 text-cyan-400/80 ml-0.5"></i>
+          <i data-lucide="log-out" class="w-3 h-3 text-atlasAccentLight/80 ml-0.5"></i>
         `;
       }
       // Reveal restricted navigation tabs for Rector
@@ -1855,10 +1855,10 @@ class LudoSportApp {
     } else {
       if (text) text.textContent = 'Acceso Rector';
       if (btn) {
-        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500 hover:text-white';
+        btn.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all border border-atlasBorder bg-atlasSurface/80 text-white/80 hover:border-white/50 hover:text-white';
         btn.title = 'Acceso para Rectores / Administración';
         btn.innerHTML = `
-          <i data-lucide="shield" class="w-3.5 h-3.5 text-slate-400"></i>
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-white/70"></i>
           <span id="adminStatusText">Acceso Rector</span>
         `;
       }
@@ -2006,9 +2006,9 @@ class LudoSportApp {
     if (!container) return;
 
     const toast = document.createElement('div');
-    const borderColor = type === 'rose' ? 'border-rose-500/40 bg-slate-900 text-rose-300' :
-                        type === 'amber' ? 'border-amber-500/40 bg-slate-900 text-amber-300' :
-                        'border-cyan-500/40 bg-slate-900 text-cyan-300';
+    const borderColor = type === 'rose' ? 'border-rose-500/40 bg-atlasSurface text-rose-300' :
+                        type === 'amber' ? 'border-amber-500/40 bg-atlasSurface text-amber-300' :
+                        'border-atlasAccent/40 bg-atlasSurface text-atlasAccentLight';
 
     toast.className = `p-3 rounded-xl border shadow-2xl text-xs font-semibold flex items-center gap-2 pointer-events-auto animate-scaleUp ${borderColor}`;
     toast.innerHTML = `
@@ -2031,11 +2031,28 @@ class LudoSportApp {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
-  getRankBadge(rank) {
+  getRankBadge(rank, color) {
     const r = (rank || 'Inizziato').trim();
+    const c = (color || '').toLowerCase().trim();
+    const colorStyles = {
+      cyan: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300',
+      blue: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300',
+      azul: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300',
+      emerald: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+      green: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+      verde: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+      amber: 'bg-amber-500/15 border-amber-500/30 text-amber-300',
+      purple: 'bg-purple-500/15 border-purple-500/30 text-purple-300',
+      rose: 'bg-rose-500/15 border-rose-500/30 text-rose-300',
+      white: 'bg-white/15 border-white/30 text-white'
+    };
+    const weight = r === 'Instructor' ? 'font-bold' : 'font-semibold';
+    if (colorStyles[c]) {
+      return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] ${weight} border ${colorStyles[c]}">${r}</span>`;
+    }
     switch (r) {
       case 'Novizio':
-        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/15 border border-sky-500/30 text-sky-300">Novizio</span>`;
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/15 border border-cyan-500/30 text-cyan-300">Novizio</span>`;
       case 'Inizziato':
         return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/15 border border-cyan-500/30 text-cyan-300">Inizziato</span>`;
       case 'Academico':
@@ -2043,7 +2060,7 @@ class LudoSportApp {
       case 'Instructor':
         return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">Instructor</span>`;
       default:
-        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">${r}</span>`;
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-atlasSurface text-white/80 border border-atlasBorder">${r}</span>`;
     }
   }
 
@@ -2062,23 +2079,23 @@ class LudoSportApp {
   // Dynamic Avatar Generator (Photo URL or Initials + Saber Halo)
   getFencerAvatarHtml(fencer, size = 'w-9 h-9', borderGlow = true) {
     if (!fencer) {
-      return `<div class="${size} rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400">?</div>`;
+      return `<div class="${size} rounded-full bg-atlasSurface border border-atlasBorder flex items-center justify-center font-bold text-xs text-white/70">?</div>`;
     }
     const ringColor = fencer.color || 'cyan';
-    const ringClass = borderGlow ? `border-2 saber-ring-${ringColor}` : 'border border-slate-700';
+    const ringClass = borderGlow ? `border-2 saber-ring-${ringColor}` : 'border border-atlasBorder';
     const initials = this.getInitials(fencer.name);
 
     if (fencer.photoUrl && fencer.photoUrl.trim().startsWith('http')) {
       return `
-        <div class="${size} rounded-full ${ringClass} bg-slate-900 overflow-hidden relative shrink-0 flex items-center justify-center">
+        <div class="${size} rounded-full ${ringClass} bg-atlasSurface overflow-hidden relative shrink-0 flex items-center justify-center">
           <img src="${fencer.photoUrl}" alt="${fencer.name}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="w-full h-full hidden items-center justify-center font-bold text-slate-100 text-xs bg-slate-900">${initials}</span>
+          <span class="w-full h-full hidden items-center justify-center font-bold text-white text-xs bg-atlasSurface">${initials}</span>
         </div>
       `;
     }
 
     return `
-      <div class="${size} rounded-full ${ringClass} bg-slate-900 flex items-center justify-center font-bold text-slate-100 text-xs shrink-0 select-none">
+      <div class="${size} rounded-full ${ringClass} bg-atlasSurface flex items-center justify-center font-bold text-white text-xs shrink-0 select-none">
         ${initials}
       </div>
     `;
@@ -2165,7 +2182,7 @@ class LudoSportApp {
       avatarContainer.innerHTML = this.getFencerAvatarHtml(fencer, 'w-14 h-14', true);
     }
     if (nameEl) nameEl.textContent = fencer.name;
-    if (rankBadgeEl) rankBadgeEl.innerHTML = this.getRankBadge(fencer.rank);
+    if (rankBadgeEl) rankBadgeEl.innerHTML = this.getRankBadge(fencer.rank, fencer.color);
     if (colorBadgeEl) {
       const col = fencer.color || 'cyan';
       const colLabel = this.getSaberColorName(col);
@@ -2180,7 +2197,7 @@ class LudoSportApp {
     if (statOHRecibidos) statOHRecibidos.textContent = stats.pointsAgainst;
     if (statOHDiff) {
       statOHDiff.textContent = (stats.diff > 0 ? '+' : '') + stats.diff;
-      statOHDiff.className = `font-combat font-bold text-base ${stats.diff > 0 ? 'text-emerald-400' : stats.diff < 0 ? 'text-rose-400' : 'text-slate-300'}`;
+      statOHDiff.className = `font-combat font-bold text-base ${stats.diff > 0 ? 'text-emerald-400' : stats.diff < 0 ? 'text-rose-400' : 'text-white/80'}`;
     }
 
     // Render Fencer Badges (current month & past months history)
@@ -2205,7 +2222,7 @@ class LudoSportApp {
 
         if (earnedBadges.length === 0) {
           badgesListEl.innerHTML = `
-            <div class="p-3 text-center text-slate-500 text-xs bg-slate-900/60 rounded-xl border border-slate-800">
+            <div class="p-3 text-center text-white/60 text-xs bg-atlasSurface/60 rounded-xl border border-atlasBorder">
               Aún no ha obtenido insignias. ¡Compite para conquistar títulos en la arena!
             </div>
           `;
@@ -2213,36 +2230,36 @@ class LudoSportApp {
           badgesListEl.innerHTML = earnedBadges.map(b => {
             const isCur = b.isCurrentMonth;
             return `
-              <div class="badge-item relative group p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-2 shadow-sm transition-all"
+              <div class="badge-item relative group p-2.5 rounded-xl bg-atlasSurface/80 border border-atlasBorder hover:border-atlasBorder flex items-center justify-between gap-2 shadow-sm transition-all"
                    tabindex="0"
                    role="article"
                    title="${b.tooltip}">
                 
                 <!-- Tooltip Popover -->
-                <div class="badge-tooltip bg-slate-950/95 text-slate-200 border border-slate-700/80 rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
+                <div class="badge-tooltip bg-atlasBg/95 text-white border border-atlasBorder rounded-xl p-2.5 shadow-2xl backdrop-blur-md text-[11px] leading-tight pointer-events-none">
                   <div class="font-bold text-xs flex items-center gap-1 mb-1 text-amber-300">
                     <span>${b.emoji}</span>
                     <span>${b.title}</span>
                   </div>
-                  <p class="text-slate-300 text-[10px] leading-normal">${b.detail}</p>
-                  <div class="mt-1 text-[9px] text-cyan-400 font-semibold">${b.monthLabel}${isCur ? ' (Mes Activo)' : ''}</div>
+                  <p class="text-white/80 text-[10px] leading-normal">${b.detail}</p>
+                  <div class="mt-1 text-[9px] text-atlasAccentLight font-semibold">${b.monthLabel}${isCur ? ' (Mes Activo)' : ''}</div>
                 </div>
 
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="text-base shrink-0 select-none">${b.emoji}</span>
                   <div class="min-w-0">
-                    <div class="text-xs font-bold text-slate-200 truncate flex items-center gap-1.5">
+                    <div class="text-xs font-bold text-white truncate flex items-center gap-1.5">
                       <span>${b.title}</span>
-                      ${isCur ? '<span class="px-1.5 py-0.2 rounded text-[9px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase font-black">Activo</span>' : ''}
+                      ${isCur ? '<span class="px-1.5 py-0.2 rounded text-[9px] bg-atlasAccent/20 text-white border border-atlasAccent/30 uppercase font-black">Activo</span>' : ''}
                     </div>
-                    <div class="text-[10px] text-slate-400 truncate">
-                      ${b.monthLabel} &bull; <span class="text-slate-300 font-semibold">${b.formattedValue}</span>
+                    <div class="text-[10px] text-white/70 truncate">
+                      ${b.monthLabel} &bull; <span class="text-white/80 font-semibold">${b.formattedValue}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="shrink-0 text-right">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-combat font-bold bg-slate-950 border border-slate-800 text-slate-300">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-combat font-bold bg-atlasBg border border-atlasBorder text-white/80">
                     ${b.formattedValue}
                   </span>
                 </div>
@@ -2262,7 +2279,7 @@ class LudoSportApp {
     if (matchesListEl) {
       if (stats.matches.length === 0) {
         matchesListEl.innerHTML = `
-          <div class="p-6 text-center text-slate-500 text-xs bg-slate-900/60 rounded-xl border border-slate-800">
+          <div class="p-6 text-center text-white/60 text-xs bg-atlasSurface/60 rounded-xl border border-atlasBorder">
             Aún no ha disputado ningún asalto este mes.
           </div>
         `;
@@ -2287,17 +2304,17 @@ class LudoSportApp {
           }
 
           return `
-            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2 shadow-sm">
+            <div class="p-2.5 rounded-xl bg-atlasSurface/80 border border-atlasBorder flex items-center justify-between gap-2 shadow-sm">
               <div class="flex items-center gap-2 min-w-0">
                 ${this.getFencerAvatarHtml(oppFencer, 'w-7 h-7', false)}
                 <div class="min-w-0">
-                  <div class="text-[11px] font-bold text-slate-200 truncate">vs ${oppName}</div>
-                  <div class="text-[9px] text-slate-500">${m.date}${m.notes ? ` &bull; ${m.notes}` : ''}</div>
+                  <div class="text-[11px] font-bold text-white truncate">vs ${oppName}</div>
+                  <div class="text-[9px] text-white/60">${m.date}${m.notes ? ` &bull; ${m.notes}` : ''}</div>
                 </div>
               </div>
 
               <div class="flex items-center gap-2 shrink-0">
-                <span class="font-combat font-black text-xs text-slate-100 px-2 py-0.5 rounded bg-slate-950 border border-slate-800">
+                <span class="font-combat font-black text-xs text-white px-2 py-0.5 rounded bg-atlasBg border border-atlasBorder">
                   ${myScore} - ${oppScore}
                 </span>
                 ${resBadge}
@@ -2459,8 +2476,8 @@ class LudoSportApp {
       banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-amber-500/10 border-amber-500/40 text-amber-300 flex items-center justify-center gap-2';
       banner.innerHTML = `<i data-lucide="award" class="w-4 h-4 text-amber-400"></i><span>Victoria para ${nameB} (+${sB - sA}) &bull; [${sA} - ${sB}]</span>`;
     } else {
-      banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-slate-900 border-slate-700 text-slate-300 flex items-center justify-center gap-2';
-      banner.innerHTML = `<i data-lucide="scale" class="w-4 h-4 text-slate-400"></i><span>Empate Técnico &bull; [${sA} - ${sB}]</span>`;
+      banner.className = 'w-full p-2.5 rounded-xl border text-xs font-bold transition-all bg-atlasSurface border-atlasBorder text-white/80 flex items-center justify-center gap-2';
+      banner.innerHTML = `<i data-lucide="scale" class="w-4 h-4 text-white/70"></i><span>Empate Técnico &bull; [${sA} - ${sB}]</span>`;
     }
 
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -2504,7 +2521,7 @@ class LudoSportApp {
     if (toggleBtn && label) {
       if (this.timerRunning) {
         label.textContent = 'Pausar';
-        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'pause');
         if (statusText) {
           statusText.textContent = 'Combate en curso';
@@ -2512,7 +2529,7 @@ class LudoSportApp {
         }
       } else {
         label.textContent = this.timerSeconds === 0 ? 'Reiniciar' : 'Iniciar';
-        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
+        toggleBtn.className = 'w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all';
         if (icon) icon.setAttribute('data-lucide', 'play');
         if (statusText) {
           if (this.timerSeconds === 0) {
@@ -2523,7 +2540,7 @@ class LudoSportApp {
             statusText.className = 'text-[11px] font-semibold text-amber-400 mt-1';
           } else {
             statusText.textContent = 'Listo para iniciar';
-            statusText.className = 'text-[11px] font-semibold text-slate-400 mt-1';
+            statusText.className = 'text-[11px] font-semibold text-white/70 mt-1';
           }
         }
       }
@@ -2757,11 +2774,11 @@ class LudoSportApp {
       const pastBtn = document.getElementById('historyPastMonthsPill');
       const pastBox = document.getElementById('historyPastMonthsContainer');
       
-      curBtn?.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
-      curBtn?.classList.remove('text-slate-400', 'border-transparent');
+      curBtn?.classList.add('bg-atlasAccent/20', 'text-white', 'border-atlasAccent/30');
+      curBtn?.classList.remove('text-white/70', 'border-transparent');
       
-      pastBtn?.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
-      pastBtn?.classList.add('text-slate-400', 'border-transparent');
+      pastBtn?.classList.remove('bg-atlasAccent/20', 'text-white', 'border-atlasAccent/30');
+      pastBtn?.classList.add('text-white/70', 'border-transparent');
       
       pastBox?.classList.add('hidden');
 
@@ -2776,11 +2793,11 @@ class LudoSportApp {
       const pastBtn = document.getElementById('historyPastMonthsPill');
       const pastBox = document.getElementById('historyPastMonthsContainer');
       
-      pastBtn?.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
-      pastBtn?.classList.remove('text-slate-400', 'border-transparent');
+      pastBtn?.classList.add('bg-atlasAccent/20', 'text-white', 'border-atlasAccent/30');
+      pastBtn?.classList.remove('text-white/70', 'border-transparent');
       
-      curBtn?.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/30');
-      curBtn?.classList.add('text-slate-400', 'border-transparent');
+      curBtn?.classList.remove('bg-atlasAccent/20', 'text-white', 'border-atlasAccent/30');
+      curBtn?.classList.add('text-white/70', 'border-transparent');
       
       pastBox?.classList.remove('hidden');
       this.renderHistoryPastMonthsList();
